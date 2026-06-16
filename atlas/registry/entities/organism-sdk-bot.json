@@ -1,0 +1,15 @@
+{
+  "id": "atlas://bot/organism-sdk-bot",
+  "name": "organism-sdk-bot",
+  "class": "Bot",
+  "division": "I — Build & Package",
+  "emoji": "📦",
+  "domain": "SDK validation & packaging",
+  "triggers": ["push:packages/"],
+  "workflow": ".github/workflows/organism-sdk-bot.yml",
+  "outputs": ["docs/sdk-catalog.md", "build/sdks/*.tar.gz"],
+  "languages": ["atlas://language/cpl-p", "atlas://language/tpl"],
+  "governance_pipeline": "pipeline://governance/bot_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "scc": 2.89
+}

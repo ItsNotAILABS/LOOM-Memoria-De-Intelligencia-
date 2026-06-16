@@ -1,0 +1,216 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# 📊 MML METRICS SPEC — METRICES MENTIS
+# "Quod mensuratur, regitur." (What is measured, is governed.)
+#
+# MML (Meta-Metric Language) — maps governance event context fields to
+# named metrics consumed by the Meta Engine for fleet evolution proposals.
+#
+# Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+# ═══════════════════════════════════════════════════════════════════════════
+
+schema_version: "1.0.0"
+language: "MML"
+scc: 3.14
+
+meta:
+  name: "Bot Fleet MML Metrics"
+  description: "Named metrics derived from governance events for Meta Engine analysis"
+
+# ── Fleet Metrics (from fleet_census_completed) ───────────────────────────
+constants:
+  living_docs_expected: 13  # Total expected living doc files in docs/; update when new bots are added
+
+metrics:
+  - id: "bot_fleet.health_ratio"
+    description: "Ratio of healthy bots to total bots"
+    source_event: "fleet_census_completed"
+    formula: "context.bots_healthy / context.bots_total"
+    type: float
+    range: [0.0, 1.0]
+    thresholds:
+      green: ">= 0.9"
+      yellow: ">= 0.7"
+      red: "< 0.7"
+    meta_engine_proposals:
+      red: "Investigate unhealthy bots; consider bot quarantine protocol"
+      yellow: "Alert alpha-bot to perform targeted fleet inspection"
+
+  - id: "bot_fleet.policy_compliance"
+    description: "Fraction of bots compliant with governance policy"
+    source_event: "fleet_census_completed"
+    formula: "context.policy_compliance"
+    type: float
+    range: [0.0, 1.0]
+    thresholds:
+      green: ">= 0.95"
+      yellow: ">= 0.8"
+      red: "< 0.8"
+    meta_engine_proposals:
+      red: "Run governance cycle on all non-compliant bots immediately"
+
+  - id: "bot_fleet.missing_workflow_count"
+    description: "Number of bots with missing workflow files"
+    source_event: "fleet_census_completed"
+    formula: "context.missing_workflows.length"
+    type: integer
+    thresholds:
+      green: "== 0"
+      yellow: "<= 2"
+      red: "> 2"
+    meta_engine_proposals:
+      red: "Bootstrap missing workflows from template immediately"
+
+  - id: "bot_fleet.living_docs_coverage"
+    description: "Fraction of expected living docs present"
+    source_event: "fleet_census_completed"
+    formula: "context.living_docs_count / constants.living_docs_expected"
+    formula_note: "Denominator is constants.living_docs_expected (default 13) — update constant when new bots are added"
+    type: float
+    range: [0.0, 1.0]
+    thresholds:
+      green: ">= 0.9"
+      yellow: ">= 0.6"
+      red: "< 0.6"
+
+  # ── Economy Metrics (from economy_scan_completed) ──────────────────────
+  - id: "economy.coverage"
+    description: "Fraction of packages/extensions with valid descriptions and licenses"
+    source_event: "economy_scan_completed"
+    formula: "context.coverage"
+    type: float
+    range: [0.0, 1.0]
+    thresholds:
+      green: ">= 0.8"
+      yellow: ">= 0.65"
+      red: "< 0.65"
+    meta_engine_proposals:
+      red: "Block new SDK additions until existing coverage improves"
+      yellow: "Trigger description/license completion sprint"
+
+  - id: "economy.complexity_score"
+    description: "Composite complexity score for the marketplace"
+    source_event: "economy_scan_completed"
+    formula: "context.complexity_score"
+    type: integer
+    thresholds:
+      green: "<= 20"
+      yellow: "<= 30"
+      red: "> 30"
+    meta_engine_proposals:
+      red: "Audit for redundant packages; propose consolidation"
+
+  - id: "economy.assets_total"
+    description: "Total deployable asset count"
+    source_event: "economy_scan_completed"
+    formula: "context.assets_total"
+    type: integer
+
+  - id: "economy.protocol_density"
+    description: "Protocols per SDK package"
+    source_event: "economy_scan_completed"
+    formula: "context.protocol_count / max(context.sdk_count, 1)"
+    formula_note: "Uses max(..., 1) guard pattern to prevent division by zero — same pattern used in topology.graph_density"
+    type: float
+
+  # ── Learning Metrics (from learning_cycle_completed) ───────────────────
+  - id: "learning.signals_per_cycle"
+    description: "Number of training signals processed per learning cycle"
+    source_event: "learning_cycle_completed"
+    formula: "context.training_signals"
+    type: integer
+    thresholds:
+      green: ">= 30"
+      yellow: ">= 10"
+      red: "< 10"
+    meta_engine_proposals:
+      red: "Increase protocol domain diversity to generate more learning signals"
+
+  - id: "learning.protocols_evolved"
+    description: "Number of protocols in expansion-eligible domains this cycle"
+    source_event: "learning_cycle_completed"
+    formula: "context.protocols_evolved"
+    type: integer
+
+  - id: "learning.expansion_pressure"
+    description: "Number of domains with ≤2 protocols needing expansion"
+    source_event: "learning_cycle_completed"
+    formula: "context.expansion_domains.length"
+    type: integer
+    thresholds:
+      green: "<= 3"
+      yellow: "<= 8"
+      red: "> 8"
+    meta_engine_proposals:
+      red: "Propose new protocols for thin domains; route to learning-bot"
+
+  # ── Topology Metrics (from crawl_completed) ────────────────────────────
+  - id: "topology.orphans"
+    description: "Files with no detected inbound references"
+    source_event: "crawl_completed"
+    formula: "context.orphans"
+    type: integer
+    thresholds:
+      green: "<= 50"
+      yellow: "<= 200"
+      red: "> 200"
+    meta_engine_proposals:
+      red: "Create orphan-cleanup pipeline; route to crawler-bot weekly"
+
+  - id: "topology.dead_links"
+    description: "Broken asset references in HTML files"
+    source_event: "crawl_completed"
+    formula: "context.dead_links"
+    type: integer
+    thresholds:
+      green: "== 0"
+      yellow: "<= 10"
+      red: "> 10"
+    meta_engine_proposals:
+      red: "Block release until dead links resolved"
+      yellow: "Warn on PR; track in docs/organism-atlas.md"
+
+  - id: "topology.graph_centrality_max"
+    description: "Degree of the most connected module"
+    source_event: "crawl_completed"
+    formula: "context.most_connected_degree"
+    type: integer
+    thresholds:
+      green: "<= 20"
+      yellow: "<= 40"
+      red: "> 40"
+    meta_engine_proposals:
+      red: "Flag most_connected module for extra review; consider splitting"
+
+  - id: "topology.graph_density"
+    description: "Ratio of edges to nodes in the dependency graph"
+    source_event: "crawl_completed"
+    formula: "context.graph_edges / max(context.graph_nodes, 1)"
+    type: float
+    thresholds:
+      green: "<= 1.5"
+      yellow: "<= 3.0"
+      red: "> 3.0"
+    meta_engine_proposals:
+      red: "High coupling: propose decoupling sprint for top hub modules"
+
+# ── Meta Engine Watch Rules ───────────────────────────────────────────────
+meta_engine_watches:
+  - id: "cross_signal.more_learning_fewer_incidents"
+    description: "Correlate learning.signals_per_cycle with topology.dead_links over time"
+    hypothesis: "Higher learning rate → fewer topology issues"
+    when_confirmed:
+      proposal: "Increase learning-bot frequency to daily"
+    when_rejected:
+      proposal: "Decouple learning rate from topology cleanup"
+
+  - id: "cross_signal.high_complexity_low_coverage"
+    description: "When economy.complexity_score > 25 AND economy.coverage < 0.7"
+    proposal: "Block new feature additions; mandate coverage sprint first"
+
+  - id: "cross_signal.orphan_spike"
+    description: "When topology.orphans increases by > 50 between cycles"
+    proposal: "Create dedicated orphan-cleanup pipeline (organism-cleanup-bot)"
+
+  - id: "cross_signal.protocol_stagnation"
+    description: "When learning.expansion_pressure > 8 for 3+ consecutive cycles"
+    proposal: "Propose 5 new PROT-NNN entries in thin domains"

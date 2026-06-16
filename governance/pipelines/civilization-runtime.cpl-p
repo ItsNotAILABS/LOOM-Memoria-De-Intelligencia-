@@ -1,0 +1,122 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# 🔄 CIVILIZATION RUNTIME PIPELINE — ITER VITAE AETERNAE
+# "Coherere, probare, memoriae mandare."
+#
+# Scope: runtime cycle for Autobots, Decepticons, and organisms.
+# Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+# ═══════════════════════════════════════════════════════════════════════════
+
+id: "pipeline://governance/civilization_runtime_cycle"
+version: "1.0.0"
+language: "CPL-P"
+scc: 4.09
+
+meta:
+  name: "Civilization Runtime Cycle"
+  description: >
+    Executes the Vita Aeterna cycle: Nova runtime spawn, memory runtime instantiation,
+    active-state execution routing, foundation-floor compute delegation, law gate,
+    chaos sandbox, telemetry/rollback, and Semper Memoria append-only persistence.
+  trigger: "runtime_tick"
+
+steps:
+  - id: "ingest_template"
+    name: "Ingest Organism Template"
+    use: "runtime.ingest_template"
+    inputs: ["template.id", "template.capabilities", "template.resources", "template.law_domain", "template.memory_scopes"]
+    outputs: ["state.template", "state.resource_plan"]
+
+  - id: "bind_lineage"
+    name: "Bind Initial Lineage"
+    use: "memory.create_or_attach_lineage"
+    inputs: ["state.template", "memory.root_object"]
+    outputs: ["state.lineage_id"]
+
+  - id: "spawn_nova_runtime"
+    name: "Spawn Nova Runtime Root"
+    use: "runtime.spawn_nova"
+    inputs: ["state.template", "state.resource_plan"]
+    outputs: ["state.nova_runtime_id"]
+
+  - id: "spawn_memory_runtime"
+    name: "Spawn Memory Runtime"
+    use: "runtime.spawn_memory_runtime"
+    inputs: ["state.nova_runtime_id", "state.lineage_id"]
+    outputs: ["state.memory_runtime_id"]
+
+  - id: "spawn_active_state_runtime"
+    name: "Spawn Active State Runtime Memory Execution"
+    use: "runtime.spawn_active_state_runtime"
+    inputs: ["state.memory_runtime_id", "state.template"]
+    outputs: ["state.active_state_runtime_id"]
+
+  - id: "delegate_foundation_floor_compute"
+    name: "Delegate Heavy Compute to Foundation Floor Runtime"
+    use: "runtime.delegate_foundation_floor"
+    inputs: ["state.active_state_runtime_id", "state.resource_plan"]
+    outputs: ["state.foundation_floor_ticket", "state.foundation_floor_mode"]
+
+  - id: "apply_laws"
+    name: "Apply Civilization Laws"
+    use: "governance.apply_cpl_l"
+    inputs: ["state", "laws_ref: governance://laws/civilization"]
+    outputs: ["decisions.actions", "decisions.violations", "decisions.warnings"]
+
+  - id: "spawn_autobot_domain"
+    name: "Spawn Autobot Domain Actors"
+    use: "runtime.spawn_autobots"
+    inputs: ["state.template", "state.resource_plan", "decisions"]
+    outputs: ["runtime.autobots", "runtime.spawn_receipts"]
+
+  - id: "run_decepticon_sandbox"
+    name: "Run Decepticon Chaos Simulation"
+    use: "runtime.run_chaos_domain"
+    inputs: ["runtime.autobots", "state.template"]
+    outputs: ["chaos.report", "chaos.telemetry", "chaos.counterpart_results"]
+
+  - id: "evaluate_counterparts"
+    name: "Evaluate Counterpart Coverage"
+    use: "governance.evaluate_counterparts"
+    inputs: ["chaos.counterpart_results"]
+    outputs: ["counterpart.coverage", "counterpart.gaps"]
+
+  - id: "execute_recovery"
+    name: "Execute Rollback or Compensating Action"
+    use: "runtime.execute_recovery"
+    inputs: ["chaos.report", "decisions", "state.resource_plan"]
+    outputs: ["recovery.performed", "recovery.handle"]
+
+  - id: "append_memory"
+    name: "Append Runtime Decision Memory"
+    use: "memory.append_semper_memoria"
+    inputs: ["state.lineage_id", "decisions", "chaos.telemetry", "recovery.handle"]
+    outputs: ["memory.object_id", "memory.summary_id"]
+
+  - id: "emit_reason_chain"
+    name: "Emit Explainability Chain"
+    use: "runtime.emit_reason_chain"
+    inputs: ["decisions", "chaos.report", "recovery.handle", "memory.object_id"]
+    outputs: ["reason.chain_id"]
+
+branches:
+  - id: "if_quota_exceeded"
+    when: 'state.resource_plan.quota_exceeded == true'
+    then:
+      type: "BLOCK"
+      target: "spawn_autobot_domain"
+      log: "Quota exceeded prior to spawn."
+
+  - id: "if_chaos_uncontained"
+    when: 'chaos.report.uncontained == true'
+    then:
+      type: "EMERGENCY_STOP"
+      target: "run_decepticon_sandbox"
+      urgency: "CRITICAL"
+
+on_error:
+  - action: "LOG"
+    target: "ril"
+    entry: "Civilization runtime pipeline error: {error.message}"
+  - action: "NOTIFY"
+    target: "human://freddy"
+    urgency: "HIGH"

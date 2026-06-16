@@ -1,0 +1,96 @@
+{
+  "id": "atlas://registry/runtime/pack-profiles",
+  "version": "1.0.0",
+  "registry_first": true,
+  "math_surface": {
+    "phi": 1.618033988749895,
+    "phi_sq": 2.618033988749895,
+    "inv_phi": 0.6180339887498948,
+    "schumann_hz": 7.83,
+    "base_432_hz": 432.0,
+    "heartbeat_ms": 618
+  },
+  "foundational_workers": [
+    "engine",
+    "memory",
+    "security",
+    "protocol"
+  ],
+  "worker_catalog": [
+    "protocol",
+    "memory",
+    "communication",
+    "security",
+    "math",
+    "evolution",
+    "careers",
+    "protocols",
+    "taxonomy",
+    "veritas",
+    "sovereign-token",
+    "inference",
+    "houses",
+    "canister",
+    "cloudflare",
+    "lingua",
+    "agi-knowledge",
+    "papers",
+    "context",
+    "edge-gate",
+    "blockchain-edge",
+    "animus",
+    "cognitive-language",
+    "frequency-stack",
+    "license",
+    "world-integrator",
+    "phantom-sensor",
+    "phantom-field",
+    "memoria-sacra",
+    "memoria-viva",
+    "memoria-nexus"
+  ],
+  "profiles": {
+    "full": {
+      "description": "All internal intelligence surfaces active.",
+      "workers": "all",
+      "tools": ["all"],
+      "queries": ["all"],
+      "bridges": ["engine", "organism", "v2_integration"],
+      "surfaces": ["multimodal", "sdk", "memory", "governance"],
+      "allow_shutdown_foundational": false
+    },
+    "ops": {
+      "description": "Operational command center profile.",
+      "workers": [
+        "protocol","memory","communication","security","math","veritas",
+        "inference","edge-gate","houses","cognitive-language","frequency-stack"
+      ],
+      "tools": ["registry", "status", "analysis", "alerts"],
+      "queries": ["status", "health", "incidents", "drift"],
+      "bridges": ["engine", "organism"],
+      "surfaces": ["command-center", "memory", "governance"],
+      "allow_shutdown_foundational": false
+    },
+    "minimal": {
+      "description": "Reduced load profile for rebuild and controlled testing.",
+      "workers": ["protocol", "memory", "security", "math", "context"],
+      "tools": ["registry", "status"],
+      "queries": ["status", "health"],
+      "bridges": ["engine"],
+      "surfaces": ["memory"],
+      "allow_shutdown_foundational": false
+    },
+    "rebuild": {
+      "description": "Layered rebuild profile to package and recompose infrastructure.",
+      "workers": [
+        "protocol","memory","security","math","context","papers",
+        "canister","cloudflare","cognitive-language","frequency-stack"
+      ],
+      "tools": ["registry", "status", "pack", "analysis"],
+      "queries": ["status", "health", "pack", "drift"],
+      "bridges": ["engine", "organism", "v2_integration"],
+      "surfaces": ["command-center", "sdk", "memory", "pack-run"],
+      "allow_shutdown_foundational": false
+    }
+  }
+}

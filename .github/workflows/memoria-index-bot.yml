@@ -1,0 +1,102 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# MEMORIA INDEXATOR — MEMORIA BOT 1: THE MEMORY INDEXER
+# "Indexator Memoriae" — Indexes all memory objects into the Memory Temple
+#
+# Triggers on any change to memory-related files or on schedule.
+# Scans for new memory objects (papers, protocols, doctrines, axioms),
+# builds a searchable memory index, and commits the index to the repo.
+#
+# House: Memory Temple tier  |  Law: L-005 (always-on, not alive)
+# Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+# ═══════════════════════════════════════════════════════════════════════════
+
+name: "[MEMORIA] Indexator — Memory Index Bot"
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "organism-cli/web/papers-worker.js"
+      - "organism-cli/web/context-worker.js"
+      - "organism-cli/web/protocol-papers.js"
+      - "organism-cli/web/memoria-*.js"
+      - "doctrine/**"
+      - "docs/bot-fleet/**"
+  schedule:
+    # Daily at 03:00 UTC — Memory index refresh
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  index:
+    name: "🗃️ Indexator — Build Memory Index"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Configure INDEXATOR-BOT identity
+        run: |
+          git config user.name  "INDEXATOR-BOT"
+          git config user.email "indexator-bot@medina.sovereign"
+
+      - name: Run Memoria Index engine
+        id: index
+        run: |
+          python3 nova_ovo/agents/memoria/memoria_index_bot.py \
+            --repo-root="$GITHUB_WORKSPACE" \
+            --output=docs/bot-fleet/memoria-index.json 2>&1 | tee /tmp/indexator-log.txt
+          echo "exit_code=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+
+      - name: Commit memory index
+        run: |
+          git add docs/bot-fleet/memoria-index.json
+          if git diff --cached --quiet; then
+            echo "[INDEXATOR] Memory index unchanged — no commit needed."
+          else
+            TIMESTAMP=$(date -u '+%Y-%m-%dT%H:%M:%SZ')
+            git commit -m "[INDEXATOR] Memory index updated: $TIMESTAMP
+
+Bot:  INDEXATOR-BOT (Indexator Memoriae)
+Law:  L-005 — Always-on, not alive
+φ = 1.618033988749895"
+            git push
+          fi
+
+      - name: BotProofRecord
+        if: always()
+        run: |
+          echo "┌─ BotProofRecord ─────────────────────────────────────────────┐"
+          echo "│ id:          INDEXATOR                                       │"
+          echo "│ latin:       Indexator Memoriae                              │"
+          echo "│ fleet:       Memoria Fleet (Memory Temple)                   │"
+          echo "│ role:        memory-index                                    │"
+          echo "│ law:         L-005 — Always-on, not alive                   │"
+          echo "│ authority:   OBSERVE + INDEX + COMMIT (index file only)     │"
+          echo "│ prohibited:  modify source files, delete memory objects     │"
+          echo "│ run_id:      ${{ github.run_id }}"
+          echo "│ sha:         ${{ github.sha }}"
+          echo "│ proof_ref:   docs/bot-fleet/proof-index.md                  │"
+          echo "└───────────────────────────────────────────────────────────────┘"
+
+      - name: Summary
+        if: always()
+        run: |
+          echo ""
+          echo "╔═══════════════════════════════════════════════╗"
+          echo "║   [INDEXATOR] Memory Index Complete           ║"
+          echo "║   φ = 1.618033988749895                       ║"
+          echo "╚═══════════════════════════════════════════════╝"
+          cat /tmp/indexator-log.txt 2>/dev/null || true

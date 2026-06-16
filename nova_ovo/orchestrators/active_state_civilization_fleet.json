@@ -1,0 +1,95 @@
+{
+  "id": "fleet://active-state-civilization-v2",
+  "version": "2.0.0",
+  "status": "active",
+  "law": "L-130",
+  "runtime_hierarchy": [
+    "nova",
+    "memory",
+    "active_state",
+    "foundation_floor"
+  ],
+  "alphas": [
+    {"id": "ALPHA-PRIMUS", "name": "NOVA IMPERATOR", "role": "root_orchestration"},
+    {"id": "ALPHA-MEMORIA", "name": "CUSTOS LINEAGIS", "role": "memory_authority"},
+    {"id": "ALPHA-SYNAPSIS", "name": "RECTOR STATUS ACTIVA", "role": "active_state_governance"},
+    {"id": "ALPHA-ECONOMIA", "name": "MERCATOR INTELLIGENTIAE", "role": "economic_governance"},
+    {"id": "ALPHA-CIVITAS", "name": "COORDINATOR ORBIS", "role": "fleet_integration"}
+  ],
+  "ais": [
+    {"id": "AI-01", "name": "NOVA-ROOT", "layer": "nova", "role": "spawn_root"},
+    {"id": "AI-02", "name": "MEMORY-CANON", "layer": "memory", "role": "canonical_append"},
+    {"id": "AI-03", "name": "ACTIVE-SYNAPSE", "layer": "active_state", "role": "live_transition"},
+    {"id": "AI-04", "name": "FOUNDATION-DELEGATE", "layer": "foundation_floor", "role": "heavy_compute"},
+    {"id": "AI-05", "name": "LINEAGE-TRACE", "layer": "memory", "role": "provenance_trace"},
+    {"id": "AI-06", "name": "LAW-GATE", "layer": "governance", "role": "constraint_enforcement"},
+    {"id": "AI-07", "name": "COUNTERPART-ASSURE", "layer": "governance", "role": "counterpart_validation"},
+    {"id": "AI-08", "name": "REASON-CHAIN", "layer": "active_state", "role": "explainability_emission"},
+    {"id": "AI-09", "name": "BRIDGE-VIGILIA", "layer": "edge", "role": "ingress_defense"},
+    {"id": "AI-10", "name": "RIGHTS-REGISTRAR", "layer": "governance", "role": "rights_contracts"},
+    {"id": "AI-11", "name": "ENGINE-CATALOGER", "layer": "runtime", "role": "engine_registry"},
+    {"id": "AI-12", "name": "MODEL-REGISTRAR", "layer": "runtime", "role": "model_group_registry"},
+    {"id": "AI-13", "name": "SDK-COMPOSER", "layer": "packaging", "role": "sdk_packaging"},
+    {"id": "AI-14", "name": "RUNTIME-MAPPER", "layer": "runtime", "role": "hierarchy_mapping"},
+    {"id": "AI-15", "name": "FEED-SYNTHESIZER", "layer": "backend", "role": "feed_normalization"},
+    {"id": "AI-16", "name": "BARTER-EXCHANGE", "layer": "economy", "role": "internal_barter"},
+    {"id": "AI-17", "name": "TOKEN-UTILITY", "layer": "economy", "role": "token_issuance_use"},
+    {"id": "AI-18", "name": "FLEET-RENTAL", "layer": "economy", "role": "market_rental"},
+    {"id": "AI-19", "name": "COMPENSATION-ENGINE", "layer": "economy", "role": "payout_logic"},
+    {"id": "AI-20", "name": "PERFORMANCE-RANKER", "layer": "economy", "role": "performance_scoring"}
+  ],
+  "engines": [
+    "Synapsis Core Engine",
+    "Memoria Flux Engine",
+    "Nova Dispatch Engine",
+    "Lineage Graph Engine",
+    "Protocol Guard Engine",
+    "Beat Scheduler Engine",
+    "Resonance Engine",
+    "Foundation Compute Engine",
+    "Token Utility Engine",
+    "Fleet Rental Engine",
+    "Compensation Engine",
+    "Evidence Ledger Engine"
+  ],
+  "model_groups": [
+    "Identity Models",
+    "Memory Models",
+    "Active State Models",
+    "Governance Models",
+    "Worker Capability Models",
+    "Runtime Health Models",
+    "Economic Models",
+    "Licensing Models",
+    "Integration Models",
+    "SDK Contract Models",
+    "Validation Models",
+    "Doctrine Models"
+  ],
+  "bridges": [
+    "frontend.intent->active_state.synapse",
+    "active_state.synapse->nova.dispatch",
+    "nova.dispatch->memory.runtime",
+    "active_state.synapse->foundation.floor",
+    "memory.runtime->evidence.ledger",
+    "economy.layer->compensation.engine"
+  ],
+  "protocols": [
+    "PROT-152",
+    "PROT-153",
+    "PROT-154",
+    "PROT-155"
+  ],
+  "sdks": [
+    "@medina/memory-sdk",
+    "@medina/micro-worker-careers",
+    "@medina/agent-incentive-service",
+    "@medina/ai-tools-marketplace"
+  ],
+  "economics": {
+    "barter": "internal capability exchange ledger",
+    "token": "issuance by validated output, spend for priority and rentals",
+    "rental": "market-facing fleet packages",
+    "payout": "base+performance weighted compensation"
+  }
+}

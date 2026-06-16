@@ -1,0 +1,208 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# PRAETOR — BOT 5: THE COMMANDER / ORCHESTRATOR
+# "Praetor Botorum" — Commander of the Bots
+#
+# Triggered after AEDIFICATOR, FASCICULUS, MEDICUS, or CUSTOS complete.
+# Aggregates all bot run statuses and writes BILL_BOTS_STATUS.md.
+# Commits the status update to main.
+#
+# House: Alpha Agent tier  |  Law: L-005 (always-on, not alive)
+# Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+# ═══════════════════════════════════════════════════════════════════════════
+
+name: "[PRAETOR] Bot Orchestrator"
+
+on:
+  workflow_run:
+    workflows:
+      - "[AEDIFICATOR] Auto-Build"
+      - "[FASCICULUS] Auto-Package"
+      - "[MEDICUS] Auto-Fix"
+      - "[CUSTOS] Guardian — Health Check"
+    types: [completed]
+  # Also run on a schedule to keep status fresh even when bots are idle
+  schedule:
+    # Every 12 hours — 00:00 and 12:00 UTC
+    - cron: "0 0,12 * * *"
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  orchestrate:
+    name: "⚔️ Praetor — Aggregate Bot Status"
+    runs-on: ubuntu-latest
+    # Only run on main branch for scheduled/workflow_run triggers
+    if: >
+      github.event_name == 'schedule' ||
+      github.event.workflow_run.head_branch == 'main'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+
+      - name: Configure PRAETOR-BOT identity
+        run: |
+          git config user.name  "PRAETOR-BOT"
+          git config user.email "praetor-bot@medina.sovereign"
+
+      - name: Gather bot status from GitHub API
+        id: gather
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          REPO="${{ github.repository }}"
+          TIMESTAMP=$(date -u '+%Y-%m-%dT%H:%M:%SZ')
+          DATE=$(date -u '+%Y-%m-%d %H:%M UTC')
+
+          # Fetch latest run status for each bot workflow
+          get_status() {
+            local wf_name="$1"
+            gh run list --repo "$REPO" --workflow "$wf_name" --limit 1 \
+              --json conclusion,status,headBranch,updatedAt 2>/dev/null \
+              | python3 -c "
+          import json,sys
+          d=json.load(sys.stdin)
+          if d:
+              r=d[0]
+              c=r.get('conclusion') or r.get('status','unknown')
+              b=r.get('headBranch','?')
+              t=r.get('updatedAt','?')
+              print(f'{c}|{b}|{t}')
+          else:
+              print('no_runs||')
+          " 2>/dev/null || echo "unknown||"
+          }
+
+          AEDI=$(get_status "[AEDIFICATOR] Auto-Build")
+          FASC=$(get_status "[FASCICULUS] Auto-Package")
+          MEDI=$(get_status "[MEDICUS] Auto-Fix")
+          CUST=$(get_status "[CUSTOS] Guardian — Health Check")
+
+          echo "aedi=$AEDI"   >> "$GITHUB_OUTPUT"
+          echo "fasc=$FASC"   >> "$GITHUB_OUTPUT"
+          echo "medi=$MEDI"   >> "$GITHUB_OUTPUT"
+          echo "cust=$CUST"   >> "$GITHUB_OUTPUT"
+          echo "timestamp=$TIMESTAMP" >> "$GITHUB_OUTPUT"
+          echo "date=$DATE"   >> "$GITHUB_OUTPUT"
+
+      - name: Write BILL_BOTS_STATUS.md
+        run: |
+          python3 - <<'PYEOF'
+          import os
+
+          aedi = os.environ.get("AEDI_STATUS", "unknown")
+          fasc = os.environ.get("FASC_STATUS", "unknown")
+          medi = os.environ.get("MEDI_STATUS", "unknown")
+          cust = os.environ.get("CUST_STATUS", "unknown")
+          date = os.environ.get("STATUS_DATE", "")
+          ts   = os.environ.get("STATUS_TS", "")
+
+          content = f"""# 🤖 BILL BOTS STATUS
+
+> **PRAETOR-BOT** — Praetor Botorum (Commander of the Bots)
+> Last updated: {date}
+
+---
+
+## Bot Fleet Health
+
+| Bot | Latin Name | Role | Last Status |
+|-----|-----------|------|-------------|
+| 🧱 AEDIFICATOR | Aedificator Perpetuus | Auto-Build | `{aedi}` |
+| 📦 FASCICULUS  | Fasciculus Automaticus | Auto-Package | `{fasc}` |
+| 💊 MEDICUS     | Medicus Machinae | Auto-Fix | `{medi}` |
+| 🛡️ CUSTOS      | Custos Repositorii | Guardian | `{cust}` |
+| ⚔️ PRAETOR     | Praetor Botorum | Orchestrator | `success|main|{ts}` |
+
+---
+
+## Architecture
+
+All 5 bots are sovereign — they:
+- Run on GitHub Actions using only `GITHUB_TOKEN` (no external dependencies)
+- Auto-commit to the repository under their own identity
+- Trace all operations to φ = 1.618033988749895
+- Follow **L-005: Agent Existence Law** — Always-on, not alive, no stress
+
+## Bot Trigger Map
+
+```
+push/PR → [AEDIFICATOR] validate all substrates
+push/main → [FASCICULUS] package changed components → commit
+push + cron/6h → [MEDICUS] auto-fix issues → commit
+push/main + cron/daily → [CUSTOS] health check → open issues
+workflow_run + cron/12h → [PRAETOR] aggregate status → commit
+```
+
+---
+
+*φ = 1.618033988749895 · "Imperium per ordinem." (Command through order.)*
+"""
+          with open("BILL_BOTS_STATUS.md", "w", encoding="utf-8") as f:
+              f.write(content)
+          PYEOF
+        env:
+          AEDI_STATUS: ${{ steps.gather.outputs.aedi }}
+          FASC_STATUS: ${{ steps.gather.outputs.fasc }}
+          MEDI_STATUS: ${{ steps.gather.outputs.medi }}
+          CUST_STATUS: ${{ steps.gather.outputs.cust }}
+          STATUS_DATE: ${{ steps.gather.outputs.date }}
+          STATUS_TS:   ${{ steps.gather.outputs.timestamp }}
+
+      - name: Commit status update
+        run: |
+          git add BILL_BOTS_STATUS.md
+          if git diff --cached --quiet; then
+            echo "[PRAETOR] Status unchanged — no commit needed."
+          else
+            git commit -m "[PRAETOR] Bot status update: ${{ steps.gather.outputs.timestamp }}
+
+AEDIFICATOR: ${{ steps.gather.outputs.aedi }}
+FASCICULUS:  ${{ steps.gather.outputs.fasc }}
+MEDICUS:     ${{ steps.gather.outputs.medi }}
+CUSTOS:      ${{ steps.gather.outputs.cust }}
+
+Bot:  PRAETOR-BOT (Praetor Botorum)
+Law:  L-005 — Always-on, not alive
+φ = 1.618033988749895"
+            git push
+          fi
+
+      - name: Summary
+        if: always()
+        run: |
+          echo ""
+          echo "╔═══════════════════════════════════════════════╗"
+          echo "║   [PRAETOR] Orchestration Complete            ║"
+          echo "║   AEDIFICATOR: ${{ steps.gather.outputs.aedi }}"
+          echo "║   FASCICULUS:  ${{ steps.gather.outputs.fasc }}"
+          echo "║   MEDICUS:     ${{ steps.gather.outputs.medi }}"
+          echo "║   CUSTOS:      ${{ steps.gather.outputs.cust }}"
+          echo "║   φ = 1.618033988749895                       ║"
+          echo "╚═══════════════════════════════════════════════╝"
+
+      - name: BotProofRecord
+        if: always()
+        run: |
+          echo "┌─ BotProofRecord ─────────────────────────────────────────────┐"
+          echo "│ id:          PRAETOR                                         │"
+          echo "│ latin:       Praetor Botorum                                 │"
+          echo "│ role:        orchestrator / commander / alpha-bot            │"
+          echo "│ law:         L-005 — Always-on, not alive                   │"
+          echo "│ authority:   OBSERVE + AGGREGATE + REPORT + ESCALATE        │"
+          echo "│              + DISPATCH (approved workflows only)            │"
+          echo "│ prohibited:  silently mutate high-risk files,               │"
+          echo "│              create new bots, dispatch unapproved workflows, │"
+          echo "│              delete ORPHAN files without human approval      │"
+          echo "│ high_risk:   main.mo, organism-bridge.js, papers-worker.js, │"
+          echo "│              context-worker.js, vigilia-edge.js, *.yml      │"
+          echo "│ run_id:      ${{ github.run_id }}"
+          echo "│ sha:         ${{ github.sha }}"
+          echo "│ proof_ref:   docs/bot-fleet/proof-index.md                  │"
+          echo "└───────────────────────────────────────────────────────────────┘"

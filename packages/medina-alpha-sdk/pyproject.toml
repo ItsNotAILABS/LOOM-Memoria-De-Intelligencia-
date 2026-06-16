@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "medina-alpha-sdk"
+version = "1.0.0"
+description = "MEDINA Alpha SDK — Enterprise AI Platform Integration Layer"
+readme = "README.md"
+license = {text = "ISIL-1.0"}
+requires-python = ">=3.10"
+authors = [
+    {name = "Alfredo 'Freddy' Medina Hernandez", email = "freddy@medinatech.io"}
+]
+keywords = ["medina", "alpha", "sdk", "ai", "enterprise", "sovereign", "organism"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Private :: Do Not Upload",
+]
+dependencies = [
+    "httpx>=0.24.0",
+    "pydantic>=2.0.0",
+    "aiohttp>=3.8.0",
+    "websockets>=11.0",
+    "numpy>=1.24.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0", "pytest-asyncio>=0.21.0", "black", "ruff"]
+all = ["redis>=4.5.0", "kafka-python>=2.0.0", "grpcio>=1.50.0"]
+
+[project.urls]
+Homepage = "https://medinatech.io"
+Repository = "https://github.com/FreddyCreates/Medina-Memory-More-AI"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project.scripts]
+medina-alpha = "alpha_sdk.cli:main"

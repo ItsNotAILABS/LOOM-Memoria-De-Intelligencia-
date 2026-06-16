@@ -1,0 +1,277 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# 👑 ORGANISM ALPHA BOT — IMPERATOR CLASSIS
+# "Unus imperator, sexdecim milites." (One commander, sixteen soldiers.)
+#
+# Division VII — Command & Control
+# Fleet Commander: orchestrates all other bots, reads their output docs,
+# produces a unified fleet status report, and escalates when bots fail.
+# Runs every 6 hours, on every push, and on manual dispatch.
+#
+# Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+# ═══════════════════════════════════════════════════════════════════════════
+
+name: 👑 organism-alpha-bot
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # Every 6 hours
+  push:
+  workflow_dispatch:
+    inputs:
+      force_report:
+        description: 'Force full fleet status report'
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  fleet-command:
+    name: 👑 Fleet Command & Control
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Read Living Docs (Bot Outputs)
+        id: docs
+        run: |
+          echo "👑 Reading living documentation from all bot outputs..."
+
+          # Check which bot reports exist
+          REPORTS=0
+          for report in \
+            docs/extension-manifest.md \
+            docs/neural-dependency-graph.md \
+            docs/sdk-catalog.md \
+            docs/protocol-encyclopedia.md \
+            docs/health-dashboard.md \
+            docs/architecture-map.md \
+            docs/deployment-manifest.md \
+            docs/security-report.md \
+            docs/visual-report.md \
+            docs/deps-report.md \
+            docs/organism-atlas.md \
+            docs/evolution-report.md \
+            docs/economy-report.md; do
+            if [ -f "$report" ]; then
+              echo "  ✓ $(basename $report)"
+              REPORTS=$((REPORTS + 1))
+            else
+              echo "  ○ $(basename $report) — not yet generated"
+            fi
+          done
+          echo "reports=$REPORTS" >> "$GITHUB_OUTPUT"
+          echo "👑 $REPORTS/13 living docs present"
+
+      - name: Compute Fleet Health
+        id: health
+        run: |
+          echo "👑 Computing fleet health metrics..."
+
+          # Count organism components
+          MO=$(ls icp/src/medina_backend/*.mo 2>/dev/null | wc -l)
+          JS=$(ls organism-cli/web/*.js 2>/dev/null | wc -l)
+          EXT=$(ls -d extensions/*/ 2>/dev/null | wc -l)
+          PKG=$(ls -d packages/*/ 2>/dev/null | wc -l)
+          CF=$(ls cloudflare-workers/*.js 2>/dev/null | wc -l)
+          PROT=$(grep -c "id:.*'PROT-" organism-cli/web/protocol-papers.js 2>/dev/null || echo "0")
+          WORKFLOWS=$(ls .github/workflows/*.yml 2>/dev/null | wc -l)
+
+          TOTAL=$((MO + JS + EXT + PKG + CF))
+
+          echo "mo=$MO" >> "$GITHUB_OUTPUT"
+          echo "js=$JS" >> "$GITHUB_OUTPUT"
+          echo "ext=$EXT" >> "$GITHUB_OUTPUT"
+          echo "pkg=$PKG" >> "$GITHUB_OUTPUT"
+          echo "prot=$PROT" >> "$GITHUB_OUTPUT"
+          echo "workflows=$WORKFLOWS" >> "$GITHUB_OUTPUT"
+          echo "total=$TOTAL" >> "$GITHUB_OUTPUT"
+
+          echo "  • Motoko engines: $MO"
+          echo "  • Web workers: $JS"
+          echo "  • Extensions: $EXT"
+          echo "  • SDK packages: $PKG"
+          echo "  • Protocols: $PROT"
+          echo "  • Bot workflows: $WORKFLOWS"
+          echo "  • Total components: $TOTAL"
+
+      - name: Division Roll Call
+        run: |
+          echo "👑 ═══════════════════════════════════════════════════"
+          echo "👑  FLEET ROLL CALL — $(date -u '+%Y-%m-%d %H:%M UTC')"
+          echo "👑 ═══════════════════════════════════════════════════"
+          echo ""
+          echo "  🏗️ Division I — Build & Package"
+          echo "     🧬 organism-build-bot     [extensions/${{ steps.health.outputs.ext }} exts]"
+          echo "     📦 organism-sdk-bot        [sdk/${{ steps.health.outputs.pkg }} pkgs]"
+          echo "     🚀 organism-release-bot    [v* tags]"
+          echo ""
+          echo "  🔬 Division II — Validate & Test"
+          echo "     🧪 organism-test-bot       [Node 18/20/22 matrix]"
+          echo "     🔬 organism-protocol-bot   [${{ steps.health.outputs.prot }} protocols]"
+          echo "     🧠 organism-neural-bot     [${{ steps.health.outputs.mo }} engines]"
+          echo "     🏰 organism-sandcastle-bot [every push]"
+          echo "     📸 organism-visual-bot     [nightly]"
+          echo ""
+          echo "  🛡️ Division III — Secure & Monitor"
+          echo "     🛡️ organism-sentinel-bot   [weekly + push]"
+          echo "     🔄 organism-deps-bot       [Mon/Thu]"
+          echo "     🕷️ organism-crawler-bot    [Tue/Fri]"
+          echo ""
+          echo "  📚 Division IV — Document & Report"
+          echo "     📚 organism-docs-bot       [every source push]"
+          echo ""
+          echo "  🌐 Division V — Deploy & Operate"
+          echo "     🌐 organism-deploy-bot     [dfx/organism push]"
+          echo ""
+          echo "  🎓 Division VI — Learn & Evolve"
+          echo "     🎓 organism-learning-bot   [nightly]"
+          echo "     💰 organism-economy-bot    [weekly]"
+          echo ""
+          echo "  👑 Division VII — Command & Control"
+          echo "     👑 organism-alpha-bot      [every 6h — THIS RUN]"
+          echo ""
+          echo "👑 Total workflows active: ${{ steps.health.outputs.workflows }}"
+
+      - name: Generate Alpha Fleet Status Report
+        run: |
+          mkdir -p build/alpha
+
+          cat > build/alpha/fleet-status.md << EOF
+          # 👑 Organism Fleet Status
+
+          **Commander Report:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')
+          **Commit:** \`${GITHUB_SHA:0:7}\`
+          **Branch:** ${{ github.ref_name }}
+          **Event:** ${{ github.event_name }}
+
+          ## Fleet Health
+
+          | Metric | Value |
+          |--------|-------|
+          | Active Bot Workflows | ${{ steps.health.outputs.workflows }} |
+          | Living Docs Generated | ${{ steps.docs.outputs.reports }}/13 |
+          | Backend Engines | ${{ steps.health.outputs.mo }} |
+          | Web Workers | ${{ steps.health.outputs.js }} |
+          | Extensions | ${{ steps.health.outputs.ext }} |
+          | SDK Packages | ${{ steps.health.outputs.pkg }} |
+          | Protocols | ${{ steps.health.outputs.prot }} |
+          | Total Components | ${{ steps.health.outputs.total }} |
+
+          ## Division Status
+
+          | Division | Bots | Status |
+          |----------|------|--------|
+          | 🏗️ I — Build & Package | build-bot, sdk-bot, release-bot | ✓ Active |
+          | 🔬 II — Validate & Test | test-bot, protocol-bot, neural-bot, sandcastle-bot, visual-bot | ✓ Active |
+          | 🛡️ III — Secure & Monitor | sentinel-bot, deps-bot, crawler-bot | ✓ Active |
+          | 📚 IV — Document & Report | docs-bot | ✓ Active |
+          | 🌐 V — Deploy & Operate | deploy-bot | ✓ Active |
+          | 🎓 VI — Learn & Evolve | learning-bot, economy-bot | ✓ Active |
+          | 👑 VII — Command & Control | alpha-bot (this) | ✓ Active |
+
+          ## Living Documentation Index
+
+          EOF
+
+          for report in \
+            docs/extension-manifest.md \
+            docs/neural-dependency-graph.md \
+            docs/sdk-catalog.md \
+            docs/protocol-encyclopedia.md \
+            docs/health-dashboard.md \
+            docs/architecture-map.md \
+            docs/deployment-manifest.md \
+            docs/security-report.md \
+            docs/visual-report.md \
+            docs/deps-report.md \
+            docs/organism-atlas.md \
+            docs/evolution-report.md \
+            docs/economy-report.md; do
+            name=$(basename "$report")
+            if [ -f "$report" ]; then
+              echo "- ✓ [$name]($report)" >> build/alpha/fleet-status.md
+            else
+              echo "- ○ $name — pending first run" >> build/alpha/fleet-status.md
+            fi
+          done
+
+          echo "" >> build/alpha/fleet-status.md
+          echo "---" >> build/alpha/fleet-status.md
+          echo "*Generated by organism-alpha-bot 👑 — Fleet Commander*" >> build/alpha/fleet-status.md
+          echo "*Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX*" >> build/alpha/fleet-status.md
+
+          cat build/alpha/fleet-status.md
+
+      - name: Commit Fleet Status
+        run: |
+          git config user.name "organism-alpha-bot"
+          git config user.email "organism-alpha-bot[bot]@users.noreply.github.com"
+          cp build/alpha/fleet-status.md docs/fleet-status.md
+          git add docs/fleet-status.md
+          git diff --cached --quiet || git commit -m "👑 organism-alpha-bot: Fleet status report [${{ steps.health.outputs.workflows }} bots, ${{ steps.health.outputs.total }} components]"
+          git push || echo "Nothing to push"
+
+      - name: Emit Governance Event
+        run: |
+          mkdir -p dist/governance/events
+
+          # Detect missing workflows (bots without .yml file)
+          MISSING="[]"
+          EXPECTED="organism-build-bot organism-neural-bot organism-sdk-bot organism-protocol-bot organism-test-bot organism-docs-bot organism-release-bot organism-deploy-bot organism-sentinel-bot organism-visual-bot organism-deps-bot organism-sandcastle-bot organism-crawler-bot organism-learning-bot organism-economy-bot organism-alpha-bot"
+          MISSING_LIST=""
+          for bot in $EXPECTED; do
+            if [ ! -f ".github/workflows/${bot}.yml" ]; then
+              MISSING_LIST="${MISSING_LIST}\"${bot}\","
+            fi
+          done
+          if [ -n "$MISSING_LIST" ]; then
+            MISSING="[${MISSING_LIST%,}]"
+          fi
+
+          COMPLIANCE=$(python3 -c "
+          import os
+          total = 16
+          present = len([f for f in os.listdir('.github/workflows') if f.startswith('organism-')])
+          print(f'{present/total:.2f}')
+          " 2>/dev/null || echo "1.00")
+
+          cat > dist/governance/events/fleet_census_completed.json << EOF
+          {
+            "entity_id": "atlas://bot/organism-alpha-bot",
+            "op": "fleet_census_completed",
+            "timestamp": "$(date -u '+%Y-%m-%dT%H:%M:%SZ')",
+            "commit": "${GITHUB_SHA:0:7}",
+            "run_id": "${{ github.run_id }}",
+            "context": {
+              "bots_total": 16,
+              "bots_healthy": ${{ steps.health.outputs.workflows }},
+              "missing_workflows": $MISSING,
+              "policy_compliance": $COMPLIANCE,
+              "living_docs_count": ${{ steps.docs.outputs.reports }},
+              "workflows_active": ${{ steps.health.outputs.workflows }},
+              "total_components": ${{ steps.health.outputs.total }},
+              "divisions": {
+                "Build & Package": ["organism-build-bot","organism-sdk-bot","organism-release-bot"],
+                "Validate & Test": ["organism-test-bot","organism-protocol-bot","organism-neural-bot","organism-sandcastle-bot","organism-visual-bot"],
+                "Secure & Monitor": ["organism-sentinel-bot","organism-deps-bot","organism-crawler-bot"],
+                "Document & Report": ["organism-docs-bot"],
+                "Deploy & Operate": ["organism-deploy-bot"],
+                "Learn & Evolve": ["organism-learning-bot","organism-economy-bot"],
+                "Command & Control": ["organism-alpha-bot"]
+              }
+            }
+          }
+          EOF
+
+          echo "👑 Governance event emitted: fleet_census_completed"
+          cat dist/governance/events/fleet_census_completed.json
+

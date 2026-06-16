@@ -1,0 +1,15 @@
+{
+  "id": "atlas://bot/organism-docs-bot",
+  "name": "organism-docs-bot",
+  "class": "Bot",
+  "division": "IV — Document & Report",
+  "emoji": "📚",
+  "domain": "Auto-documentation generation",
+  "triggers": ["push:extensions/", "push:packages/", "push:organism-cli/web/", "push:icp/src/", "push:cloudflare-workers/"],
+  "workflow": ".github/workflows/organism-docs-bot.yml",
+  "outputs": ["docs/architecture-map.md"],
+  "languages": ["atlas://language/cdl", "atlas://language/edl"],
+  "governance_pipeline": "pipeline://governance/bot_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "scc": 2.71
+}

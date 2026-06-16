@@ -1,0 +1,118 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# MEDICUS — BOT 3: THE AUTO-HEALER
+# "Medicus Machinae" — Doctor of the Machine
+#
+# Runs on every push + every 6 hours on schedule.
+# Detects and auto-fixes common Organism issues:
+#   JSON validation/repair, missing __init__.py, trailing whitespace,
+#   manifest consistency, import drift.
+# Commits fixes with [MEDICUS] prefix.
+#
+# House: Observer Solvers tier  |  Law: L-005 (always-on, not alive)
+# Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+# ═══════════════════════════════════════════════════════════════════════════
+
+name: "[MEDICUS] Auto-Fix"
+
+on:
+  push:
+    branches: ["**"]
+  schedule:
+    # Every 6 hours — φ-aligned: 0, 6, 12, 18 UTC
+    - cron: "0 0,6,12,18 * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  heal:
+    name: "💊 Medicus — Auto-Fix Organism Issues"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # Full history so fixes can see context
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Configure MEDICUS-BOT identity
+        run: |
+          git config user.name  "MEDICUS-BOT"
+          git config user.email "medicus-bot@medina.sovereign"
+
+      - name: Run Medicus auto-fix engine
+        id: medicus
+        run: |
+          python3 nova_ovo/agents/bill_bots/medicus_bot.py --mode=ci \
+            --repo-root="$GITHUB_WORKSPACE" \
+            --output=dist/governance/events/medicus-report.json 2>&1 | tee /tmp/medicus-log.txt
+          echo "exit_code=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+
+      - name: Commit fixes (if any)
+        run: |
+          git add -A
+          if git diff --cached --quiet; then
+            echo "[MEDICUS] No fixes needed — Organism is healthy."
+          else
+            SUMMARY=$(python3 -c "
+          import json, sys
+          try:
+              d = json.load(open('dist/governance/events/medicus-report.json'))
+              fixes = d.get('fixes_applied', [])
+              print(', '.join(fixes[:5]) if fixes else 'general fixes')
+          except:
+              print('auto-fix')
+          ")
+            git commit -m "[MEDICUS] Auto-fix: ${SUMMARY}
+
+Commit:    ${{ github.sha }}
+Branch:    ${{ github.ref_name }}
+Bot:       MEDICUS-BOT (Medicus Machinae)
+Law:       L-005 — Always-on, not alive
+φ = 1.618033988749895"
+            git push
+          fi
+
+      - name: Upload Medicus report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: medicus-report-${{ github.run_id }}
+          path: dist/governance/events/medicus-report.json
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Summary
+        if: always()
+        run: |
+          echo ""
+          echo "╔═══════════════════════════════════════════════╗"
+          echo "║   [MEDICUS] Healing Cycle Complete            ║"
+          echo "║   φ = 1.618033988749895                       ║"
+          echo "╚═══════════════════════════════════════════════╝"
+          cat /tmp/medicus-log.txt 2>/dev/null || true
+
+      - name: BotProofRecord
+        if: always()
+        run: |
+          echo "┌─ BotProofRecord ─────────────────────────────────────────────┐"
+          echo "│ id:          MEDICUS                                         │"
+          echo "│ latin:       Medicus Machinae                                │"
+          echo "│ role:        auto-fix                                        │"
+          echo "│ law:         L-005 — Always-on, not alive                   │"
+          echo "│ authority:   OBSERVE + FIX (whitespace/syntax) + COMMIT     │"
+          echo "│ prohibited:  rewrite logic, modify high-risk files,         │"
+          echo "│              delete source files, open issues                │"
+          echo "│ high_risk:   main.mo, organism-bridge.js, papers-worker.js, │"
+          echo "│              context-worker.js, vigilia-edge.js, *.yml      │"
+          echo "│ run_id:      ${{ github.run_id }}"
+          echo "│ sha:         ${{ github.sha }}"
+          echo "│ proof_ref:   docs/bot-fleet/proof-index.md                  │"
+          echo "└───────────────────────────────────────────────────────────────┘"

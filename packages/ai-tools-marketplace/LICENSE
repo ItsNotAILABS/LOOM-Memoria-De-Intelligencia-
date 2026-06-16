@@ -1,0 +1,80 @@
+ISIL-1.0 — ItsNotAILABS SOVEREIGN INTELLIGENCE LICENSE
+AUTHORIZED USE ADDENDUM — AI TOOLS MARKETPLACE
+=========================================================================
+
+Copyright © 2024-2026 Alfredo "Freddy" Medina Hernandez
+ItsNotAILABS / Medina Tech — Dallas, Texas, USA
+
+This Addendum supplements the root ISIL-1.0 license located at the
+repository root. All nine Articles of the ISIL-1.0 apply in full to
+this package. This Addendum constitutes the Article IX specification
+for the ai-tools-marketplace package.
+
+=========================================================================
+
+CLASSIFICATION: INTERNAL CONFIDENTIAL
+CLEARANCE LEVEL: SOVEREIGN-BETA
+
+=========================================================================
+
+ARTICLE IX ADDENDUM — AI TOOLS MARKETPLACE
+
+  A9.1  CONFIDENTIALITY DESIGNATION
+
+        This package is classified as INTERNAL CONFIDENTIAL within the
+        MEDINA intelligence architecture. It contains the sovereign AI
+        tools marketplace — a living ecosystem of 50+ enterprise tools,
+        300+ extensions, worker tool bundles, and tool discovery
+        intelligence that enables workers within the organism to find,
+        deploy, and operate tools.
+
+  A9.2  AUTHORIZED USE — INTERNAL DEVELOPMENT AND DEPLOYMENT
+
+        (a) This package is authorized for internal use by the Author
+            and by development teams operating under a valid MEDINA
+            Internal Development Agreement (MIDA).
+
+        (b) MIDA holders may integrate this marketplace into their
+            MEDINA-powered deployments solely for internal tool
+            discovery and worker enablement.
+
+        (c) No portion of the marketplace may be exposed as a public
+            service, public API, or public-facing tool store without
+            a separate MEDINA Marketplace Distribution Agreement
+            (MMDA) signed by the Author.
+
+  A9.3  TOOL SUBMISSION
+
+        (a) Third-party tools may be submitted to the marketplace
+            only through the Author's sovereign submission process.
+
+        (b) All submitted tools become subject to this license upon
+            acceptance into the marketplace.
+
+        (c) The Author retains absolute discretion over tool
+            acceptance, rejection, and removal.
+
+  A9.4  ABSOLUTE PROHIBITIONS (IN ADDITION TO ARTICLE III)
+
+        (a) No competing marketplace, tool store, or tool discovery
+            system may be derived from this package.
+
+        (b) No tool metadata, categorization schema, or discovery
+            algorithms may be extracted or replicated.
+
+        (c) No marketplace analytics, usage data, or tool popularity
+            metrics may be collected or shared externally.
+
+  A9.5  TRADE SECRET DESIGNATION
+
+        The marketplace architecture, discovery algorithms, tool
+        categorization schema, and integration patterns constitute
+        trade secrets under DTSA and TUTSA.
+
+=========================================================================
+
+© 2024-2026 Alfredo "Freddy" Medina Hernandez
+ItsNotAILABS / Medina Tech — Dallas, Texas, USA
+INTERNAL CONFIDENTIAL — SOVEREIGN-BETA CLEARANCE REQUIRED
+
+ISIL-1.0 — Authorized Use Addendum: ai-tools-marketplace

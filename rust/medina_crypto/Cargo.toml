@@ -1,0 +1,40 @@
+[package]
+name = "medina_crypto"
+version = "1.0.0"
+edition = "2021"
+authors = ["Alfredo Medina Hernandez <medinasiftech@outlook.com>"]
+description = "MEDINA Cryptography Layer - φ-native hash primitives and ANIMA chain encryption"
+license = "Proprietary"
+repository = "https://github.com/FreddyCreates/Medina-Memory-More-AI"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# MEDINA - PROPRIETARY AND CONFIDENTIAL
+# ═══════════════════════════════════════════════════════════════════════════════
+# Copyright © 2024-2026 Alfredo Medina, Medina Tech, Dallas, Texas, USA
+# medinasiftech@outlook.com
+#
+# ALL RIGHTS RESERVED. NO FREE LICENSES. STRICTLY PROPRIETARY.
+# This software is blockchain-registered on ICP for immutable proof of ownership.
+#
+# IP_HASH: 0x5255_5354_5F43_5259_5054_4F5F_4D45_4449_4E41
+# ANIMA_LINEAGE: GENESIS_ALFREDO_MEDINA_2024_FOUNDER
+# ═══════════════════════════════════════════════════════════════════════════════
+
+[lib]
+name = "medina_crypto"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+sha2 = "0.10"
+blake3 = "1.5"
+hex = "0.4"
+wasm-bindgen = { version = "0.2", optional = true }
+js-sys = { version = "0.3", optional = true }
+
+[features]
+default = []
+wasm = ["wasm-bindgen", "js-sys"]
+
+[profile.release]
+opt-level = 3
+lto = true
