@@ -1,0 +1,16 @@
+{
+  "id": "atlas://bot/organism-sentinel-bot",
+  "name": "organism-sentinel-bot",
+  "class": "Bot",
+  "division": "III — Secure & Monitor",
+  "emoji": "🛡️",
+  "domain": "Security scanning & immune response",
+  "triggers": ["push:*", "schedule:weekly"],
+  "workflow": ".github/workflows/organism-sentinel-bot.yml",
+  "outputs": ["docs/security-report.md"],
+  "laws": ["BOT_FLEET_SAFETY.BLOCK_SECRETS"],
+  "languages": ["atlas://language/cpl-l", "atlas://language/acl"],
+  "governance_pipeline": "pipeline://governance/bot_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "scc": 4.44
+}

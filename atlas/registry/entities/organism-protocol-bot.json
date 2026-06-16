@@ -1,0 +1,15 @@
+{
+  "id": "atlas://bot/organism-protocol-bot",
+  "name": "organism-protocol-bot",
+  "class": "Bot",
+  "division": "II — Validate & Test",
+  "emoji": "🔬",
+  "domain": "Protocol integrity & domain graphing",
+  "triggers": ["push:organism-cli/web/protocol-papers.js", "push:organism-cli/web/*-worker.js"],
+  "workflow": ".github/workflows/organism-protocol-bot.yml",
+  "outputs": ["docs/protocol-encyclopedia.md"],
+  "languages": ["atlas://language/cpl-l", "atlas://language/ril"],
+  "governance_pipeline": "pipeline://governance/bot_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "scc": 3.51
+}

@@ -1,0 +1,15 @@
+{
+  "id": "atlas://bot/organism-deploy-bot",
+  "name": "organism-deploy-bot",
+  "class": "Bot",
+  "division": "V — Deploy & Operate",
+  "emoji": "🌐",
+  "domain": "ICP & Cloudflare deployment",
+  "triggers": ["push:icp/dfx.json", "push:cloudflare-workers/", "push:organism/"],
+  "workflow": ".github/workflows/organism-deploy-bot.yml",
+  "outputs": ["docs/deployment-manifest.md"],
+  "languages": ["atlas://language/tpl", "atlas://language/cpl-p"],
+  "governance_pipeline": "pipeline://governance/bot_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "scc": 3.14
+}

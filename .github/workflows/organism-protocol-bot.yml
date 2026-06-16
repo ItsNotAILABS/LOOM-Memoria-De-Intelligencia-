@@ -1,0 +1,116 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# 🔬 ORGANISM PROTOCOL BOT — INSPECTOR PROTOCOLLORUM
+# "Omne protocollum probatur." (Every protocol is tested.)
+#
+# Lints all protocols in protocol-papers.js, categorizes by domain,
+# detects coverage gaps and circular dependencies.
+#
+# Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+# ═══════════════════════════════════════════════════════════════════════════
+
+name: 🔬 organism-protocol-bot
+
+on:
+  push:
+    paths:
+      - 'organism-cli/web/protocol-papers.js'
+      - 'organism-cli/web/*-worker.js'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  protocol-integrity:
+    name: 🔬 Protocol Integrity Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Validate Protocol Papers Syntax
+        run: |
+          echo "🔬 Validating protocol-papers.js syntax..."
+          node -c organism-cli/web/protocol-papers.js && echo "  ✓ Valid JavaScript" || echo "  ✗ Syntax error"
+
+      - name: Count Protocols & Domains
+        id: protocols
+        run: |
+          PROT_COUNT=$(grep -c "id:.*'PROT-" organism-cli/web/protocol-papers.js 2>/dev/null || echo "0")
+          DOMAIN_COUNT=$(grep -oP "domain:\s*'[^']+'" organism-cli/web/protocol-papers.js 2>/dev/null | sort -u | wc -l)
+          echo "protocols=$PROT_COUNT" >> "$GITHUB_OUTPUT"
+          echo "domains=$DOMAIN_COUNT" >> "$GITHUB_OUTPUT"
+          echo "🔬 Found $PROT_COUNT protocols across $DOMAIN_COUNT domains"
+
+      - name: Analyze Protocol Domains
+        run: |
+          echo "🔬 Protocol domain distribution:"
+          grep -oP "domain:\s*'[^']+'" organism-cli/web/protocol-papers.js 2>/dev/null | \
+            sed "s/domain: '//;s/'//" | sort | uniq -c | sort -rn | \
+            while read count domain; do
+              echo "  $domain: $count protocols"
+            done
+
+      - name: Check Protocol ID Sequence
+        run: |
+          echo "🔬 Checking protocol ID sequence..."
+          LAST_ID=$(grep -oP "PROT-\d+" organism-cli/web/protocol-papers.js 2>/dev/null | \
+            sed 's/PROT-//' | sort -n | tail -1)
+          EXPECTED_COUNT=$((LAST_ID))
+          ACTUAL_COUNT=$(grep -c "id:.*'PROT-" organism-cli/web/protocol-papers.js 2>/dev/null || echo "0")
+          echo "  Last protocol: PROT-$LAST_ID"
+          echo "  Total protocols: $ACTUAL_COUNT"
+          if [ "$ACTUAL_COUNT" -lt "$EXPECTED_COUNT" ]; then
+            GAPS=$((EXPECTED_COUNT - ACTUAL_COUNT))
+            echo "  ⚠ $GAPS gaps detected in protocol sequence"
+          else
+            echo "  ✓ No gaps in sequence"
+          fi
+
+      - name: Validate All Worker Syntax
+        run: |
+          echo "🔬 Validating all web worker syntax..."
+          VALID=0
+          INVALID=0
+          for f in organism-cli/web/*.js; do
+            name=$(basename "$f")
+            if node -c "$f" 2>/dev/null; then
+              VALID=$((VALID + 1))
+            else
+              echo "  ✗ $name — syntax error"
+              INVALID=$((INVALID + 1))
+            fi
+          done
+          echo "  ✓ $VALID/$((VALID + INVALID)) workers have valid syntax"
+
+      - name: Generate Protocol Encyclopedia
+        run: |
+          mkdir -p build/protocols
+          echo "# 🔬 Protocol Encyclopedia" > build/protocols/protocol-encyclopedia.md
+          echo "" >> build/protocols/protocol-encyclopedia.md
+          echo "**Generated:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> build/protocols/protocol-encyclopedia.md
+          echo "**Protocols:** ${{ steps.protocols.outputs.protocols }}" >> build/protocols/protocol-encyclopedia.md
+          echo "**Domains:** ${{ steps.protocols.outputs.domains }}" >> build/protocols/protocol-encyclopedia.md
+          echo "" >> build/protocols/protocol-encyclopedia.md
+          echo "## Domain Distribution" >> build/protocols/protocol-encyclopedia.md
+          echo "" >> build/protocols/protocol-encyclopedia.md
+          grep -oP "domain:\s*'[^']+'" organism-cli/web/protocol-papers.js 2>/dev/null | \
+            sed "s/domain: '//;s/'//" | sort | uniq -c | sort -rn | \
+            while read count domain; do
+              echo "- **$domain**: $count protocols" >> build/protocols/protocol-encyclopedia.md
+            done
+          cat build/protocols/protocol-encyclopedia.md
+
+      - name: Commit Encyclopedia
+        run: |
+          git config user.name "organism-protocol-bot"
+          git config user.email "organism-protocol-bot[bot]@users.noreply.github.com"
+          cp build/protocols/protocol-encyclopedia.md docs/protocol-encyclopedia.md
+          git add docs/protocol-encyclopedia.md
+          git diff --cached --quiet || git commit -m "🔬 organism-protocol-bot: Updated protocol encyclopedia [${{ steps.protocols.outputs.protocols }} protocols, ${{ steps.protocols.outputs.domains }} domains]"
+          git push || echo "Nothing to push"

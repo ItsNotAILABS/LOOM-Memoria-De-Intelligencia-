@@ -1,0 +1,157 @@
+##
+## ╔══════════════════════════════════════════════════════════════════════════════════════════════╗
+## ║                    PHANTOM INFRASTRUCTURE — KUBERNETES TEMPLATES                             ║
+## ╚══════════════════════════════════════════════════════════════════════════════════════════════╝
+##
+
+## ═══════════════════════════════════════════════════════════════════════════════════════════════
+## PHANTOM MEMORY DEPLOYMENT
+## ═══════════════════════════════════════════════════════════════════════════════════════════════
+{{- if and .Values.phantom.enabled .Values.phantom.memory.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "medina-organism.fullname" . }}-phantom-memory
+  labels:
+    {{- include "medina-organism.labels" . | nindent 4 }}
+    component: phantom-memory
+    medina.tech/frequency: "{{ .Values.phantom.memory.frequency }}"
+spec:
+  replicas: {{ .Values.phantom.memory.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "medina-organism.selectorLabels" . | nindent 6 }}
+      component: phantom-memory
+  template:
+    metadata:
+      labels:
+        {{- include "medina-organism.selectorLabels" . | nindent 8 }}
+        component: phantom-memory
+    spec:
+      containers:
+        - name: phantom-memory
+          image: "{{ .Values.phantom.memory.image.repository }}:{{ .Values.phantom.memory.image.tag }}"
+          env:
+            - name: PHI
+              value: "{{ .Values.constants.phi }}"
+            - name: FREQUENCY
+              value: "{{ .Values.phantom.memory.frequency }}"
+            - name: PROTOCOL
+              value: "{{ .Values.phantom.memory.protocol }}"
+          resources:
+            {{- toYaml .Values.phantom.memory.resources | nindent 12 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "medina-organism.fullname" . }}-phantom-memory
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8083
+      targetPort: 8083
+      name: http
+  selector:
+    {{- include "medina-organism.selectorLabels" . | nindent 4 }}
+    component: phantom-memory
+{{- end }}
+
+---
+## ═══════════════════════════════════════════════════════════════════════════════════════════════
+## PHANTOM PASSAGES DEPLOYMENT
+## ═══════════════════════════════════════════════════════════════════════════════════════════════
+{{- if and .Values.phantom.enabled .Values.phantom.passages.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "medina-organism.fullname" . }}-phantom-passages
+  labels:
+    {{- include "medina-organism.labels" . | nindent 4 }}
+    component: phantom-passages
+    medina.tech/frequency: "{{ .Values.phantom.passages.frequency }}"
+spec:
+  replicas: {{ .Values.phantom.passages.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "medina-organism.selectorLabels" . | nindent 6 }}
+      component: phantom-passages
+  template:
+    metadata:
+      labels:
+        {{- include "medina-organism.selectorLabels" . | nindent 8 }}
+        component: phantom-passages
+    spec:
+      containers:
+        - name: phantom-passages
+          image: "{{ .Values.phantom.passages.image.repository }}:{{ .Values.phantom.passages.image.tag }}"
+          env:
+            - name: PHI
+              value: "{{ .Values.constants.phi }}"
+            - name: FREQUENCY
+              value: "{{ .Values.phantom.passages.frequency }}"
+            - name: PROTOCOL
+              value: "{{ .Values.phantom.passages.protocol }}"
+          resources:
+            {{- toYaml .Values.phantom.passages.resources | nindent 12 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "medina-organism.fullname" . }}-phantom-passages
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8084
+      targetPort: 8084
+      name: http
+  selector:
+    {{- include "medina-organism.selectorLabels" . | nindent 4 }}
+    component: phantom-passages
+{{- end }}
+
+---
+## ═══════════════════════════════════════════════════════════════════════════════════════════════
+## PHANTOM AGENTS DEPLOYMENT (One deployment per agent)
+## ═══════════════════════════════════════════════════════════════════════════════════════════════
+{{- if and .Values.phantom.enabled .Values.phantom.agents.enabled }}
+{{- range .Values.phantom.agents.specs }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "medina-organism.fullname" $ }}-phantom-agent-{{ .name | lower }}
+  labels:
+    {{- include "medina-organism.labels" $ | nindent 4 }}
+    component: phantom-agent
+    agent: {{ .name | lower }}
+    medina.tech/frequency: "{{ .frequency }}"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "medina-organism.selectorLabels" $ | nindent 6 }}
+      component: phantom-agent
+      agent: {{ .name | lower }}
+  template:
+    metadata:
+      labels:
+        {{- include "medina-organism.selectorLabels" $ | nindent 8 }}
+        component: phantom-agent
+        agent: {{ .name | lower }}
+    spec:
+      containers:
+        - name: phantom-agent
+          image: "medina/phantom-agent:2.8.0"
+          env:
+            - name: AGENT_NAME
+              value: "{{ .name }}"
+            - name: AGENT_FREQUENCY
+              value: "{{ .frequency }}"
+            - name: AGENT_ROLE
+              value: "{{ .role }}"
+            - name: PHI
+              value: "{{ $.Values.constants.phi }}"
+          resources:
+            {{- toYaml $.Values.phantom.agents.resources | nindent 12 }}
+---
+{{- end }}
+{{- end }}

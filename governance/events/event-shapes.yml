@@ -1,0 +1,204 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# 📡 GOVERNANCE EVENT SPECS — FORMA EVENTUUM
+# "Ex eventibus, lex." (From events, law.)
+#
+# Standardized event shapes emitted by the 4 sensor bots (alpha, economy,
+# learning, crawler) into dist/governance/events/*.json.
+# The governance ingestor reads these and feeds them into CPL-L + CPL-P.
+#
+# Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+# ═══════════════════════════════════════════════════════════════════════════
+
+schema_version: "1.0.0"
+language: "EVENT"
+scc: 3.76
+
+# ── Event Envelope (all events share this wrapper) ────────────────────────
+envelope:
+  fields:
+    entity_id:
+      type: string
+      format: "atlas://bot/NAME"
+      required: true
+      description: "The bot that emitted this event"
+    op:
+      type: string
+      required: true
+      description: "Operation identifier (snake_case)"
+    timestamp:
+      type: datetime
+      format: "ISO 8601"
+      required: true
+    commit:
+      type: string
+      description: "7-char git SHA"
+    run_id:
+      type: string
+      description: "GitHub Actions run ID"
+    context:
+      type: object
+      required: true
+      description: "Event-specific payload (see shapes below)"
+
+# ── Event Shape 1: fleet_census_completed ─────────────────────────────────
+events:
+  - op: "fleet_census_completed"
+    emitted_by: "atlas://bot/organism-alpha-bot"
+    description: "Emitted every alpha-bot run with full fleet topology"
+    context_fields:
+      bots_total:
+        type: integer
+        description: "Total number of bots in the fleet"
+        example: 16
+      bots_healthy:
+        type: integer
+        description: "Bots with workflows present and recently run"
+        example: 15
+      missing_workflows:
+        type: array
+        items: string
+        description: "Bot names with missing or stale workflow files"
+        example: ["organism-build-bot"]
+      policy_compliance:
+        type: float
+        range: [0.0, 1.0]
+        description: "Fraction of bots compliant with governance policy"
+        example: 0.93
+      living_docs_count:
+        type: integer
+        description: "Number of living doc files present in docs/"
+        example: 11
+      divisions:
+        type: object
+        description: "Map of division name to list of bot names"
+    cpl_l_fields:
+      - "context.missing_workflows.length"
+      - "context.policy_compliance"
+      - "context.living_docs_count"
+      - "context.bots_healthy"
+
+  # ── Event Shape 2: economy_scan_completed ─────────────────────────────
+  - op: "economy_scan_completed"
+    emitted_by: "atlas://bot/organism-economy-bot"
+    description: "Emitted every economy-bot run with marketplace metrics"
+    context_fields:
+      assets_total:
+        type: integer
+        description: "Total deployable asset count (packages + extensions)"
+        example: 103
+      sdk_count:
+        type: integer
+        description: "Number of SDK packages"
+        example: 18
+      extension_count:
+        type: integer
+        description: "Number of browser extensions"
+        example: 38
+      protocol_count:
+        type: integer
+        description: "Number of protocol papers (PROT-xxx)"
+        example: 125
+      complexity_score:
+        type: integer
+        description: "Composite complexity (assets_total / sdk_count ratio × factor)"
+        example: 29
+      coverage:
+        type: float
+        range: [0.0, 1.0]
+        description: "Fraction of packages with valid descriptions and licenses"
+        example: 0.65
+    cpl_l_fields:
+      - "context.coverage"
+      - "context.complexity_score"
+      - "context.assets_total"
+      - "context.protocol_count"
+
+  # ── Event Shape 3: learning_cycle_completed ────────────────────────────
+  - op: "learning_cycle_completed"
+    emitted_by: "atlas://bot/organism-learning-bot"
+    description: "Emitted every learning-bot run with protocol evolution metrics"
+    context_fields:
+      training_signals:
+        type: integer
+        description: "Number of distinct learning signals processed this cycle"
+        example: 42
+      hebbian_synapses_trained:
+        type: integer
+        description: "Number of protocol domain pairs with co-activation this cycle"
+        example: 780
+      protocols_evolved:
+        type: integer
+        description: "Number of protocols in expansion-eligible domains"
+        example: 39
+      last_protocol_id:
+        type: string
+        description: "Highest PROT-NNN seen this cycle"
+        example: "PROT-125"
+      expansion_domains:
+        type: array
+        items: string
+        description: "Domains with ≤2 protocols, flagged for expansion"
+        example: ["governance", "feedback"]
+      state_path:
+        type: string
+        description: "Path to the learning state JSON artifact"
+        example: "dist/learning/learning-state.json"
+    cpl_l_fields:
+      - "context.protocols_evolved"
+      - "context.expansion_domains.length"
+      - "context.training_signals"
+
+  # ── Event Shape 4: crawl_completed ────────────────────────────────────
+  - op: "crawl_completed"
+    emitted_by: "atlas://bot/organism-crawler-bot"
+    description: "Emitted every crawler-bot run with full topology census"
+    context_fields:
+      files:
+        type: integer
+        description: "Total file count in repo"
+        example: 871
+      dirs:
+        type: integer
+        description: "Total directory count"
+        example: 167
+      orphans:
+        type: integer
+        description: "Files with no inbound references detected"
+        example: 211
+      dead_links:
+        type: integer
+        description: "Broken asset/href references found in HTML"
+        example: 95
+      graph_nodes:
+        type: integer
+        description: "Nodes in the dependency graph"
+        example: 400
+      graph_edges:
+        type: integer
+        description: "Edges in the dependency graph"
+        example: 305
+      most_connected:
+        type: string
+        description: "Path of the most central module"
+        example: "organism-cli/web/protocol-papers.js"
+      most_connected_degree:
+        type: integer
+        description: "Degree (in+out edges) of most central module"
+        example: 38
+    cpl_l_fields:
+      - "context.dead_links"
+      - "context.orphans"
+      - "context.graph_nodes"
+      - "context.most_connected_degree"
+
+# ── Output Location ───────────────────────────────────────────────────────
+output:
+  directory: "dist/governance/events/"
+  filename_pattern: "{op}.json"
+  examples:
+    - "dist/governance/events/fleet_census_completed.json"
+    - "dist/governance/events/economy_scan_completed.json"
+    - "dist/governance/events/learning_cycle_completed.json"
+    - "dist/governance/events/crawl_completed.json"
+  retention: "latest only (overwritten each run)"
+  committed_to: "docs/governance-events-latest.json (summary)"

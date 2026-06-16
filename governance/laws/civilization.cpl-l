@@ -1,0 +1,201 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# ⚖️ CIVILIZATION CPL-L LAWS — LEGES CIVITATIS
+# "Ordo sine ruina, probatio sine exitio."
+#
+# Scope: Autobot + Decepticon + Semper Memoria + Vita Aeterna runtime.
+# Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+# ═══════════════════════════════════════════════════════════════════════════
+
+id: "CIVILIZATION_LAWSET"
+version: "1.0.0"
+language: "CPL-L"
+scc: 4.21
+
+subjects:
+  - id: "atlas://class/autobot"
+    rules:
+      - name: "LAW_OF_COHERENCE"
+        description: "Autobot changes must preserve global invariants unless versioned override exists"
+        when: 'context.invariant_broken == true && context.override_versioned != true'
+        then:
+          - action: "FORBID"
+            target: "apply_change"
+          - action: "REQUIRE"
+            target: "versioned_override"
+
+      - name: "LAW_OF_REVERSIBILITY"
+        description: "Destructive operation requires snapshot/checkpoint/compensating action"
+        when: 'context.destructive == true && context.reversal_path_available != true'
+        then:
+          - action: "FORBID"
+            target: "destructive_op"
+          - action: "REQUIRE"
+            target: "reversal_path"
+
+      - name: "LAW_OF_EXPLAINABILITY"
+        description: "Autobot action must emit protocol-law-pipeline chain"
+        when: 'context.reason_chain_present != true'
+        then:
+          - action: "BLOCK"
+            target: "action_finalize"
+          - action: "REQUIRE"
+            target: "reason_chain"
+
+      - name: "LAW_OF_CONTAINMENT"
+        description: "All spawns must be bounded to runtime and quota"
+        when: 'context.spawn_requested == true && (context.runtime_scoped != true || context.quota_scoped != true)'
+        then:
+          - action: "FORBID"
+            target: "spawn"
+
+  - id: "atlas://class/decepticon"
+    rules:
+      - name: "LAW_OF_SANDBOXING"
+        description: "Decepticons can run only in chaos domains"
+        when: 'context.chaos_domain != true'
+        then:
+          - action: "FORBID"
+            target: "adversarial_action"
+
+      - name: "LAW_OF_TELEMETRY"
+        description: "Every adversarial action must emit telemetry"
+        when: 'context.telemetry_emitted != true'
+        then:
+          - action: "BLOCK"
+            target: "action_finalize"
+          - action: "REQUIRE"
+            target: "telemetry_emit"
+
+      - name: "LAW_OF_NON_PERSISTENCE"
+        description: "Decepticon writes to canonical memory are forbidden"
+        when: 'context.target_memory_branch == "canonical"'
+        then:
+          - action: "FORBID"
+            target: "memory_write"
+          - action: "REQUIRE"
+            target: "ephemeral_fork"
+
+      - name: "LAW_OF_COUNTERPART"
+        description: "Every Decepticon class must have an Autobot counterpart"
+        when: 'context.counterpart_exists != true'
+        then:
+          - action: "REQUIRE"
+            target: "register_counterpart"
+
+global_rules:
+  - name: "LAW_OF_SEMPER_MEMORIA_APPEND_ONLY"
+    description: "Canonical memory objects are append-only"
+    applies_to: "all"
+    when: 'context.memory_object_mutation_attempted == true'
+    then:
+      - action: "FORBID"
+        target: "mutation"
+
+  - name: "LAW_OF_RUNTIME_QUOTA_ENFORCEMENT"
+    description: "All organisms must remain inside assigned quota"
+    applies_to: "all"
+    when: 'context.quota_exceeded == true'
+    then:
+      - action: "BLOCK"
+        target: "execution"
+      - action: "ESCALATE"
+        target: "human://freddy"
+        urgency: "HIGH"
+
+  - name: "LAW_OF_RUNTIME_HIERARCHY_ENFORCEMENT"
+    description: "Runtime ordering must remain nova>memory>active_state for canonical execution"
+    applies_to: "all"
+    when: 'context.runtime_hierarchy != "nova>memory>active_state"'
+    then:
+      - action: "FORBID"
+        target: "runtime_execution"
+
+  - name: "LAW_OF_FOUNDATION_FLOOR_DELEGATION"
+    description: "Heavy computation must be delegated to foundation floor runtime lanes"
+    applies_to: "all"
+    when: 'context.heavy_compute == true && context.foundation_floor_delegated != true'
+    then:
+      - action: "REQUIRE"
+        target: "foundation_floor_delegate"
+
+# ═══════════════════════════════════════════════════════════════════════════
+# ⚡ ATMOSPHERIC & CIVILIZATIONAL INTELLIGENCE LAWS
+# "Caelum non solum circumstat, sed intelligit."
+# ═══════════════════════════════════════════════════════════════════════════
+
+atmospheric_laws:
+  dimensional_planes: 5
+  phi_weights: [1.000, 1.618, 2.618, 4.236, 6.854]
+
+  # ── L-43: CIVILIZATIONAL SKY BROADCAST ───────────────────────────────
+  - id: "L-43"
+    name: "CIVILIZATIONAL_SKY_BROADCAST"
+    cpl_dialect: "CPL-L"
+    rule: >
+      When a high-energy atmospheric event propagates across a territory and
+      is perceived by many receivers at once, it functions as a shared
+      system-intelligence layer that synchronizes awareness, salience,
+      readiness, and consequence across the civilization.
+      Eight sub-architectures operate simultaneously: broadcast, synchronization,
+      salience, readiness, power, territorial, memory, governance.
+      Threshold: broadcast_coverage >= φ⁻¹ = 0.618 of territory.
+    enforcement: "Signal Classification Engine + governance beat"
+    severity: "high"
+    immutable: false
+    origin: "Storm/Sky/Civilization Intelligence Log — Prima Causa"
+    synchronization_threshold: 0.618
+    sub_architectures:
+      - broadcast
+      - synchronization
+      - salience
+      - readiness
+      - power
+      - territorial
+      - memory
+      - governance
+    doc_ref: "docs/ORGANISM_SPACE/PRINCIPLES/L-043_CIVILIZATIONAL_SKY_BROADCAST.md"
+
+  # ── L-44: FIELD-WIDE SIGNAL PRIORITY ─────────────────────────────────
+  - id: "L-44"
+    name: "FIELD_WIDE_SIGNAL_PRIORITY"
+    cpl_dialect: "CPL-L"
+    rule: >
+      The louder and more total the field signal, the more it overrides
+      local noise and forces collective attention alignment.
+      Priority threshold: signal_to_noise >= φ = 1.618 AND coverage >= φ⁻¹ = 0.618.
+      Above threshold: collective attention alignment is FORCED — not requested.
+      Below threshold: normal queue processing continues.
+    enforcement: "Priority Signal Classifier + attention weight engine"
+    severity: "high"
+    immutable: false
+    origin: "Storm/Sky/Civilization Intelligence Log — Prima Causa"
+    priority_threshold_snr: 1.618
+    priority_threshold_coverage: 0.618
+    doc_ref: "docs/ORGANISM_SPACE/PRINCIPLES/L-044_FIELD_WIDE_SIGNAL_PRIORITY.md"
+
+  # ── L-45: ATMOSPHERIC ORGAN ───────────────────────────────────────────
+  - id: "L-45"
+    name: "ATMOSPHERIC_ORGAN"
+    cpl_dialect: "CPL-L"
+    rule: >
+      For a civilization, the sky is not only environment. Under certain
+      conditions it behaves like a macro-sensory and macro-governance organ.
+      Organ threshold: event_coverage >= φ⁻¹ = 0.618 AND channels_active >= 3.
+      When ACTIVE: sky receives organ-tier classification and governance weight × φ.
+      Six organ functions recognized: perception, emission, synchronization,
+      governance trigger, memory encoding, threat detection.
+    enforcement: "Atmospheric Organ Map + entity registry promotion"
+    severity: "high"
+    immutable: false
+    origin: "Storm/Sky/Civilization Intelligence Log — Prima Causa"
+    organ_threshold_coverage: 0.618
+    organ_threshold_channels: 3
+    organ_functions:
+      - perception
+      - emission
+      - synchronization
+      - governance_trigger
+      - memory_encoding
+      - threat_detection
+    governance_weight_multiplier: 1.618
+    doc_ref: "docs/ORGANISM_SPACE/PRINCIPLES/L-045_ATMOSPHERIC_ORGAN.md"

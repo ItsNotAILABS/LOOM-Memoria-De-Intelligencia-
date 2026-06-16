@@ -1,0 +1,16 @@
+{
+  "id": "atlas://bot/organism-release-bot",
+  "name": "organism-release-bot",
+  "class": "Bot",
+  "division": "I — Build & Package",
+  "emoji": "🚀",
+  "domain": "Production releases",
+  "triggers": ["tag:v*"],
+  "workflow": ".github/workflows/organism-release-bot.yml",
+  "outputs": ["github://release", "build/release/*.zip"],
+  "laws": ["BOT_FLEET_SAFETY.NO_RELEASE_ON_RED"],
+  "languages": ["atlas://language/cpl-p", "atlas://language/cil"],
+  "governance_pipeline": "pipeline://governance/bot_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "scc": 3.88
+}

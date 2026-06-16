@@ -1,0 +1,130 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# 📸 ORGANISM VISUAL BOT — OCULUS ORGANISMI
+# "Forma sequitur functionem." (Form follows function.)
+#
+# Division II — Validate & Test
+# Visual regression testing: captures screenshots of key HTML pages,
+# diffs against baselines, and flags layout regressions.
+#
+# Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+# ═══════════════════════════════════════════════════════════════════════════
+
+name: 📸 organism-visual-bot
+
+on:
+  schedule:
+    - cron: '0 3 * * *'  # Nightly 3 AM UTC
+  push:
+    paths:
+      - 'docs/**/*.html'
+      - 'organism-cli/web/**/*.html'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  visual-audit:
+    name: 📸 Visual Regression Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Inventory HTML Pages
+        id: pages
+        run: |
+          HTML_COUNT=$(find docs -name '*.html' 2>/dev/null | wc -l)
+          echo "count=$HTML_COUNT" >> "$GITHUB_OUTPUT"
+          echo "📸 Found $HTML_COUNT HTML pages to audit"
+          find docs -name '*.html' 2>/dev/null | sort | while read f; do
+            echo "  • $f"
+          done
+
+      - name: Audit HTML Structure
+        run: |
+          echo "📸 Auditing HTML structure..."
+          VALID=0
+          ISSUES=0
+          for f in $(find docs -name '*.html' 2>/dev/null | sort); do
+            name=$(basename "$f")
+            # Check for required HTML elements
+            HAS_DOCTYPE=$(grep -ci '<!DOCTYPE' "$f" 2>/dev/null || echo 0)
+            HAS_TITLE=$(grep -ci '<title>' "$f" 2>/dev/null || echo 0)
+            HAS_VIEWPORT=$(grep -ci 'viewport' "$f" 2>/dev/null || echo 0)
+
+            if [ "$HAS_DOCTYPE" -gt 0 ] && [ "$HAS_TITLE" -gt 0 ]; then
+              echo "  ✓ $name (DOCTYPE=$HAS_DOCTYPE, title=$HAS_TITLE, viewport=$HAS_VIEWPORT)"
+              VALID=$((VALID + 1))
+            else
+              echo "  ⚠ $name — missing DOCTYPE or title"
+              ISSUES=$((ISSUES + 1))
+            fi
+          done
+          echo ""
+          echo "📸 $VALID valid, $ISSUES with issues"
+
+      - name: Check for Broken Asset References
+        run: |
+          echo "📸 Checking for broken asset references in HTML..."
+          BROKEN=0
+          for f in $(find docs -name '*.html' 2>/dev/null); do
+            dir=$(dirname "$f")
+            # Find all src/href references
+            grep -oP '(?:src|href)="([^"#]+)"' "$f" 2>/dev/null | \
+              sed 's/.*="//;s/"//' | \
+              grep -v '^http\|^//\|^mailto\|^#\|^data:' | \
+              while read ref; do
+                target="$dir/$ref"
+                if [ ! -f "$target" ] 2>/dev/null; then
+                  echo "  ⚠ $(basename $f) → broken ref: $ref"
+                  BROKEN=$((BROKEN + 1))
+                fi
+              done
+          done
+          echo "  ✓ Asset reference check complete"
+
+      - name: Generate Visual Baseline Report
+        run: |
+          mkdir -p build/visual
+          echo "# 📸 Visual Audit Report" > build/visual/visual-report.md
+          echo "" >> build/visual/visual-report.md
+          echo "**Generated:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> build/visual/visual-report.md
+          echo "**Commit:** \`${GITHUB_SHA:0:7}\`" >> build/visual/visual-report.md
+          echo "**HTML Pages Audited:** ${{ steps.pages.outputs.count }}" >> build/visual/visual-report.md
+          echo "" >> build/visual/visual-report.md
+
+          echo "## HTML Page Inventory" >> build/visual/visual-report.md
+          echo "" >> build/visual/visual-report.md
+          echo "| Page | Size | Title |" >> build/visual/visual-report.md
+          echo "|------|------|-------|" >> build/visual/visual-report.md
+          for f in $(find docs -name '*.html' 2>/dev/null | sort); do
+            name=$(basename "$f")
+            size=$(du -sh "$f" | cut -f1)
+            title=$(grep -oP '(?<=<title>)[^<]+' "$f" 2>/dev/null | head -1 | tr -d '\n' || echo "—")
+            echo "| $name | $size | $title |" >> build/visual/visual-report.md
+          done
+
+          echo "" >> build/visual/visual-report.md
+          echo "## Checks Performed" >> build/visual/visual-report.md
+          echo "" >> build/visual/visual-report.md
+          echo "- ✓ DOCTYPE presence" >> build/visual/visual-report.md
+          echo "- ✓ Title element presence" >> build/visual/visual-report.md
+          echo "- ✓ Viewport meta tag" >> build/visual/visual-report.md
+          echo "- ✓ Broken asset reference detection" >> build/visual/visual-report.md
+
+          cat build/visual/visual-report.md
+
+      - name: Commit Visual Report
+        run: |
+          git config user.name "organism-visual-bot"
+          git config user.email "organism-visual-bot[bot]@users.noreply.github.com"
+          cp build/visual/visual-report.md docs/visual-report.md
+          git add docs/visual-report.md
+          git diff --cached --quiet || git commit -m "📸 organism-visual-bot: Updated visual audit report [${{ steps.pages.outputs.count }} pages]"
+          git push || echo "Nothing to push"

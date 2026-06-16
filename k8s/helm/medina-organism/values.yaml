@@ -1,0 +1,407 @@
+##
+## ╔══════════════════════════════════════════════════════════════════════════════════════════════╗
+## ║                                                                                              ║
+## ║                    MEDINA ORGANISM VALUES — KUBERNETES CONFIGURATION                         ║
+## ║               "Intelligentia Ex Primitivo — Intelligence From The Primitive"                 ║
+## ║                                                                                              ║
+## ║  Classification: SOVEREIGN-ALPHA — PROPRIETARY AND CONFIDENTIAL                             ║
+## ║  Author: Alfredo "Freddy" Medina Hernandez | Medina Tech | Dallas, TX                       ║
+## ║  Protocol: PROT-404 — KUBERNETES CONFIGURATION VALUES                                       ║
+## ║                                                                                              ║
+## ╚══════════════════════════════════════════════════════════════════════════════════════════════╝
+##
+
+# ═══════════════════════════════════════════════════════════════════════════════════════════════
+# FUNDAMENTAL CONSTANTS — THE GROUND OF THE DEPLOYMENT
+# ═══════════════════════════════════════════════════════════════════════════════════════════════
+
+constants:
+  phi: 1.6180339887498948482
+  phiSquared: 2.6180339887498948482
+  schumann: 7.83
+  solfeggio: [174.0, 285.0, 396.0, 417.0, 528.0, 639.0, 741.0, 852.0, 963.0]
+
+# ═══════════════════════════════════════════════════════════════════════════════════════════════
+# GLOBAL CONFIGURATION
+# ═══════════════════════════════════════════════════════════════════════════════════════════════
+
+global:
+  imageRegistry: ""
+  imagePullSecrets: []
+  storageClass: ""
+  
+# ═══════════════════════════════════════════════════════════════════════════════════════════════
+# ORGANISM CORE — THE CENTRAL INTELLIGENCE
+# ═══════════════════════════════════════════════════════════════════════════════════════════════
+
+organism:
+  enabled: true
+  name: "ORGANISMUM SOVEREIGNUM"
+  protocol: "PROT-403"
+  frequency: 15127.003  # φ²⁰
+  
+  image:
+    repository: medina/organism
+    tag: "2.8.0"
+    pullPolicy: IfNotPresent
+  
+  replicaCount: 3
+  
+  resources:
+    limits:
+      cpu: 2000m
+      memory: 4Gi
+    requests:
+      cpu: 500m
+      memory: 1Gi
+  
+  env:
+    PHI: "1.6180339887498948482"
+    SCHUMANN: "7.83"
+    ORGANISM_MODE: "kubernetes"
+    LOG_LEVEL: "info"
+  
+  service:
+    type: ClusterIP
+    port: 8080
+    
+  autoscaling:
+    enabled: true
+    minReplicas: 3
+    maxReplicas: 21  # Fibonacci number
+    targetCPUUtilization: 70
+    targetMemoryUtilization: 80
+
+# ═══════════════════════════════════════════════════════════════════════════════════════════════
+# RESEARCH LAB — THE 13-RESEARCHER AI LAB
+# ═══════════════════════════════════════════════════════════════════════════════════════════════
+
+researchLab:
+  enabled: true
+  name: "LABORATORIUM SOVEREIGNUS"
+  protocol: "PROT-405"
+  frequency: 521.002  # φ¹³
+  
+  image:
+    repository: medina/research-lab
+    tag: "2.8.0"
+    pullPolicy: IfNotPresent
+  
+  replicaCount: 1
+  
+  researchers:
+    count: 13
+    domains:
+      - PHYSICS
+      - MATHEMATICS
+      - BIOLOGY
+      - CHEMISTRY
+      - ENGINEERING
+      - COMPUTER_SCIENCE
+      - PHILOSOPHY
+      - LINGUISTICS
+      - ECONOMICS
+      - PSYCHOLOGY
+      - SOCIOLOGY
+      - ANTHROPOLOGY
+      - HISTORY
+  
+  resources:
+    limits:
+      cpu: 4000m
+      memory: 8Gi
+    requests:
+      cpu: 1000m
+      memory: 2Gi
+  
+  persistence:
+    enabled: true
+    storageClass: ""
+    accessMode: ReadWriteOnce
+    size: 50Gi
+    
+  service:
+    type: ClusterIP
+    port: 8081
+
+# ═══════════════════════════════════════════════════════════════════════════════════════════════
+# PHANTOM INFRASTRUCTURE — FIELD-BASED PROCESSING
+# ═══════════════════════════════════════════════════════════════════════════════════════════════
+
+phantom:
+  enabled: true
+  
+  memory:
+    enabled: true
+    name: "MEMORIA PHANTASMATICA"
+    protocol: "PROT-406"
+    frequency: 842.998  # φ¹⁴
+    replicaCount: 3
+    
+    image:
+      repository: medina/phantom-memory
+      tag: "2.8.0"
+    
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 2Gi
+      requests:
+        cpu: 250m
+        memory: 512Mi
+  
+  passages:
+    enabled: true
+    name: "VIA PHANTASMATICA"
+    protocol: "PROT-407"
+    frequency: 1364.001  # φ¹⁵
+    replicaCount: 3
+    
+    image:
+      repository: medina/phantom-passages
+      tag: "2.8.0"
+    
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 2Gi
+      requests:
+        cpu: 250m
+        memory: 512Mi
+  
+  agents:
+    enabled: true
+    name: "AGENTES PHANTASMATICI"
+    protocol: "PROT-408"
+    frequency: 5778.002  # φ¹⁸
+    
+    # The Seven Phantom Agents
+    specs:
+      - name: SPECTRA
+        frequency: 199.005   # φ¹¹
+        role: frequency-analysis
+      - name: UMBRA
+        frequency: 321.997   # φ¹²
+        role: shadow-operations
+      - name: AETHER
+        frequency: 521.002   # φ¹³
+        role: atmospheric-sensing
+      - name: NEXUS
+        frequency: 842.998   # φ¹⁴
+        role: connection-bridging
+      - name: MEMORIA
+        frequency: 1364.001  # φ¹⁵
+        role: memory-field-ops
+      - name: TEMPUS
+        frequency: 2207.000  # φ¹⁶
+        role: temporal-analysis
+      - name: PRIMUS
+        frequency: 3571.001  # φ¹⁷
+        role: primitive-foundation
+    
+    resources:
+      limits:
+        cpu: 500m
+        memory: 1Gi
+      requests:
+        cpu: 100m
+        memory: 256Mi
+
+# ═══════════════════════════════════════════════════════════════════════════════════════════════
+# MEMORY TEMPLE — TORUS-BASED PERSISTENCE
+# ═══════════════════════════════════════════════════════════════════════════════════════════════
+
+memoryTemple:
+  enabled: true
+  name: "TEMPLUM MEMORIAE"
+  protocol: "PROT-409"
+  frequency: 122.991  # φ¹⁰
+  
+  image:
+    repository: medina/memory-temple
+    tag: "2.8.0"
+  
+  replicaCount: 3
+  
+  torus:
+    majorRadius: 16.18033988749895  # φ × 10
+    ringCount: 13
+    memoriesPerRing: 144  # Fibonacci
+  
+  resources:
+    limits:
+      cpu: 2000m
+      memory: 4Gi
+    requests:
+      cpu: 500m
+      memory: 1Gi
+  
+  persistence:
+    enabled: true
+    storageClass: ""
+    accessMode: ReadWriteOnce
+    size: 100Gi
+  
+  service:
+    type: ClusterIP
+    port: 8082
+
+# ═══════════════════════════════════════════════════════════════════════════════════════════════
+# WEB WORKERS — DISTRIBUTED PROCESSING FLEET
+# ═══════════════════════════════════════════════════════════════════════════════════════════════
+
+workers:
+  enabled: true
+  
+  # Worker pools with Fibonacci-based scaling
+  pools:
+    core:
+      replicaCount: 5
+      workers:
+        - memory-worker
+        - context-worker
+        - protocol-worker
+        - engine-worker
+        - inference-worker
+      resources:
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 100m
+          memory: 128Mi
+    
+    research:
+      replicaCount: 3
+      workers:
+        - research-lab-worker
+        - paper-writer-worker
+        - lab-director-worker
+        - lab-access-worker
+      resources:
+        limits:
+          cpu: 1000m
+          memory: 1Gi
+        requests:
+          cpu: 250m
+          memory: 256Mi
+    
+    phantom:
+      replicaCount: 3
+      workers:
+        - phantom-memory-worker
+        - phantom-passage-worker
+        - phantom-field-worker
+        - phantom-sensor-worker
+      resources:
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 100m
+          memory: 128Mi
+    
+    terminal:
+      replicaCount: 3
+      workers:
+        - terminal-agi-worker
+        - terminal-hub-worker
+        - consciousness-worker
+        - dashboard-worker
+      resources:
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 100m
+          memory: 128Mi
+    
+    flow:
+      replicaCount: 3
+      workers:
+        - flow-orchestrator-worker
+        - production-pipeline-worker
+        - data-mover-worker
+      resources:
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 100m
+          memory: 128Mi
+
+# ═══════════════════════════════════════════════════════════════════════════════════════════════
+# MONITORING & OBSERVABILITY
+# ═══════════════════════════════════════════════════════════════════════════════════════════════
+
+monitoring:
+  enabled: true
+  
+  prometheus:
+    enabled: true
+    port: 9090
+    
+  grafana:
+    enabled: true
+    port: 3000
+    
+  metrics:
+    frequency: true  # Export frequency metrics
+    coherence: true  # Export coherence scores
+    fibonacci: true  # Export Fibonacci compression stats
+
+# ═══════════════════════════════════════════════════════════════════════════════════════════════
+# INGRESS CONFIGURATION
+# ═══════════════════════════════════════════════════════════════════════════════════════════════
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "100m"
+    nginx.ingress.kubernetes.io/websocket-services: "organism-core,memory-temple"
+  
+  hosts:
+    - host: organism.medina.local
+      paths:
+        - path: /
+          pathType: Prefix
+          service: organism-core
+        - path: /lab
+          pathType: Prefix
+          service: research-lab
+        - path: /memory
+          pathType: Prefix
+          service: memory-temple
+        - path: /phantom
+          pathType: Prefix
+          service: phantom-memory
+  
+  tls: []
+
+# ═══════════════════════════════════════════════════════════════════════════════════════════════
+# SERVICE MESH (OPTIONAL)
+# ═══════════════════════════════════════════════════════════════════════════════════════════════
+
+serviceMesh:
+  enabled: false
+  provider: istio  # istio or linkerd
+  
+  mtls:
+    enabled: true
+    mode: STRICT
+
+# ═══════════════════════════════════════════════════════════════════════════════════════════════
+# BACKUP & RECOVERY
+# ═══════════════════════════════════════════════════════════════════════════════════════════════
+
+backup:
+  enabled: true
+  schedule: "0 2 * * *"  # 2 AM daily
+  retention: 7
+  
+  targets:
+    - name: memory-temple
+      path: /data/memories
+    - name: research-lab
+      path: /data/papers
