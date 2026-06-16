@@ -1,0 +1,25 @@
+{
+  "name": "@medina/memory-sdk",
+  "version": "1.0.0",
+  "description": "MEDINA Memory SDK — Sovereign memory temple, lineage tracking, phi-traced persistence. HIGHEST CONFIDENTIALITY.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "license": "ISIL-1.0",
+  "private": true,
+  "author": "Alfredo Freddy Medina Hernandez <medinasiftech@outlook.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FreddyCreates/Medina-Memory-More-AI"
+  },
+  "keywords": [
+    "medina", "memory", "sovereign", "intelligence", "phi-traced",
+    "memory-temple", "lineage", "organism"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "build": "echo 'Sovereign build via MACHINA NODI'",
+    "test": "echo 'Sovereign test via VERITAS model'"
+  }
+}

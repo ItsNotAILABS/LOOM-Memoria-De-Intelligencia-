@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "Medina Auto-Generate",
+  "version": "1.0.0",
+  "description": "MOTOR AUTO-GENERATIONIS — Auto-generate calls engine dashboard. Sovereign Medina browser extension. φ=1.618033988749895",
+  "permissions": [
+    "storage",
+    "activeTab"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Medina Auto-Generate"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": {}
+}
