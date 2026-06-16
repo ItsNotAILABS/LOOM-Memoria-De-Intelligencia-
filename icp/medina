@@ -1,0 +1,139 @@
+#!/bin/bash
+#
+# MEDINA — ORGANISM DEPLOYMENT SCRIPT
+#
+# This script IS the organism's deployment intelligence.
+# Run it to manifest the organism on the Internet Computer.
+#
+# Copyright Alfredo Medina | Medina Tech | Dallas, TX
+# PROPRIETARY - ALL RIGHTS RESERVED
+#
+
+set -e
+
+# Colors for organism feedback
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'
+NC='\033[0m' # No Color
+
+# PHI constant for display
+PHI="1.618"
+
+echo -e "${PURPLE}"
+echo "╔═══════════════════════════════════════════════════════════════════════════╗"
+echo "║                                                                           ║"
+echo "║                    MEDINA — THE LIVING ORGANISM                           ║"
+echo "║                                                                           ║"
+echo "║  Deploying the unified organism to the Internet Computer.                ║"
+echo "║  Every module is an organ. Every model is a neural cluster.              ║"
+echo "║  THE ORGANISM WILL MANIFEST.                                              ║"
+echo "║                                                                           ║"
+echo "╚═══════════════════════════════════════════════════════════════════════════╝"
+echo -e "${NC}"
+
+# Check we're in the right directory
+if [ ! -f "dfx.json" ]; then
+    echo -e "${RED}Error: dfx.json not found. Run this from the icp directory.${NC}"
+    echo "  cd icp"
+    echo "  ./medina deploy"
+    exit 1
+fi
+
+# Check dfx is installed
+if ! command -v dfx &> /dev/null; then
+    echo -e "${YELLOW}DFX not found. Installing...${NC}"
+    sh -ci "$(curl -fsSL https://internetcomputer.org/install.sh)"
+fi
+
+# Commands
+case "${1}" in
+    "start")
+        echo -e "${CYAN}💓 Starting local replica...${NC}"
+        dfx start --background
+        echo -e "${GREEN}✓ Local replica running${NC}"
+        ;;
+    
+    "stop")
+        echo -e "${CYAN}Stopping local replica...${NC}"
+        dfx stop
+        echo -e "${GREEN}✓ Stopped${NC}"
+        ;;
+    
+    "deploy")
+        NETWORK="${2:-local}"
+        echo -e "${CYAN}🚀 Deploying organism to ${NETWORK}...${NC}"
+        
+        if [ "$NETWORK" == "ic" ] || [ "$NETWORK" == "mainnet" ]; then
+            echo -e "${YELLOW}Deploying to MAINNET...${NC}"
+            dfx deploy --network ic
+        else
+            echo -e "${YELLOW}Deploying locally...${NC}"
+            dfx deploy
+        fi
+        
+        echo -e "${GREEN}"
+        echo "╔═══════════════════════════════════════════════════════════════╗"
+        echo "║                     ORGANISM MANIFESTED                        ║"
+        echo "╚═══════════════════════════════════════════════════════════════╝"
+        echo -e "${NC}"
+        
+        if [ "$NETWORK" != "ic" ] && [ "$NETWORK" != "mainnet" ]; then
+            FRONTEND_ID=$(dfx canister id medina_frontend 2>/dev/null || echo "")
+            if [ -n "$FRONTEND_ID" ]; then
+                echo -e "${PURPLE}Open the organism at:${NC}"
+                echo -e "${CYAN}http://localhost:4943/?canisterId=${FRONTEND_ID}${NC}"
+            fi
+        fi
+        ;;
+    
+    "status")
+        echo -e "${CYAN}🧬 Checking organism status...${NC}"
+        dfx canister status medina_backend 2>/dev/null || echo "Backend not deployed"
+        dfx canister status medina_frontend 2>/dev/null || echo "Frontend not deployed"
+        ;;
+    
+    "pulse"|"tick")
+        echo -e "${CYAN}💓 Sending heartbeat pulse...${NC}"
+        dfx canister call medina_backend tick
+        ;;
+    
+    "terminal")
+        echo -e "${CYAN}🖥️ Opening intelligent terminal...${NC}"
+        FRONTEND_ID=$(dfx canister id medina_frontend 2>/dev/null || echo "")
+        if [ -n "$FRONTEND_ID" ]; then
+            URL="http://localhost:4943/?canisterId=${FRONTEND_ID}"
+            echo "Opening: $URL"
+            if command -v open &> /dev/null; then
+                open "$URL"
+            elif command -v xdg-open &> /dev/null; then
+                xdg-open "$URL"
+            else
+                echo "Open this URL in your browser: $URL"
+            fi
+        else
+            echo -e "${RED}Frontend not deployed. Run: ./medina deploy${NC}"
+        fi
+        ;;
+    
+    "help"|*)
+        echo -e "${PURPLE}MEDINA ORGANISM COMMANDS${NC}"
+        echo ""
+        echo "  ./medina start          Start local replica"
+        echo "  ./medina stop           Stop local replica"
+        echo "  ./medina deploy         Deploy organism locally"
+        echo "  ./medina deploy ic      Deploy organism to mainnet"
+        echo "  ./medina status         Check organism status"
+        echo "  ./medina pulse          Send heartbeat pulse"
+        echo "  ./medina terminal       Open intelligent terminal"
+        echo "  ./medina help           Show this help"
+        echo ""
+        echo -e "${CYAN}Quick local deployment:${NC}"
+        echo "  ./medina start"
+        echo "  ./medina deploy"
+        echo "  ./medina terminal"
+        echo ""
+        ;;
+esac
