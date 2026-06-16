@@ -1,0 +1,21 @@
+{
+  "canisters": {
+    "medina_backend": {
+      "main": "src/medina_backend/main.mo",
+      "type": "motoko"
+    },
+    "medina_frontend": {
+      "dependencies": ["medina_backend"],
+      "source": ["src/medina_frontend/assets"],
+      "type": "assets"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}
