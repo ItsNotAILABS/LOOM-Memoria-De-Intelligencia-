@@ -1,7 +1,7 @@
 # 🕷️ Organism Atlas
 
-**Crawled:** 2026-05-28 05:36:24 UTC
-**Commit:** `8e1657d`
+**Crawled:** 2026-06-16 21:23:17 UTC
+**Commit:** `9b09ea8`
 
 ## Complete Census
 
@@ -9,20 +9,29 @@
 |-------|-------------|-------|-------|
 | 🧠 Backend | Motoko Engines | 184 | 123142 |
 | 🖥️ Frontend | TypeScript Engines | 13 | — |
-| ⚙️ Workers | Web Workers (specialized) | 70 | 33151 |
+| ⚙️ Workers | Web Workers (specialized) | 74 | 34148 |
 | 🧩 Extensions | Browser Extensions | 22 | — |
-| 📦 SDK | NPM Packages | 7 | — |
-| 🔬 Protocols | Protocol Papers | 151 | — |
+| 📦 SDK | NPM Packages | 8 | — |
+| 🔬 Protocols | Protocol Papers | 231 | — |
 | 📜 Doctrine | Doctrine Documents | 29 | — |
 | ☁️ Edge | Cloudflare Workers | 2 | — |
 
-**Total Components: 302**
+**Total Components: 307**
 
 ## Protocol Domain Map
 
 - **cognitive-language**: 13 protocols
+- **callable-ai-external**: 12 protocols
 - **encryption**: 10 protocols
+- **alpha-orchestration**: 10 protocols
+- **alpha-conduction**: 10 protocols
+- **library-nexus-devops**: 8 protocols
+- **callable-ai-internal**: 8 protocols
 - **production-integration**: 7 protocols
+- **library-nexus-web**: 7 protocols
+- **library-nexus-data**: 7 protocols
+- **library-nexus-aiml**: 7 protocols
+- **library-nexus-cloud**: 6 protocols
 - **edge**: 6 protocols
 - **temporal**: 5 protocols
 - **routing**: 5 protocols
@@ -31,6 +40,7 @@
 - **neural**: 5 protocols
 - **network**: 5 protocols
 - **memory**: 5 protocols
+- **library-nexus-database**: 5 protocols
 - **introspection**: 5 protocols
 - **identity**: 5 protocols
 - **governance**: 5 protocols
@@ -56,12 +66,15 @@
 
 - `agi-knowledge-worker.js` (505 lines)
 - `alpha-adapter-worker.js` (69 lines)
+- `alpha-conductor-worker.js` (137 lines)
 - `alpha-enterprise-worker.js` (76 lines)
 - `alpha-extension-worker.js` (69 lines)
+- `alpha-orchestrator-worker.js` (136 lines)
 - `alpha-sdk-worker.js` (90 lines)
 - `animus-worker.js` (600 lines)
 - `atmospheric-organ-worker.js` (414 lines)
 - `bill-bot-worker.js` (416 lines)
+- `callable-ai-worker.js` (170 lines)
 - `canister-worker.js` (434 lines)
 - `careers-worker.js` (468 lines)
 - `cognitive-language-worker.js` (584 lines)
@@ -87,6 +100,7 @@
 - `k8s-orchestrator-worker.js` (377 lines)
 - `lab-access-worker.js` (373 lines)
 - `lab-director-worker.js` (296 lines)
+- `library-nexus-worker.js` (225 lines)
 - `license-worker.js` (359 lines)
 - `limites-mundi-gateway-worker.js` (446 lines)
 - `lingua-worker.js` (692 lines)
