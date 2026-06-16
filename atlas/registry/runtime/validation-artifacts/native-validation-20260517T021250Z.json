@@ -1,0 +1,277 @@
+{
+  "artifact_id": "native-validation-20260517T021250Z",
+  "created_at": "2026-05-17T02:12:50.568830+00:00",
+  "profile": "ops",
+  "math_surface": {
+    "phi": 1.618033988749895,
+    "phi_sq": 2.618033988749895,
+    "inv_phi": 0.6180339887498948,
+    "schumann": 7.83,
+    "fibonacci_window": [
+      2,
+      3,
+      5,
+      8,
+      13,
+      21,
+      34,
+      55
+    ]
+  },
+  "results": {
+    "vision": {
+      "domain": "vision",
+      "profile": "ops",
+      "edge_analysis_score": 8359.712609,
+      "event": "native-validation",
+      "registry_first": true,
+      "beat": {
+        "beat": 1,
+        "orchestrator_id": "ORCH-06",
+        "success": true,
+        "psi_before": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "psi_after": [
+          1.0,
+          0.0021596497704689226,
+          0.0021596497704689226,
+          0.0
+        ],
+        "heart_brain_resonance": 0.8610607799163026,
+        "phase_lag": 0.3819660112501051,
+        "direction_vector": [
+          0.8150192046878789,
+          0.5794339444578108,
+          0.5403023058681398
+        ],
+        "propulsion": 0.3209565451626321,
+        "alignment_score": 1.0,
+        "push_effectiveness": 0.06931537290909767,
+        "coherence": 0.21596497704689224,
+        "invariants": {
+          "continuity_preserved": true,
+          "doctrine_floor_held": true,
+          "identity_locked": true
+        },
+        "latency_ms": 0.07104873657226562,
+        "timestamp": 1778983970.5681984,
+        "errors": []
+      }
+    },
+    "security": {
+      "domain": "security",
+      "profile": "ops",
+      "risk": 0.373561,
+      "gate_action": "steady",
+      "registry_first": true,
+      "beat": {
+        "beat": 1,
+        "orchestrator_id": "ORCH-05",
+        "success": true,
+        "psi_before": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "psi_after": [
+          1.0,
+          0.0021596497704689226,
+          0.0021596497704689226,
+          0.0
+        ],
+        "heart_brain_resonance": 0.8610607799163026,
+        "phase_lag": 0.3819660112501051,
+        "direction_vector": [
+          0.8150192046878789,
+          0.5794339444578108,
+          0.5403023058681398
+        ],
+        "propulsion": 0.3209565451626321,
+        "alignment_score": 1.0,
+        "push_effectiveness": 0.06931537290909767,
+        "coherence": 0.21596497704689224,
+        "invariants": {
+          "continuity_preserved": true,
+          "doctrine_floor_held": true,
+          "identity_locked": true
+        },
+        "latency_ms": 0.04458427429199219,
+        "timestamp": 1778983970.5683863,
+        "errors": []
+      }
+    },
+    "billing": {
+      "domain": "billing",
+      "profile": "ops",
+      "token_quote": 898,
+      "rate_model": "phi-fibonacci",
+      "beat": {
+        "beat": 1,
+        "orchestrator_id": "ORCH-04",
+        "success": true,
+        "psi_before": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "psi_after": [
+          1.0,
+          0.0021596497704689226,
+          0.0021596497704689226,
+          0.0
+        ],
+        "heart_brain_resonance": 0.8610607799163026,
+        "phase_lag": 0.3819660112501051,
+        "direction_vector": [
+          0.8150192046878789,
+          0.5794339444578108,
+          0.5403023058681398
+        ],
+        "propulsion": 0.3209565451626321,
+        "alignment_score": 1.0,
+        "push_effectiveness": 0.06931537290909767,
+        "coherence": 0.21596497704689224,
+        "invariants": {
+          "continuity_preserved": true,
+          "doctrine_floor_held": true,
+          "identity_locked": true
+        },
+        "latency_ms": 0.03719329833984375,
+        "timestamp": 1778983970.5684934,
+        "errors": []
+      }
+    },
+    "internal-build": {
+      "domain": "internal-build",
+      "profile": "ops",
+      "build_velocity": 111.314102,
+      "orchestration": "multi-engine",
+      "beat": {
+        "beat": 1,
+        "orchestrator_id": "ORCH-03",
+        "success": true,
+        "psi_before": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "psi_after": [
+          1.0,
+          0.0021596497704689226,
+          0.0021596497704689226,
+          0.0
+        ],
+        "heart_brain_resonance": 0.8610607799163026,
+        "phase_lag": 0.3819660112501051,
+        "direction_vector": [
+          0.8150192046878789,
+          0.5794339444578108,
+          0.5403023058681398
+        ],
+        "propulsion": 0.3209565451626321,
+        "alignment_score": 1.0,
+        "push_effectiveness": 0.06931537290909767,
+        "coherence": 0.21596497704689224,
+        "invariants": {
+          "continuity_preserved": true,
+          "doctrine_floor_held": true,
+          "identity_locked": true
+        },
+        "latency_ms": 0.03743171691894531,
+        "timestamp": 1778983970.5685859,
+        "errors": []
+      }
+    },
+    "governance": {
+      "domain": "governance",
+      "profile": "ops",
+      "continuity_attestation": 0.999909,
+      "doctrine": "held",
+      "beat": {
+        "beat": 1,
+        "orchestrator_id": "ORCH-07",
+        "success": true,
+        "psi_before": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "psi_after": [
+          1.0,
+          0.0021596497704689226,
+          0.0021596497704689226,
+          0.0
+        ],
+        "heart_brain_resonance": 0.8610607799163026,
+        "phase_lag": 0.3819660112501051,
+        "direction_vector": [
+          0.8150192046878789,
+          0.5794339444578108,
+          0.5403023058681398
+        ],
+        "propulsion": 0.3209565451626321,
+        "alignment_score": 1.0,
+        "push_effectiveness": 0.06931537290909767,
+        "coherence": 0.21596497704689224,
+        "invariants": {
+          "continuity_preserved": true,
+          "doctrine_floor_held": true,
+          "identity_locked": true
+        },
+        "latency_ms": 0.03719329833984375,
+        "timestamp": 1778983970.5686755,
+        "errors": []
+      }
+    }
+  },
+  "tokens": [
+    {
+      "token_id": "valtok-vision-1778983970568",
+      "flow": "vision",
+      "profile": "ops",
+      "minted_at": "2026-05-17T02:12:50.568317+00:00",
+      "amount": 4,
+      "evidence_hash": "0ea24d8a76dfc116736994666bee9ad84a2fc33a483f897a43f62a338d541f5c"
+    },
+    {
+      "token_id": "valtok-security-1778983970568",
+      "flow": "security",
+      "profile": "ops",
+      "minted_at": "2026-05-17T02:12:50.568444+00:00",
+      "amount": 4,
+      "evidence_hash": "d65df5bda5269943645dd766407a3c7e696d42fda865be2b7eb70bdea07b889b"
+    },
+    {
+      "token_id": "valtok-billing-1778983970568",
+      "flow": "billing",
+      "profile": "ops",
+      "minted_at": "2026-05-17T02:12:50.568539+00:00",
+      "amount": 4,
+      "evidence_hash": "fe450273ad6c8994bcc36ea8aac90dd1dc771d017488a9620349c17fb9e99cac"
+    },
+    {
+      "token_id": "valtok-internal-build-1778983970568",
+      "flow": "internal-build",
+      "profile": "ops",
+      "minted_at": "2026-05-17T02:12:50.568628+00:00",
+      "amount": 4,
+      "evidence_hash": "a7006c4141dea5e97f152aee6bf35613a3e8751d35844ddb29443be66a48ed80"
+    },
+    {
+      "token_id": "valtok-governance-1778983970568",
+      "flow": "governance",
+      "profile": "ops",
+      "minted_at": "2026-05-17T02:12:50.568757+00:00",
+      "amount": 4,
+      "evidence_hash": "3c8046b229b4c7bf7fca0a82e4f804b2f66021b1b9804ed1028c8b3da1082242"
+    }
+  ]
+}

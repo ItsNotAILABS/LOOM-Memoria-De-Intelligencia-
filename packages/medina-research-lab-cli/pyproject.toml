@@ -1,0 +1,85 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "medina-research-lab"
+version = "2.8.0"
+description = "LABORATORIUM SOVEREIGNUS CLI — Command-line interface for the 13-Researcher AI Lab"
+readme = "README.md"
+license = {text = "ISIL-1.0"}
+authors = [
+    {name = "Alfredo 'Freddy' Medina Hernandez", email = "freddy@medinatech.io"}
+]
+keywords = [
+    "sovereign-ai",
+    "research-lab",
+    "phi-frequency",
+    "medina-organism",
+    "cli"
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Framework :: Medina Organism",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: Other/Proprietary License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
+requires-python = ">=3.10"
+dependencies = [
+    "click>=8.0.0",
+    "rich>=13.0.0",
+    "prompt-toolkit>=3.0.0",
+    "pyyaml>=6.0.0",
+    "httpx>=0.25.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "black>=23.0.0",
+    "mypy>=1.0.0",
+    "ruff>=0.1.0",
+]
+
+[project.scripts]
+medina-lab = "medina_lab.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/FreddyCreates/Medina-Memory-More-AI"
+Documentation = "https://medina-organism.readthedocs.io"
+Repository = "https://github.com/FreddyCreates/Medina-Memory-More-AI"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"*" = ["py.typed"]
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+ignore_missing_imports = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.black]
+line-length = 100
+target-version = ["py310", "py311", "py312"]
+
+[project.metadata]
+medina_protocol = "PROT-412"
+medina_frequency = 521.002
+medina_primitive_trace = "FIELD → DISTINCTION → RELATION → REPETITION → MEMORY → ADDRESS → φ"

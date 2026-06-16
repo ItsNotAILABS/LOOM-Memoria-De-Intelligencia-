@@ -1,0 +1,113 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# 📚 ORGANISM DOCS BOT — SCRIBA ORGANISMI
+# "Memoria sine scripto perit." (Memory without writing perishes.)
+#
+# Auto-generates extension catalog, protocol encyclopedia, SDK reference,
+# and architecture map. All living documentation.
+#
+# Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+# ═══════════════════════════════════════════════════════════════════════════
+
+name: 📚 organism-docs-bot
+
+on:
+  push:
+    paths:
+      - 'extensions/**'
+      - 'packages/**'
+      - 'organism-cli/web/**'
+      - 'icp/src/**'
+      - 'cloudflare-workers/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate-docs:
+    name: 📚 Generate Living Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Generate Architecture Map
+        run: |
+          mkdir -p build/docs
+
+          echo "# 📚 Organism Architecture Map" > build/docs/architecture-map.md
+          echo "" >> build/docs/architecture-map.md
+          echo "**Auto-generated:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> build/docs/architecture-map.md
+          echo "**Commit:** \`${{ github.sha }}\`" >> build/docs/architecture-map.md
+          echo "" >> build/docs/architecture-map.md
+
+          # Count everything
+          MO=$(ls icp/src/medina_backend/*.mo 2>/dev/null | wc -l)
+          MO_LINES=$(cat icp/src/medina_backend/*.mo 2>/dev/null | wc -l)
+          TS=$(find icp/src/medina_frontend -name '*.ts' 2>/dev/null | wc -l)
+          JS=$(ls organism-cli/web/*.js 2>/dev/null | wc -l)
+          JS_LINES=$(cat organism-cli/web/*.js 2>/dev/null | wc -l)
+          EXT=$(ls -d extensions/*/ 2>/dev/null | wc -l)
+          PKG=$(ls -d packages/*/ 2>/dev/null | wc -l)
+          CF=$(ls cloudflare-workers/*.js 2>/dev/null | wc -l)
+          SCRIPTS=$(ls scripts/*.sh 2>/dev/null | wc -l)
+          DOCTRINE=$(find doctrine -type f 2>/dev/null | wc -l)
+
+          echo "## Organism Census" >> build/docs/architecture-map.md
+          echo "" >> build/docs/architecture-map.md
+          echo "| Layer | Component | Count | Lines |" >> build/docs/architecture-map.md
+          echo "|-------|-----------|-------|-------|" >> build/docs/architecture-map.md
+          echo "| 🧠 Backend | Motoko Engines (.mo) | $MO | $MO_LINES |" >> build/docs/architecture-map.md
+          echo "| 🖥️ Frontend | TypeScript Engines (.ts) | $TS | — |" >> build/docs/architecture-map.md
+          echo "| ⚙️ Workers | Web Workers (.js) | $JS | $JS_LINES |" >> build/docs/architecture-map.md
+          echo "| 🧩 Extensions | Browser Extensions | $EXT | — |" >> build/docs/architecture-map.md
+          echo "| 📦 SDKs | NPM Packages | $PKG | — |" >> build/docs/architecture-map.md
+          echo "| ☁️ Edge | Cloudflare Workers | $CF | — |" >> build/docs/architecture-map.md
+          echo "| 🔧 Scripts | Build/Deploy Scripts | $SCRIPTS | — |" >> build/docs/architecture-map.md
+          echo "| 📜 Doctrine | Doctrine Documents | $DOCTRINE | — |" >> build/docs/architecture-map.md
+          echo "" >> build/docs/architecture-map.md
+
+          TOTAL=$((MO + TS + JS + EXT + PKG + CF + SCRIPTS + DOCTRINE))
+          echo "**Total Components: $TOTAL**" >> build/docs/architecture-map.md
+          echo "" >> build/docs/architecture-map.md
+
+          echo "## Backend Engines" >> build/docs/architecture-map.md
+          echo "" >> build/docs/architecture-map.md
+          for f in icp/src/medina_backend/*.mo; do
+            name=$(basename "$f" .mo)
+            lines=$(wc -l < "$f")
+            echo "- \`$name\` ($lines lines)" >> build/docs/architecture-map.md
+          done
+
+          echo "" >> build/docs/architecture-map.md
+          echo "## Web Workers" >> build/docs/architecture-map.md
+          echo "" >> build/docs/architecture-map.md
+          for f in organism-cli/web/*.js; do
+            name=$(basename "$f")
+            lines=$(wc -l < "$f")
+            echo "- \`$name\` ($lines lines)" >> build/docs/architecture-map.md
+          done
+
+          echo "" >> build/docs/architecture-map.md
+          echo "## Extensions" >> build/docs/architecture-map.md
+          echo "" >> build/docs/architecture-map.md
+          for ext in extensions/*/; do
+            name=$(basename "$ext")
+            echo "- \`$name\`" >> build/docs/architecture-map.md
+          done
+
+          cat build/docs/architecture-map.md
+
+      - name: Commit Architecture Map
+        run: |
+          git config user.name "organism-docs-bot"
+          git config user.email "organism-docs-bot[bot]@users.noreply.github.com"
+          cp build/docs/architecture-map.md docs/architecture-map.md
+          git add docs/architecture-map.md
+          git diff --cached --quiet || git commit -m "📚 organism-docs-bot: Updated architecture map [$(date -u '+%Y-%m-%d')]"
+          git push || echo "Nothing to push"

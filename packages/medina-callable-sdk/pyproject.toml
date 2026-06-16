@@ -1,0 +1,25 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "medina-callable-sdk"
+version = "1.0.0"
+description = "AI-Callable Library SDK — Unified Function Registry for the Medina Sovereign Organism"
+authors = [{name = "Alfredo 'Freddy' Medina Hernandez", email = "contact@medinatech.io"}]
+license = {text = "ISIL-1.0"}
+requires-python = ">=3.10"
+readme = "README.md"
+
+dependencies = []
+
+[project.optional-dependencies]
+ai = ["openai>=1.12", "anthropic>=0.18", "langchain>=0.1"]
+data = ["pandas>=2.2", "numpy>=1.26", "polars>=0.20"]
+cloud = ["boto3>=1.34", "google-cloud-aiplatform>=1.42"]
+web = ["fastapi>=0.109", "httpx>=0.27", "pydantic>=2.6"]
+db = ["psycopg[binary]>=3.1", "pymongo>=4.6", "chromadb>=0.4"]
+all = ["medina-callable-sdk[ai,data,cloud,web,db]"]
+
+[project.urls]
+Homepage = "https://github.com/FreddyCreates/Medina-Memory-More-AI"

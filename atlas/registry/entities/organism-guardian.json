@@ -1,0 +1,43 @@
+{
+  "id": "atlas://organism/guardian",
+  "name": "GUARDIAN",
+  "class": "SyntheticOrganism",
+  "division": "III — Secure & Monitor",
+  "emoji": "🛡️",
+  "domain": "Safety synthesis & integrity narrative",
+  "description": "GUARDIAN reads alpha + sentinel + crawler governance events and synthesizes safety narratives and integrity reports for human leadership",
+  "feeds_from": [
+    "atlas://bot/organism-alpha-bot",
+    "atlas://bot/organism-sentinel-bot",
+    "atlas://bot/organism-crawler-bot"
+  ],
+  "event_ops_consumed": [
+    "fleet_census_completed",
+    "security_scan_completed",
+    "crawl_completed"
+  ],
+  "mml_metrics_watched": [
+    "bot_fleet.health_ratio",
+    "bot_fleet.policy_compliance",
+    "bot_fleet.missing_workflow_count",
+    "topology.dead_links",
+    "topology.graph_centrality_max",
+    "topology.orphans"
+  ],
+  "outputs": [
+    "CIL narrative: safety_assessment",
+    "CIL narrative: integrity_report",
+    "Slack message: governance_story (via Slack Division)"
+  ],
+  "ocl_ref": "governance://organism/guardian",
+  "governance_pipeline": "pipeline://governance/bot_cycle",
+  "languages": [
+    "atlas://language/cil",
+    "atlas://language/ocl",
+    "atlas://language/cpl-l",
+    "atlas://language/acl"
+  ],
+  "authority": "advisory",
+  "escalation_target": "human://freddy",
+  "scc": 4.44
+}

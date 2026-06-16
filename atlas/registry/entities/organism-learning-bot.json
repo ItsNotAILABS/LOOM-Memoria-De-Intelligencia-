@@ -1,0 +1,16 @@
+{
+  "id": "atlas://bot/organism-learning-bot",
+  "name": "organism-learning-bot",
+  "class": "Bot",
+  "division": "VI — Learn & Evolve",
+  "emoji": "🎓",
+  "domain": "Protocol evolution & expansion analysis",
+  "triggers": ["push:organism-cli/web/protocol-papers.js", "push:icp/src/medina_backend/", "schedule:nightly"],
+  "workflow": ".github/workflows/organism-learning-bot.yml",
+  "outputs": ["docs/evolution-report.md"],
+  "languages": ["atlas://language/cpl-l", "atlas://language/acl", "atlas://language/rsl"],
+  "governance_pipeline": "pipeline://governance/bot_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "meta_engine_feed": true,
+  "scc": 4.08
+}

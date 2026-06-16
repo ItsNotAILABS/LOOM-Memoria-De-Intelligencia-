@@ -1,0 +1,115 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# AEDIFICATOR — BOT 1: THE PERPETUAL BUILDER
+# "Aedificator Perpetuus" — Auto-build on every push
+#
+# Runs validate.sh across ALL substrates:
+#   canister (Motoko/ICP), extensions, packages, CLI, Rust, dist
+#
+# House: Engines tier  |  Law: L-005 (always-on, not alive)
+# Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+# ═══════════════════════════════════════════════════════════════════════════
+
+name: "[AEDIFICATOR] Auto-Build"
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: "🧱 Aedificator — Validate All Substrates"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Validate — ICP Canister (Motoko)
+        run: |
+          if [ -f "scripts/validate.sh" ]; then
+            bash scripts/validate.sh canister
+          else
+            echo "[AEDIFICATOR] validate.sh not found — skipping canister validation"
+          fi
+
+      - name: Validate — Browser Extensions
+        run: |
+          if [ -f "scripts/validate.sh" ]; then
+            bash scripts/validate.sh extensions
+          else
+            echo "[AEDIFICATOR] validate.sh not found — skipping extensions validation"
+          fi
+
+      - name: Validate — SDK Packages
+        run: |
+          if [ -f "scripts/validate.sh" ]; then
+            bash scripts/validate.sh packages
+          else
+            echo "[AEDIFICATOR] validate.sh not found — skipping packages validation"
+          fi
+
+      - name: Validate — Organism CLI
+        run: |
+          if [ -f "scripts/validate.sh" ]; then
+            bash scripts/validate.sh cli
+          else
+            echo "[AEDIFICATOR] validate.sh not found — skipping CLI validation"
+          fi
+
+      - name: Validate — Distribution Scripts
+        run: |
+          if [ -f "scripts/validate.sh" ]; then
+            bash scripts/validate.sh dist
+          else
+            echo "[AEDIFICATOR] validate.sh not found — skipping dist validation"
+          fi
+
+      - name: Validate — Rust Crate (if cargo available)
+        run: |
+          if [ -f "scripts/validate.sh" ]; then
+            bash scripts/validate.sh rust
+          else
+            echo "[AEDIFICATOR] validate.sh not found — skipping Rust validation"
+          fi
+
+      - name: Full validate summary
+        if: always()
+        run: |
+          echo ""
+          echo "╔═══════════════════════════════════════════════╗"
+          echo "║   [AEDIFICATOR] Build Complete                ║"
+          echo "║   φ = 1.618033988749895                       ║"
+          echo "╚═══════════════════════════════════════════════╝"
+          echo "Commit: ${{ github.sha }}"
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Actor:  ${{ github.actor }}"
+
+      - name: BotProofRecord
+        if: always()
+        run: |
+          echo "┌─ BotProofRecord ─────────────────────────────────────────────┐"
+          echo "│ id:          AEDIFICATOR                                     │"
+          echo "│ latin:       Aedificator Perpetuus                           │"
+          echo "│ role:        auto-build                                      │"
+          echo "│ law:         L-005 — Always-on, not alive                   │"
+          echo "│ authority:   OBSERVE + REPORT + FAIL_BUILD                  │"
+          echo "│ prohibited:  mutate files, open issues, dispatch workflows   │"
+          echo "│ run_id:      ${{ github.run_id }}"
+          echo "│ sha:         ${{ github.sha }}"
+          echo "│ proof_ref:   docs/bot-fleet/proof-index.md                  │"
+          echo "└───────────────────────────────────────────────────────────────┘"

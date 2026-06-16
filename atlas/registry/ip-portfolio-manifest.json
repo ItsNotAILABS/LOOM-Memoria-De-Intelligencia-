@@ -1,0 +1,100 @@
+{
+  "id": "atlas://registry/ip-portfolio/sovereign-v1",
+  "version": "1.0.0",
+  "status": "active-seed",
+  "generated": "2026-05-08T01:49:54Z",
+  "title": "Sovereign IP Portfolio Manifest",
+  "description": "Initial IP portfolio manifest capturing enterprise SDK AI products, SDK AI chain systems, AI SDK AGI product families, and value-capture structure.",
+  "owner": "Alfredo Freddy Medina Hernandez",
+  "organism_key": "PRIMA CAUSA",
+  "runtime_scope": [
+    "nova",
+    "memory",
+    "active_state",
+    "foundation_floor"
+  ],
+  "counts": {
+    "enterprise_sdk_ai_products": 10,
+    "sdk_ai_chain_systems": 20,
+    "aisdkagi_product_families": 10
+  },
+  "enterprise_sdk_ai_products": [
+    { "id": "ENT-SDK-001", "name": "MEMORIA ENTERPRISE SUITE", "domain": "memory-runtime" },
+    { "id": "ENT-SDK-002", "name": "NOVA ORCHESTRATION SUITE", "domain": "runtime-governance" },
+    { "id": "ENT-SDK-003", "name": "ACTIVE STATE EXECUTION SUITE", "domain": "active-state" },
+    { "id": "ENT-SDK-004", "name": "FOUNDATION FLOOR COMPUTE SUITE", "domain": "deep-compute" },
+    { "id": "ENT-SDK-005", "name": "VIGILIA SECURITY SUITE", "domain": "edge-defense" },
+    { "id": "ENT-SDK-006", "name": "PROTOCOL GOVERNANCE SUITE", "domain": "law-protocol" },
+    { "id": "ENT-SDK-007", "name": "AI MODEL REGISTRY SUITE", "domain": "model-lifecycle" },
+    { "id": "ENT-SDK-008", "name": "FLEET RENTAL MARKET SUITE", "domain": "economy-market" },
+    { "id": "ENT-SDK-009", "name": "COMPENSATION INTELLIGENCE SUITE", "domain": "economic-compensation" },
+    { "id": "ENT-SDK-010", "name": "CIVILIZATION BRIDGE SUITE", "domain": "cross-system-bridging" }
+  ],
+  "sdk_ai_chain_systems": [
+    { "id": "CHAIN-001", "name": "NOVA-MEMORY-LINK" },
+    { "id": "CHAIN-002", "name": "MEMORY-ACTIVE-LINK" },
+    { "id": "CHAIN-003", "name": "ACTIVE-FOUNDATION-LINK" },
+    { "id": "CHAIN-004", "name": "LAW-GATE-CHAIN" },
+    { "id": "CHAIN-005", "name": "LINEAGE-TRACE-CHAIN" },
+    { "id": "CHAIN-006", "name": "REASON-CHAIN-EMITTER" },
+    { "id": "CHAIN-007", "name": "COUNTERPART-ASSURANCE-CHAIN" },
+    { "id": "CHAIN-008", "name": "RUNTIME-MAP-CHAIN" },
+    { "id": "CHAIN-009", "name": "PROTOCOL-ENFORCEMENT-CHAIN" },
+    { "id": "CHAIN-010", "name": "EDGE-VIGILIA-CHAIN" },
+    { "id": "CHAIN-011", "name": "SDK-PACKAGING-CHAIN" },
+    { "id": "CHAIN-012", "name": "MODEL-REGISTRY-CHAIN" },
+    { "id": "CHAIN-013", "name": "ENGINE-REGISTRY-CHAIN" },
+    { "id": "CHAIN-014", "name": "BARTER-SETTLEMENT-CHAIN" },
+    { "id": "CHAIN-015", "name": "TOKEN-UTILITY-CHAIN" },
+    { "id": "CHAIN-016", "name": "FLEET-RENTAL-CHAIN" },
+    { "id": "CHAIN-017", "name": "CONTRACTOR-PAYOUT-CHAIN" },
+    { "id": "CHAIN-018", "name": "PERFORMANCE-RANK-CHAIN" },
+    { "id": "CHAIN-019", "name": "IP-HASH-REGISTRY-CHAIN" },
+    { "id": "CHAIN-020", "name": "PORTFOLIO-VALUATION-CHAIN" }
+  ],
+  "aisdkagi_product_families": [
+    { "id": "FAM-001", "name": "SOVEREIGN MEMORY FAMILY", "focus": "memory-temple products" },
+    { "id": "FAM-002", "name": "RUNTIME CIVILIZATION FAMILY", "focus": "nova-memory-active products" },
+    { "id": "FAM-003", "name": "FOUNDATION COMPUTE FAMILY", "focus": "floor delegation products" },
+    { "id": "FAM-004", "name": "SECURITY VIGILIA FAMILY", "focus": "edge and defense products" },
+    { "id": "FAM-005", "name": "PROTOCOL LAW FAMILY", "focus": "governance and compliance products" },
+    { "id": "FAM-006", "name": "MODEL INTELLIGENCE FAMILY", "focus": "model and engine products" },
+    { "id": "FAM-007", "name": "SDK COMPOSITION FAMILY", "focus": "sdk assembly and distribution" },
+    { "id": "FAM-008", "name": "AI MARKET FAMILY", "focus": "market and rental products" },
+    { "id": "FAM-009", "name": "TOKEN ECONOMY FAMILY", "focus": "token and barter products" },
+    { "id": "FAM-010", "name": "IP PORTFOLIO FAMILY", "focus": "ip registration and valuation products" }
+  ],
+  "protocols": {
+    "active": ["PROT-152", "PROT-153", "PROT-154", "PROT-155"],
+    "portfolio_seed": [
+      "PROT-156 (Enterprise SDK Product Portfolio)",
+      "PROT-157 (SDK AI Chain System Contracts)",
+      "PROT-158 (AI SDK AGI Product Family Taxonomy)",
+      "PROT-159 (IP Value Capture Ledger)",
+      "PROT-160 (Portfolio Valuation and Rights Mapping)"
+    ]
+  },
+  "value_capture": {
+    "capture_domains": [
+      "intellectual_property_hashes",
+      "protocol_rights",
+      "software_copyright",
+      "trade_secret_doctrine",
+      "sdk_license_revenue",
+      "token_economy_revenue",
+      "fleet_rental_revenue",
+      "enterprise_deployment_revenue"
+    ],
+    "valuation_axes": [
+      "technical_novelty",
+      "protocol_coverage",
+      "runtime_criticality",
+      "market_utility",
+      "defensibility"
+    ]
+  },
+  "notes": [
+    "This manifest is the initial portfolio seed requested in PR comment #4402644597.",
+    "Entries are portfolio-controlled and can be promoted to production registry items in subsequent passes."
+  ]
+}

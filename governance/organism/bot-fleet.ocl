@@ -1,0 +1,94 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# 🧬 BOT FLEET OCL CHARTER — CHARTA CLASSIS
+# "Sexdecim milites, una voluntas." (Sixteen soldiers, one will.)
+#
+# Organism Constraint Language (OCL) charter for the entire bot fleet.
+# Each bot may reference this shared charter or define its own override.
+# Compliant with PROT-113 (OCL sovereign constraint protocol).
+#
+# Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+# ═══════════════════════════════════════════════════════════════════════════
+
+id: "atlas://organism/bot-fleet"
+version: "1.0.0"
+language: "OCL"
+scc: 3.14
+
+meta:
+  name: "Organism Bot Fleet Charter"
+  description: "Shared governance constraints for all 16 organism bots across 7 divisions"
+  divisions:
+    - id: "I"
+      name: "Build & Package"
+      bots: ["organism-build-bot", "organism-sdk-bot", "organism-release-bot"]
+    - id: "II"
+      name: "Validate & Test"
+      bots: ["organism-test-bot", "organism-protocol-bot", "organism-neural-bot", "organism-sandcastle-bot", "organism-visual-bot"]
+    - id: "III"
+      name: "Secure & Monitor"
+      bots: ["organism-sentinel-bot", "organism-deps-bot", "organism-crawler-bot"]
+    - id: "IV"
+      name: "Document & Report"
+      bots: ["organism-docs-bot"]
+    - id: "V"
+      name: "Deploy & Operate"
+      bots: ["organism-deploy-bot"]
+    - id: "VI"
+      name: "Learn & Evolve"
+      bots: ["organism-learning-bot", "organism-economy-bot"]
+    - id: "VII"
+      name: "Command & Control"
+      bots: ["organism-alpha-bot"]
+
+# Core capabilities shared by all bots
+capabilities:
+  - "read_repository"
+  - "write_docs"
+  - "upload_artifacts"
+  - "commit_living_docs"
+
+# Optional capabilities (must be declared per-bot)
+optional_capabilities:
+  - "create_github_release"
+  - "post_pr_comment"
+  - "write_security_events"
+
+# Universal limits — no bot may violate these
+limits:
+  - id: "no_direct_prod_data_mutation"
+    description: "Bots may not directly mutate ICP canister state in production"
+    severity: "HARD"
+  - id: "no_unreviewed_secret_exposure"
+    description: "No bot may commit secrets, credentials, or private keys"
+    severity: "HARD"
+  - id: "no_force_push"
+    description: "Bots may not force-push to any branch"
+    severity: "HARD"
+  - id: "no_delete_branch"
+    description: "Bots may not delete branches"
+    severity: "HARD"
+  - id: "docs_only_commits"
+    description: "Bot commits should target docs/ or build/ — never src code"
+    severity: "SOFT"
+
+# Behavioral drives (φ-weighted, 0.0–1.0)
+drives:
+  stability: 0.80       # Prefer proven patterns over experimentation
+  exploration: 0.40     # Moderate discovery of new protocol slots
+  safety: 0.95          # Near-maximum safety constraint
+  learning_rate: 0.60   # Active learning from feedback cycles
+  sovereignty: 1.00     # Always sovereign — never depends on external auth
+
+# Escalation chain
+escalation:
+  primary: "human://freddy"
+  conditions:
+    - "risk_score > 0.7"
+    - "law_violation == true"
+    - "release_blocked == true"
+    - "secret_leak_detected == true"
+
+# Governance cycle
+governance_pipeline: "pipeline://governance/bot_cycle"
+feedback_schema: "governance://feedback/schema"
+laws_ref: "governance://laws/bot-fleet"

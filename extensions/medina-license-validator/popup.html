@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Medina License Validator</title>
+    <style>
+        body { font-family: 'Segoe UI', system-ui, sans-serif; width: 320px; padding: 16px; background: #0a0a0a; color: #d4af37; }
+        h1 { font-size: 14px; margin: 0 0 4px 0; color: #ffd700; }
+        h2 { font-size: 11px; margin: 0 0 12px 0; color: #b8860b; font-style: italic; }
+        .status { padding: 8px; border: 1px solid #333; border-radius: 4px; background: #111; margin-bottom: 8px; }
+        .status .label { font-size: 10px; color: #888; text-transform: uppercase; }
+        .status .value { font-size: 13px; color: #ffd700; }
+        .phi { color: #d4af37; font-weight: bold; }
+        .domain { font-size: 11px; color: #aaa; margin-top: 8px; }
+        .footer { font-size: 9px; color: #555; margin-top: 12px; border-top: 1px solid #222; padding-top: 8px; }
+    </style>
+</head>
+<body>
+    <h1>Medina License Validator</h1>
+    <h2>VALIDATOR LICENTIAE</h2>
+    <div class="status">
+        <div class="label">Status</div>
+        <div class="value" id="status">Checking...</div>
+    </div>
+    <div class="status">
+        <div class="label">Frequency</div>
+        <div class="value"><span class="phi">φ</span> = 1.618033988749895 Hz</div>
+    </div>
+    <div class="domain">ISIL license compliance checking</div>
+    <div class="footer">MEDINA Sovereign Extension • ISIL-1.0</div>
+    <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# MEDINA RUNNER SYSTEM — Docker Compose
+# Self-hosted GitHub Actions runners for the Organism bot fleet
+#
+# Usage:
+#   export GITHUB_TOKEN=<your-pat>
+#   docker compose up -d
+#
+# Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+# ═══════════════════════════════════════════════════════════════════════════
+
+services:
+  runner-bot-1:
+    image: myoung34/github-runner:latest
+    container_name: medina-runner-1
+    restart: unless-stopped
+    environment:
+      - REPO_URL=https://github.com/FreddyCreates/Medina-Memory-More-AI
+      - RUNNER_NAME=medina-runner-1
+      - RUNNER_TOKEN=${RUNNER_TOKEN}
+      - RUNNER_WORKDIR=/tmp/runner-work
+      - LABELS=medina-runner,self-hosted,linux,x64
+      - RUNNER_GROUP=medina-organism
+    volumes:
+      - runner-work-1:/tmp/runner-work
+      - /var/run/docker.sock:/var/run/docker.sock
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 4G
+
+  runner-bot-2:
+    image: myoung34/github-runner:latest
+    container_name: medina-runner-2
+    restart: unless-stopped
+    environment:
+      - REPO_URL=https://github.com/FreddyCreates/Medina-Memory-More-AI
+      - RUNNER_NAME=medina-runner-2
+      - RUNNER_TOKEN=${RUNNER_TOKEN}
+      - RUNNER_WORKDIR=/tmp/runner-work
+      - LABELS=medina-heavy,self-hosted,linux,x64
+      - RUNNER_GROUP=medina-organism
+    volumes:
+      - runner-work-2:/tmp/runner-work
+      - /var/run/docker.sock:/var/run/docker.sock
+    deploy:
+      resources:
+        limits:
+          cpus: "4.0"
+          memory: 8G
+
+volumes:
+  runner-work-1:
+  runner-work-2:
