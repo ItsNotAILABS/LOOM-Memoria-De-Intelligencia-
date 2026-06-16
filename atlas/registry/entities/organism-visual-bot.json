@@ -1,0 +1,15 @@
+{
+  "id": "atlas://bot/organism-visual-bot",
+  "name": "organism-visual-bot",
+  "class": "Bot",
+  "division": "II — Validate & Test",
+  "emoji": "📸",
+  "domain": "Visual regression & HTML structure audit",
+  "triggers": ["push:docs/**/*.html", "schedule:nightly"],
+  "workflow": ".github/workflows/organism-visual-bot.yml",
+  "outputs": ["docs/visual-report.md"],
+  "languages": ["atlas://language/ocl", "atlas://language/edl"],
+  "governance_pipeline": "pipeline://governance/bot_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "scc": 2.62
+}

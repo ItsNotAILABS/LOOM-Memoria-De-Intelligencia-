@@ -1,0 +1,102 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# ORGANISM RUNNER MONITOR — Runner Health Check Workflow
+# Monitors self-hosted runner health and reports status
+#
+# House: Infrastructure tier  |  Law: L-005 (always-on, not alive)
+# Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+# ═══════════════════════════════════════════════════════════════════════════
+
+name: "🏃 organism-runner-monitor"
+
+on:
+  schedule:
+    # Every 6 hours
+    - cron: "0 0,6,12,18 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  monitor:
+    name: "🏃 Runner Health Check"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check runner status
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "╔═══════════════════════════════════════════════╗"
+          echo "║   MEDINA RUNNER SYSTEM — Health Check         ║"
+          echo "║   φ = 1.618033988749895                       ║"
+          echo "╚═══════════════════════════════════════════════╝"
+          echo ""
+
+          # List all runners for this repo
+          RUNNERS=$(gh api /repos/${{ github.repository }}/actions/runners 2>/dev/null || echo '{"runners":[]}')
+
+          echo "$RUNNERS" | python3 -c "
+          import json, sys
+
+          data = json.load(sys.stdin)
+          runners = data.get('runners', [])
+
+          if not runners:
+              print('  ⚠️  No self-hosted runners configured')
+              print('  → Set up runners: .github/runner-system/README.md')
+          else:
+              print(f'  Runners found: {len(runners)}')
+              print('')
+              for r in runners:
+                  status = '🟢' if r['status'] == 'online' else '🔴'
+                  labels = ', '.join(l['name'] for l in r.get('labels', []))
+                  print(f'  {status} {r[\"name\"]} ({r[\"status\"]}) — [{labels}]')
+          print('')
+          print('  φ = 1.618033988749895')
+          "
+
+      - name: Check workflow bot health
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo ""
+          echo "═══ Bot Fleet Workflow Status ═══"
+          echo ""
+
+          WORKFLOWS=("organism-protocol-bot" "organism-test-bot" "organism-build-bot" \
+                     "organism-docs-bot" "organism-deps-bot" "organism-neural-bot" \
+                     "custos-guardian" "medicus-autofix" "fasciculus-package" \
+                     "praetor-orchestrate" "memoria-index-bot" "memoria-compress-bot" \
+                     "memoria-recall-bot")
+
+          for wf in "${WORKFLOWS[@]}"; do
+            RESULT=$(gh run list --workflow "${wf}.yml" --limit 1 --json conclusion,status 2>/dev/null || echo "[]")
+            STATUS=$(echo "$RESULT" | python3 -c "
+          import json,sys
+          d=json.load(sys.stdin)
+          if d:
+              print(d[0].get('conclusion') or d[0].get('status','unknown'))
+          else:
+              print('no_runs')
+          " 2>/dev/null || echo "error")
+            ICON="✓"
+            [ "$STATUS" = "failure" ] && ICON="✗"
+            [ "$STATUS" = "no_runs" ] && ICON="○"
+            printf "  %s %-30s %s\n" "$ICON" "$wf" "$STATUS"
+          done
+
+      - name: BotProofRecord
+        if: always()
+        run: |
+          echo "┌─ BotProofRecord ─────────────────────────────────────────────┐"
+          echo "│ id:          RUNNER-MONITOR                                  │"
+          echo "│ role:        runner-health-check                              │"
+          echo "│ law:         L-005 — Always-on, not alive                   │"
+          echo "│ run_id:      ${{ github.run_id }}"
+          echo "│ sha:         ${{ github.sha }}"
+          echo "└───────────────────────────────────────────────────────────────┘"

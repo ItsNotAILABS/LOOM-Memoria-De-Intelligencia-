@@ -1,0 +1,136 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# 🧠 ORGANISM NEURAL BOT — CEREBRUM ORGANISMI
+# "Nervos validat, graphum aedificat." (Validates nerves, builds the graph.)
+#
+# Validates all backend Motoko engines, frontend workers, and builds
+# a neural dependency graph of the entire organism architecture.
+#
+# Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+# ═══════════════════════════════════════════════════════════════════════════
+
+name: 🧠 organism-neural-bot
+
+on:
+  push:
+    paths:
+      - 'icp/src/medina_backend/**'
+      - 'organism-cli/web/**'
+      - 'organism/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  neural-validation:
+    name: 🧠 Deep Architecture Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Count Backend Engines
+        id: backend
+        run: |
+          MO_COUNT=$(ls icp/src/medina_backend/*.mo 2>/dev/null | wc -l)
+          MO_LINES=$(cat icp/src/medina_backend/*.mo 2>/dev/null | wc -l)
+          echo "count=$MO_COUNT" >> "$GITHUB_OUTPUT"
+          echo "lines=$MO_LINES" >> "$GITHUB_OUTPUT"
+          echo "🧠 Backend: $MO_COUNT Motoko engines, $MO_LINES total lines"
+
+      - name: Count Web Workers
+        id: workers
+        run: |
+          JS_COUNT=$(ls organism-cli/web/*.js 2>/dev/null | wc -l)
+          JS_LINES=$(cat organism-cli/web/*.js 2>/dev/null | wc -l)
+          echo "count=$JS_COUNT" >> "$GITHUB_OUTPUT"
+          echo "lines=$JS_LINES" >> "$GITHUB_OUTPUT"
+          echo "🧠 Frontend: $JS_COUNT web workers, $JS_LINES total lines"
+
+      - name: Validate Motoko Syntax
+        run: |
+          echo "🧠 Validating Motoko module structure..."
+          ERRORS=0
+          for f in icp/src/medina_backend/*.mo; do
+            name=$(basename "$f")
+            # Check for module/actor declaration
+            if ! grep -qE '(module|actor)' "$f"; then
+              echo "  ✗ $name — missing module/actor declaration"
+              ERRORS=$((ERRORS + 1))
+            else
+              echo "  ✓ $name"
+            fi
+          done
+          echo ""
+          if [ $ERRORS -gt 0 ]; then
+            echo "⚠️ $ERRORS engines have structural issues"
+          else
+            echo "✓ All ${{ steps.backend.outputs.count }} engines validated"
+          fi
+
+      - name: Validate Web Worker Boot Protocol
+        run: |
+          echo "🧠 Validating web worker boot protocol..."
+          ERRORS=0
+          for f in organism-cli/web/*-worker.js; do
+            name=$(basename "$f")
+            # Workers must post a 'booted' message
+            if ! grep -q "type.*booted\|type.*ready\|READY\|WORKER_READY" "$f"; then
+              echo "  ⚠ $name — no boot message detected"
+              ERRORS=$((ERRORS + 1))
+            else
+              echo "  ✓ $name"
+            fi
+          done
+          echo ""
+          echo "🧠 $(($(ls organism-cli/web/*-worker.js 2>/dev/null | wc -l) - ERRORS)) workers have valid boot protocol"
+
+      - name: Build Neural Dependency Graph
+        run: |
+          echo "🧠 Building neural dependency graph..."
+          mkdir -p build/neural
+
+          # Backend imports
+          echo "# Neural Dependency Graph" > build/neural/dependency-graph.md
+          echo "" >> build/neural/dependency-graph.md
+          echo "**Generated:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> build/neural/dependency-graph.md
+          echo "**Backend Engines:** ${{ steps.backend.outputs.count }}" >> build/neural/dependency-graph.md
+          echo "**Web Workers:** ${{ steps.workers.outputs.count }}" >> build/neural/dependency-graph.md
+          echo "**Total Lines:** $(( ${{ steps.backend.outputs.lines }} + ${{ steps.workers.outputs.lines }} ))" >> build/neural/dependency-graph.md
+          echo "" >> build/neural/dependency-graph.md
+
+          echo "## Backend Import Map" >> build/neural/dependency-graph.md
+          echo "" >> build/neural/dependency-graph.md
+          for f in icp/src/medina_backend/*.mo; do
+            name=$(basename "$f" .mo)
+            imports=$(grep -oP 'import\s+\w+\s+"([^"]+)"' "$f" 2>/dev/null | sed 's/import .* "//;s/"//' | sort -u | tr '\n' ', ' | sed 's/,$//')
+            if [ -n "$imports" ]; then
+              echo "- **$name** → $imports" >> build/neural/dependency-graph.md
+            fi
+          done
+
+          echo "" >> build/neural/dependency-graph.md
+          echo "## Worker Communication Map" >> build/neural/dependency-graph.md
+          echo "" >> build/neural/dependency-graph.md
+          # Check organism-bridge.js for worker list
+          if [ -f organism-cli/web/organism-bridge.js ]; then
+            grep -oP "'[a-z-]+'" organism-cli/web/organism-bridge.js | sort -u | while read w; do
+              echo "- organism-bridge → $w-worker.js" >> build/neural/dependency-graph.md
+            done
+          fi
+
+          cat build/neural/dependency-graph.md
+
+      - name: Commit Neural Graph
+        run: |
+          git config user.name "organism-neural-bot"
+          git config user.email "organism-neural-bot[bot]@users.noreply.github.com"
+          cp build/neural/dependency-graph.md docs/neural-dependency-graph.md
+          git add docs/neural-dependency-graph.md
+          git diff --cached --quiet || git commit -m "🧠 organism-neural-bot: Updated neural dependency graph [${{ steps.backend.outputs.count }} engines, ${{ steps.workers.outputs.count }} workers]"
+          git push || echo "Nothing to push"

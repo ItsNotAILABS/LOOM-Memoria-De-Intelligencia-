@@ -1,0 +1,119 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# 📦 ORGANISM SDK BOT — CAPSA INSTRUMENTORUM
+# "Instrumenta valida, opera recta." (Valid tools, correct work.)
+#
+# Validates and normalizes all SDK packages for npm publish readiness.
+# Creates tarballs for each SDK package.
+#
+# Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+# ═══════════════════════════════════════════════════════════════════════════
+
+name: 📦 organism-sdk-bot
+
+on:
+  push:
+    paths:
+      - 'packages/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  validate-sdks:
+    name: 📦 Validate & Package SDKs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Discover SDKs
+        id: sdks
+        run: |
+          SDK_COUNT=$(ls -d packages/*/ 2>/dev/null | wc -l)
+          echo "count=$SDK_COUNT" >> "$GITHUB_OUTPUT"
+          echo "📦 Found $SDK_COUNT SDK packages"
+
+      - name: Validate Package JSON
+        run: |
+          echo "📦 Validating package.json for each SDK..."
+          VALID=0
+          INVALID=0
+          for pkg in packages/*/; do
+            name=$(basename "$pkg")
+            if [ -f "$pkg/package.json" ]; then
+              # Validate JSON
+              if python3 -c "import json; json.load(open('$pkg/package.json'))" 2>/dev/null; then
+                # Check required fields
+                HAS_NAME=$(python3 -c "import json; d=json.load(open('$pkg/package.json')); print('yes' if 'name' in d else 'no')" 2>/dev/null)
+                HAS_VERSION=$(python3 -c "import json; d=json.load(open('$pkg/package.json')); print('yes' if 'version' in d else 'no')" 2>/dev/null)
+                if [ "$HAS_NAME" = "yes" ] && [ "$HAS_VERSION" = "yes" ]; then
+                  echo "  ✓ $name — valid (name + version present)"
+                  VALID=$((VALID + 1))
+                else
+                  echo "  ⚠ $name — missing name or version"
+                  INVALID=$((INVALID + 1))
+                fi
+              else
+                echo "  ✗ $name — invalid JSON"
+                INVALID=$((INVALID + 1))
+              fi
+            else
+              echo "  ⚠ $name — no package.json"
+              INVALID=$((INVALID + 1))
+            fi
+          done
+          echo ""
+          echo "📦 $VALID valid, $INVALID need attention"
+
+      - name: Create SDK Tarballs
+        run: |
+          mkdir -p build/sdks
+          for pkg in packages/*/; do
+            name=$(basename "$pkg")
+            if [ -f "$pkg/package.json" ]; then
+              tar czf "build/sdks/${name}.tar.gz" -C packages "$name"
+              size=$(du -sh "build/sdks/${name}.tar.gz" | cut -f1)
+              echo "  ✓ ${name}.tar.gz ($size)"
+            fi
+          done
+
+      - name: Generate SDK Catalog
+        run: |
+          echo "# 📦 SDK Package Catalog" > build/sdks/SDK-CATALOG.md
+          echo "" >> build/sdks/SDK-CATALOG.md
+          echo "**Built:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> build/sdks/SDK-CATALOG.md
+          echo "**SDKs:** ${{ steps.sdks.outputs.count }}" >> build/sdks/SDK-CATALOG.md
+          echo "" >> build/sdks/SDK-CATALOG.md
+          echo "| SDK | Version | Description |" >> build/sdks/SDK-CATALOG.md
+          echo "|-----|---------|-------------|" >> build/sdks/SDK-CATALOG.md
+          for pkg in packages/*/; do
+            name=$(basename "$pkg")
+            if [ -f "$pkg/package.json" ]; then
+              version=$(python3 -c "import json; print(json.load(open('$pkg/package.json')).get('version','?'))" 2>/dev/null)
+              desc=$(python3 -c "import json; print(json.load(open('$pkg/package.json')).get('description','—')[:60])" 2>/dev/null)
+              echo "| $name | $version | $desc |" >> build/sdks/SDK-CATALOG.md
+            fi
+          done
+          cat build/sdks/SDK-CATALOG.md
+
+      - name: Upload SDK Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: organism-sdks-${{ github.sha }}
+          path: build/sdks/
+          retention-days: 30
+
+      - name: Commit SDK Catalog
+        run: |
+          git config user.name "organism-sdk-bot"
+          git config user.email "organism-sdk-bot[bot]@users.noreply.github.com"
+          cp build/sdks/SDK-CATALOG.md docs/sdk-catalog.md
+          git add docs/sdk-catalog.md
+          git diff --cached --quiet || git commit -m "📦 organism-sdk-bot: Updated SDK catalog [${{ steps.sdks.outputs.count }} packages]"
+          git push || echo "Nothing to push"

@@ -1,0 +1,32 @@
+{
+  "id": "atlas://registry/bot-fleet",
+  "version": "1.0.0",
+  "description": "Organism Bot Fleet — 16 bots across 7 divisions",
+  "total_bots": 16,
+  "divisions": 7,
+  "generated": "2026-05-03T04:17:57Z",
+  "entities": [
+    { "$ref": "./entities/organism-build-bot.json",      "division": "I",   "emoji": "🧬" },
+    { "$ref": "./entities/organism-sdk-bot.json",        "division": "I",   "emoji": "📦" },
+    { "$ref": "./entities/organism-release-bot.json",    "division": "I",   "emoji": "🚀" },
+    { "$ref": "./entities/organism-test-bot.json",       "division": "II",  "emoji": "🧪" },
+    { "$ref": "./entities/organism-protocol-bot.json",   "division": "II",  "emoji": "🔬" },
+    { "$ref": "./entities/organism-neural-bot.json",     "division": "II",  "emoji": "🧠" },
+    { "$ref": "./entities/organism-sandcastle-bot.json", "division": "II",  "emoji": "🏰" },
+    { "$ref": "./entities/organism-visual-bot.json",     "division": "II",  "emoji": "📸" },
+    { "$ref": "./entities/organism-sentinel-bot.json",   "division": "III", "emoji": "🛡️" },
+    { "$ref": "./entities/organism-deps-bot.json",       "division": "III", "emoji": "🔄" },
+    { "$ref": "./entities/organism-crawler-bot.json",    "division": "III", "emoji": "🕷️" },
+    { "$ref": "./entities/organism-docs-bot.json",       "division": "IV",  "emoji": "📚" },
+    { "$ref": "./entities/organism-deploy-bot.json",     "division": "V",   "emoji": "🌐" },
+    { "$ref": "./entities/organism-learning-bot.json",   "division": "VI",  "emoji": "🎓" },
+    { "$ref": "./entities/organism-economy-bot.json",    "division": "VI",  "emoji": "💰" },
+    { "$ref": "./entities/organism-alpha-bot.json",      "division": "VII", "emoji": "👑" }
+  ],
+  "governance": {
+    "ocl_charter": "governance/organism/bot-fleet.ocl",
+    "cpl_l_laws": "governance/laws/bot-fleet.cpl-l",
+    "cpl_p_pipeline": "governance/pipelines/bot-governance.cpl-p",
+    "feedback_schema": "governance/feedback/schema.yml"
+  }
+}

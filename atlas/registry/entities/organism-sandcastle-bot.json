@@ -1,0 +1,16 @@
+{
+  "id": "atlas://bot/organism-sandcastle-bot",
+  "name": "organism-sandcastle-bot",
+  "class": "Bot",
+  "division": "II — Validate & Test",
+  "emoji": "🏰",
+  "domain": "Sandboxed build-test-land pipeline",
+  "triggers": ["push:*", "pull_request"],
+  "workflow": ".github/workflows/organism-sandcastle-bot.yml",
+  "outputs": ["build/sandcastle/sandcastle-report.md"],
+  "phases": ["build_gate", "test_gate", "security_gate"],
+  "languages": ["atlas://language/cpl-p", "atlas://language/cpl-l", "atlas://language/cil"],
+  "governance_pipeline": "pipeline://governance/bot_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "scc": 3.76
+}

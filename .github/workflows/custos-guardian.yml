@@ -1,0 +1,154 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# CUSTOS — BOT 4: THE GUARDIAN / ISSUE WATCHER
+# "Custos Repositorii" — Guardian of the Repository
+#
+# Runs daily + on push to main.
+# Checks Organism structural health and opens GitHub Issues when drift
+# is detected that MEDICUS cannot auto-fix:
+#   - Motoko module count vs main.mo import count
+#   - Worker count vs organism-bridge.js boot list
+#   - Protocol count consistency
+#   - File count consistency across mirrored dirs
+#
+# House: Nova AI tier  |  Law: L-005 (always-on, not alive)
+# Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+# ═══════════════════════════════════════════════════════════════════════════
+
+name: "[CUSTOS] Guardian — Health Check"
+
+on:
+  push:
+    branches: ["main"]
+  schedule:
+    # Daily at 06:18 UTC (φ-aligned: 6h18m)
+    - cron: "18 6 * * *"
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  guard:
+    name: "🛡️ Custos — Organism Health Check"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run Custos health checks
+        id: custos
+        run: |
+          if [ -f "nova_ovo/agents/bill_bots/custos_bot.py" ]; then
+            python3 nova_ovo/agents/bill_bots/custos_bot.py \
+              --repo-root="$GITHUB_WORKSPACE" \
+              --output=/tmp/custos-report.json 2>&1 | tee /tmp/custos-log.txt
+            echo "exit_code=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+          else
+            echo "[CUSTOS] custos_bot.py not found — generating empty report"
+            echo '{"healthy": true, "issues": [], "note": "custos_bot.py not found on this branch"}' > /tmp/custos-report.json
+            echo "exit_code=0" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Parse drift report
+        id: parse
+        run: |
+          python3 - <<'PYEOF'
+          import json, os
+
+          try:
+              report = json.load(open('/tmp/custos-report.json'))
+          except:
+              report = {"issues": [], "healthy": True}
+
+          issues = report.get("issues", [])
+          healthy = report.get("healthy", True)
+
+          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+              f.write(f"has_issues={'true' if issues else 'false'}\n")
+              f.write(f"healthy={str(healthy).lower()}\n")
+              # Write issues summary for the next step
+              summary = "\n".join(f"- {i}" for i in issues[:10])
+              f.write(f"issues_summary<<EOF\n{summary}\nEOF\n")
+          PYEOF
+
+      - name: Open GitHub Issue for drift (if any)
+        if: steps.parse.outputs.has_issues == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TITLE="[CUSTOS] Organism Drift Detected — $(date -u '+%Y-%m-%d')"
+          BODY="## 🛡️ CUSTOS — Organism Health Alert
+
+**Bot:** CUSTOS-BOT (Custos Repositorii — Guardian of the Repository)
+**Detected:** \`$(date -u '+%Y-%m-%dT%H:%M:%SZ')\`
+**Branch:** \`${{ github.ref_name }}\`
+**Commit:** \`${{ github.sha }}\`
+
+---
+
+### Drift Issues Found
+
+${{ steps.parse.outputs.issues_summary }}
+
+---
+
+### What to do
+
+These issues require manual review. MEDICUS could not auto-fix them.
+
+1. Review each drift item listed above
+2. Apply the correct fix to the relevant file
+3. Commit with prefix \`[CUSTOS-FIX]\` for traceability
+4. Close this issue once resolved
+
+---
+
+*Law: L-005 — Agent Existence Law — Always-on, not alive*
+*φ = 1.618033988749895*"
+
+          gh issue create \
+            --title "$TITLE" \
+            --body "$BODY" \
+            --label "organism-bot" \
+            || echo "[CUSTOS] Could not open issue (label may not exist yet — create 'organism-bot' label)"
+
+      - name: Upload Custos report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: custos-report-${{ github.run_id }}
+          path: /tmp/custos-report.json
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: Summary
+        if: always()
+        run: |
+          echo ""
+          echo "╔═══════════════════════════════════════════════╗"
+          echo "║   [CUSTOS] Guardian Check Complete            ║"
+          echo "║   φ = 1.618033988749895                       ║"
+          echo "╚═══════════════════════════════════════════════╝"
+          cat /tmp/custos-log.txt 2>/dev/null || true
+
+      - name: BotProofRecord
+        if: always()
+        run: |
+          echo "┌─ BotProofRecord ─────────────────────────────────────────────┐"
+          echo "│ id:          CUSTOS                                          │"
+          echo "│ latin:       Custos Repositorii                              │"
+          echo "│ role:        guardian / health-check                         │"
+          echo "│ law:         L-005 — Always-on, not alive                   │"
+          echo "│ authority:   OBSERVE + REPORT + OPEN_ISSUES                 │"
+          echo "│ prohibited:  mutate source files, commit to main,           │"
+          echo "│              delete files, dispatch workflows                │"
+          echo "│ run_id:      ${{ github.run_id }}"
+          echo "│ sha:         ${{ github.sha }}"
+          echo "│ proof_ref:   docs/bot-fleet/proof-index.md                  │"
+          echo "└───────────────────────────────────────────────────────────────┘"

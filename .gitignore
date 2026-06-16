@@ -1,0 +1,53 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# MEDINA — EXCLUSIONES SOVEREIGNAE
+# "Quod non pertinet, non committitur." (What does not belong is not committed.)
+#
+# Custom ignore rules for the Medina platform.
+# Covers: ICP/Motoko, Node.js, Rust, Browser Extensions, Distribution.
+#
+# TRACKED (never ignored):
+#   dist/          — install scripts, bundler, standalone download page
+#   docs/          — GitHub Pages (download page + worker)
+#   scripts/       — native build/validate/deploy scripts
+#   extensions/    — 20 browser extension source directories
+#   packages/      — SDK source packages
+#   organism-cli/  — terminal AI source
+#
+# Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+# ═══════════════════════════════════════════════════════════════════════════
+
+# ── Build output ──────────────────────────────────────────────────────────
+# Release bundler writes here (node dist/bundle.js)
+build/
+
+# ── Rust (medina_crypto) ─────────────────────────────────────────────────
+# cargo build/check output
+target/
+# Lock file regenerated per machine
+Cargo.lock
+
+# ── Node.js (organism-cli, packages/*) ────────────────────────────────────
+node_modules/
+# Package manager locks — regenerated per install
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# ── ICP / dfx (canister builds) ──────────────────────────────────────────
+.dfx/
+canister_ids.json
+
+# ── OS files ──────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# ── Editor state ──────────────────────────────────────────────────────────
+*.swp
+*.swo
+*~
+
+# ── Runtime / temp ────────────────────────────────────────────────────────
+*.log
+*.pid
+*.seed

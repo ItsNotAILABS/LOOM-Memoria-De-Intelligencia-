@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "Medina Care & Defense",
+  "version": "1.0.0",
+  "description": "CURA ET DEFENSIO — Care↔Defense cooperation monitor. Sovereign Medina browser extension. φ=1.618033988749895",
+  "permissions": [
+    "storage",
+    "activeTab"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Medina Care & Defense"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": {}
+}

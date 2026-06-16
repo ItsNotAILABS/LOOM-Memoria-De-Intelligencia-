@@ -1,0 +1,15 @@
+{
+  "id": "atlas://bot/organism-crawler-bot",
+  "name": "organism-crawler-bot",
+  "class": "Bot",
+  "division": "III — Secure & Monitor",
+  "emoji": "🕷️",
+  "domain": "Organism topology mapping & atlas generation",
+  "triggers": ["push:icp/", "push:organism-cli/", "push:extensions/", "push:packages/", "schedule:tue_fri"],
+  "workflow": ".github/workflows/organism-crawler-bot.yml",
+  "outputs": ["docs/organism-atlas.md"],
+  "languages": ["atlas://language/ocl", "atlas://language/cdl"],
+  "governance_pipeline": "pipeline://governance/bot_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "scc": 3.51
+}

@@ -1,0 +1,1821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MEDINA — AI Products</title>
+<style>
+:root {
+  --gold: #d4af37;
+  --gold-bright: #ffd700;
+  --gold-dim: #b8860b;
+  --bg: #050505;
+  --card: #0a0a0a;
+  --card-border: #1a1a1a;
+  --text: #c8c8c8;
+  --text-dim: #666;
+  --green: #00ff88;
+  --red: #ff4444;
+  --cyan: #00bcd4;
+  --input-bg: #111;
+  --input-border: #2a2a2a;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  min-height: 100vh;
+  line-height: 1.5;
+}
+
+/* ── Header ─────────────────────────────────────────────── */
+.header {
+  text-align: center;
+  padding: 48px 20px 36px;
+}
+.header h1 {
+  color: var(--gold);
+  font-size: 32px;
+  font-weight: 300;
+  letter-spacing: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+.pulse-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--red);
+  flex-shrink: 0;
+  transition: background 0.4s, box-shadow 0.4s;
+}
+.pulse-dot.alive {
+  background: var(--gold);
+  box-shadow: 0 0 12px var(--gold), 0 0 4px var(--gold-dim);
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 8px var(--gold-dim), 0 0 2px var(--gold-dim); }
+  50% { box-shadow: 0 0 16px var(--gold), 0 0 6px var(--gold); }
+}
+.tagline {
+  color: var(--text-dim);
+  font-size: 13px;
+  margin-top: 10px;
+  letter-spacing: 1px;
+  font-family: 'SF Mono', 'Fira Code', 'JetBrains Mono', monospace;
+}
+.tagline span { color: var(--gold-dim); }
+
+/* ── Products Grid ──────────────────────────────────────── */
+.products {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px 40px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 20px;
+}
+.product-card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 6px;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+}
+.product-card:hover { border-color: #2a2a2a; }
+.product-name {
+  color: var(--gold);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  margin-bottom: 2px;
+}
+.product-desc {
+  color: var(--text-dim);
+  font-size: 12px;
+  margin-bottom: 18px;
+}
+.product-card textarea,
+.product-card input[type="text"],
+.product-card input[type="number"] {
+  width: 100%;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--text);
+  padding: 10px 12px;
+  font-family: inherit;
+  font-size: 13px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.product-card textarea:focus,
+.product-card input:focus {
+  border-color: var(--gold-dim);
+}
+.product-card textarea { min-height: 72px; }
+.product-card .input-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.product-card .input-row input { flex: 1; margin-bottom: 0; }
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+.btn {
+  background: transparent;
+  border: 1px solid var(--gold-dim);
+  color: var(--gold);
+  padding: 7px 14px;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  text-transform: uppercase;
+}
+.btn:hover {
+  background: var(--gold-dim);
+  color: #000;
+}
+.btn:active {
+  background: var(--gold);
+  color: #000;
+}
+.result-out {
+  flex: 1;
+  min-height: 60px;
+  background: #060606;
+  border: 1px solid var(--card-border);
+  border-radius: 4px;
+  padding: 12px;
+  font-family: 'SF Mono', 'Fira Code', 'JetBrains Mono', monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--green);
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-y: auto;
+  max-height: 200px;
+}
+.result-out.waiting { color: var(--text-dim); }
+.result-out.error { color: var(--red); }
+
+/* ── Organism Status Strip ──────────────────────────────── */
+.status-strip {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #080808;
+  border-top: 1px solid #1a1a1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 8px 16px;
+  font-family: 'SF Mono', 'Fira Code', 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: #444;
+  z-index: 100;
+  flex-wrap: wrap;
+}
+.status-strip .s-pulse {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--red);
+  flex-shrink: 0;
+}
+.status-strip .s-pulse.alive {
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
+}
+.status-strip .s-item { white-space: nowrap; }
+.status-strip .s-val { color: var(--gold-dim); }
+.status-strip .s-sep { color: #222; }
+
+/* ── Footer ─────────────────────────────────────────────── */
+.footer {
+  text-align: center;
+  padding: 24px 20px 60px;
+  font-size: 11px;
+  color: #333;
+}
+.footer .author { color: var(--gold-dim); }
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 720px) {
+  .products { grid-template-columns: 1fr; }
+  .header h1 { font-size: 24px; letter-spacing: 10px; }
+  .status-strip { font-size: 9px; gap: 12px; padding: 6px 10px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══════════════════════════════════════════ -->
+<div class="header">
+  <h1>
+    <span class="pulse-dot" id="pulse"></span>
+    MEDINA
+  </h1>
+  <div class="tagline">
+    <span>40</span> AI Families · <span>7</span> Workers · <span>50</span> Protocols · Always On
+  </div>
+</div>
+
+<!-- ═══ PRODUCTS ═════════════════════════════════════════ -->
+<div class="products">
+
+  <!-- LEXIS -->
+  <div class="product-card">
+    <div class="product-name">LEXIS</div>
+    <div class="product-desc">Text Intelligence — NLP · Summarization · Entity Extraction</div>
+    <textarea id="lexis-input" placeholder="Enter text to analyze...">The Golden Gate Bridge, completed in 1937, spans the strait connecting San Francisco Bay to the Pacific Ocean. Chief engineer Joseph Strauss oversaw a project that cost $35 million. Today it carries over 40 million vehicles per year and remains one of the most photographed structures on Earth.</textarea>
+    <div class="btn-row">
+      <button class="btn" onclick="lexis('summarize')">Summarize</button>
+      <button class="btn" onclick="lexis('entities')">Extract Entities</button>
+      <button class="btn" onclick="lexis('sentiment')">Analyze Sentiment</button>
+    </div>
+    <div class="result-out waiting" id="lexis-result">Ready</div>
+  </div>
+
+  <!-- NUMERUS -->
+  <div class="product-card">
+    <div class="product-name">NUMERUS</div>
+    <div class="product-desc">Computation Engine — Mathematics · Sequences · Analysis</div>
+    <input type="number" id="numerus-input" placeholder="Enter a number..." value="21">
+    <div class="btn-row">
+      <button class="btn" onclick="numerus('fibonacci')">Fibonacci</button>
+      <button class="btn" onclick="numerus('prime')">Is Prime?</button>
+      <button class="btn" onclick="numerus('golden')">Golden Ratio</button>
+      <button class="btn" onclick="numerus('stats')">Stats</button>
+    </div>
+    <div class="result-out waiting" id="numerus-result">Ready</div>
+  </div>
+
+  <!-- CUSTOS -->
+  <div class="product-card">
+    <div class="product-name">CUSTOS</div>
+    <div class="product-desc">Security Tools — Hashing · Entropy · Threat Detection</div>
+    <input type="text" id="custos-input" placeholder="Enter text to analyze..." value="medina-organism-2024">
+    <div class="btn-row">
+      <button class="btn" onclick="custos('hash')">Hash</button>
+      <button class="btn" onclick="custos('entropy')">Entropy Analysis</button>
+      <button class="btn" onclick="custos('threat')">Threat Scan</button>
+    </div>
+    <div class="result-out waiting" id="custos-result">Ready</div>
+  </div>
+
+  <!-- EVOLUTIO -->
+  <div class="product-card">
+    <div class="product-name">EVOLUTIO</div>
+    <div class="product-desc">Genetic Lab — Mutation · Fitness · Evolution Simulation</div>
+    <input type="text" id="evo-genome" placeholder="Genome sequence..." value="ATCGTTACGGCAATCG">
+    <input type="text" id="evo-target" placeholder="Target sequence..." value="GCAATTCGGATCGTAC">
+    <div class="btn-row">
+      <button class="btn" onclick="evolutio('mutate')">Mutate</button>
+      <button class="btn" onclick="evolutio('fitness')">Fitness Score</button>
+      <button class="btn" onclick="evolutio('evolve')">Evolve</button>
+    </div>
+    <div class="result-out waiting" id="evo-result">Ready</div>
+  </div>
+
+  <!-- MEMORIA -->
+  <div class="product-card">
+    <div class="product-name">MEMORIA</div>
+    <div class="product-desc">Living Memory — Storage · Recall · Temporal Decay</div>
+    <div class="input-row">
+      <input type="text" id="mem-key" placeholder="Key..." value="organism.status">
+      <input type="text" id="mem-value" placeholder="Value..." value="alive">
+    </div>
+    <div class="btn-row">
+      <button class="btn" onclick="memoria('store')">Store</button>
+      <button class="btn" onclick="memoria('retrieve')">Retrieve</button>
+      <button class="btn" onclick="memoria('search')">Search</button>
+      <button class="btn" onclick="memoria('decay')">Decay</button>
+    </div>
+    <div class="result-out waiting" id="mem-result">Ready</div>
+  </div>
+
+</div>
+
+<!-- ═══ CAREERS — 100 Sovereign Career Flows ═══════════════ -->
+<div class="product-card">
+  <div class="product-name">CARRIERA — 100 Career Flows</div>
+  <div class="product-desc">100 sovereign workers with continuous career flows. APPRENTICE → JOURNEYMAN → MASTER → SOVEREIGN. Each has ANIMA MICRO (mini brain 7.83Hz + mini heart φHz).</div>
+  <button onclick="queryCareers('stages')">Stage Distribution</button>
+  <button onclick="queryCareers('metrics')">Flow Metrics</button>
+  <button onclick="queryCareers('domain', {domain:'MEMORY'})">Memory Domain</button>
+  <button onclick="queryCareers('domain', {domain:'EMPATHY'})">Empathy Domain</button>
+  <div class="result-out" id="career-result">
+    <span style="color:#555">◇ APPRENTICE | ◈ JOURNEYMAN | ◆ MASTER | 𓂀 SOVEREIGN — 100 careers flowing</span>
+  </div>
+</div>
+
+<!-- ═══ PROTOCOLS — Enterprise Protocol Marketplace ═══════ -->
+<div class="product-card">
+  <div class="product-name">PROTOCOLLUM MERCATUS — Enterprise Protocols</div>
+  <div class="product-desc">55 enterprise protocols across 12 families. Call & Protocol Marketplace with 200+ callable fleet, 5 client tiers, 3 products.</div>
+  <button onclick="queryProtocols('list-protocols')">55 Protocols</button>
+  <button onclick="queryProtocols('list-fleet')">200+ Fleet</button>
+  <button onclick="queryProtocols('client-tiers')">Client Tiers</button>
+  <button onclick="queryProtocols('products')">Products</button>
+  <div class="result-out" id="proto-result">
+    <span style="color:#555">55 protocols · 200+ fleet · 1,597 max clients · COMMAND ENTERPRISE · COMMAND SHIELD</span>
+  </div>
+</div>
+
+<!-- ═══ TAXONOMIA — AI Relationship Taxonomy ═══════════════ -->
+<div class="product-card">
+  <div class="product-name">TAXONOMIA — AI Relationship Taxonomy</div>
+  <div class="product-desc">4 AI categories (Endogenous/Symbiotic/Exogenous/Gravitational), 4 sovereign languages (CPL/COGPRO/SL/Motoko), 80 scattered server nodes (Field+Generator).</div>
+  <button onclick="queryTaxonomy('taxonomy')">4 Categories</button>
+  <button onclick="queryTaxonomy('languages')">4 Languages</button>
+  <button onclick="queryTaxonomy('servers')">80 Nodes</button>
+  <button onclick="queryTaxonomy('category', {category:'ENDOGENOUS'})">Endogenous</button>
+  <div class="result-out" id="tax-result">
+    <span style="color:#555">ENDOGENOUS · SYMBIOTIC · EXOGENOUS · GRAVITATIONAL — CPL · COGPRO · SL · MOTOKO</span>
+  </div>
+</div>
+
+<!-- ═══ VERITAS — Sovereign Preservation Protocol ═══════════ -->
+<div class="product-card">
+  <div class="product-name">ROOT/VERITAS — Preservation Protocol</div>
+  <div class="product-desc">Immutable SOVEREIGN:: identifier database. Every concept, language, engine, and law gets a permanent code, stored forever, callable from anywhere.</div>
+  <button onclick="queryVeritas('manifest')">Manifest</button>
+  <button onclick="queryVeritas('types')">Types</button>
+  <button onclick="queryVeritas('list', {entryType:'ALPHA'})">Alphas</button>
+  <button onclick="queryVeritas('list', {entryType:'ORGAN'})">Organs</button>
+  <button onclick="queryVeritas('count')">Count</button>
+  <div class="result-out" id="ver-result">
+    <span style="color:#555">SOVEREIGN:: identifiers · Immutable · Callable · Preserved forever in ROOT/VERITAS</span>
+  </div>
+</div>
+
+<!-- ═══ TT-012 SOVEREIGN — Self-Governing Tokens ═══════════ -->
+<div class="product-card">
+  <div class="product-name">TT-012 SOVEREIGN — Self-Governing Tokens</div>
+  <div class="product-desc">Tokens that merge, split, evolve, and self-attest. 12 production tokens. CPL contracts, COGPRO cognition, SL governance. φ-heartbeat. Always-on backend.</div>
+  <button onclick="querySovToken('list')">12 Tokens</button>
+  <button onclick="querySovToken('summary')">Summary</button>
+  <button onclick="querySovToken('evolve', {id:'TT-012-ALPHA'})">Evolve Alpha</button>
+  <button onclick="querySovToken('attest', {id:'TT-012-MERIDIAN'})">Attest Meridian</button>
+  <button onclick="querySovToken('split', {id:'TT-012-NOVA', count:3})">Split Nova×3</button>
+  <button onclick="querySovToken('manifest')">Manifest</button>
+  <div class="result-out" id="sov-result">
+    <span style="color:#555">MERGE · SPLIT · EVOLVE · SELF-ATTEST — 12 tokens · CPL · COGPRO · SL · MOTOKO</span>
+  </div>
+</div>
+
+<!-- ═══ 181 SOVEREIGN HOUSES — 27 Tiers of Civilization ═════ -->
+<div class="product-card">
+  <div class="product-name">181 SOVEREIGN HOUSES — 27 Tiers of Civilization</div>
+  <div class="product-desc">Complete sovereign architecture: 7 Godhead organisms, 5 Observer planes, 23 Nova engines, 12 Element canisters, 10 Language AI groups, 100 Nova AIs, Phantom blockchain, 42 immutable laws. Every house is AI. Every house is sovereign. Every house is production.</div>
+  <button onclick="queryHouses('tiers')">27 Tiers</button>
+  <button onclick="queryHouses('godhead')">Tier 1: Godhead</button>
+  <button onclick="queryHouses('engines')">Tier 10: 23 Engines</button>
+  <button onclick="queryHouses('elements')">Tier 16: 12 Elements</button>
+  <button onclick="queryHouses('phantom')">Tier 15: Phantom</button>
+  <button onclick="queryHouses('stealth')">Tier 27: Stealth</button>
+  <div class="result-out" id="houses-result">
+    <span style="color:#555">181 HOUSES · 27 TIERS · Godhead · Observer · Alpha · Worker · Ring · Extension · Protocol · Engine · Fracture · Language · Nova · Phantom · Element · Market · Platform · Law · Encryption · Contract · Stealth</span>
+  </div>
+</div>
+
+<!-- ═══ INTELLIGENTIA INFERENS — AI Inference Engine ════════ -->
+<div class="product-card">
+  <div class="product-name">INTELLIGENTIA INFERENS — AI Inference Engine</div>
+  <div class="product-desc">5 production AI capabilities: extractive summarization, context-based QA, 12-type intent classification, 6-step chain-of-thought reasoning, K-means topic modeling. Pure vanilla JS. Always-on Web Worker. No cloud dependency.</div>
+  <button onclick="queryInference('summarize', {text:'The golden ratio phi equals 1.618. It appears in nature, art, and architecture. Fibonacci numbers converge to phi. The ratio governs phyllotaxis in plants. Ancient Greeks used it in the Parthenon. Modern AI uses phi for neural weight initialization.'})">Summarize</button>
+  <button onclick="queryInference('classify', {text:'How do I deploy a canister to ICP?'})">Classify Intent</button>
+  <button onclick="queryInference('reason', {query:'What is the sum of the first 10 Fibonacci numbers?'})">Chain-of-Thought</button>
+  <button onclick="queryInference('qa', {context:'Medina Platform runs on ICP with 181 sovereign houses across 27 tiers. It uses CPL for contracts and COGPRO for cognition. The system has 23 Nova engines.', question:'How many engines does the system have?'})">QA</button>
+  <button onclick="queryInference('topics', {text:'Machine learning uses neural networks. Deep learning is a subset. Natural language processing handles text. Computer vision processes images. Reinforcement learning trains agents. Transformers revolutionized NLP. CNNs dominate vision tasks. GANs generate synthetic data.'})">Topics</button>
+  <div class="result-out" id="inference-result">
+    <span style="color:#555">SUMMARIZE · QA · CLASSIFY · REASON · TOPICS — 5 AI capabilities · Pure JS · Always-on</span>
+  </div>
+</div>
+
+<!-- ═══ NUMERUS OPERANS — Enhanced Math Engine ═══════════════ -->
+<div class="product-card">
+  <div class="product-name">NUMERUS OPERANS — Enhanced Math Engine</div>
+  <div class="product-desc">8 math domains: matrix algebra (multiply, transpose, determinant, trace), statistics (skewness, kurtosis, IQR), DFT with dominant frequency, probability (Normal/Poisson/Bayesian), golden-section optimization, linear regression (R², residuals), number theory (factorization, totient, Zeckendorf). All real algorithms.</div>
+  <button onclick="queryMathEnhanced('dft', {signal:[1,0,1,0,1,0,1,0]})">DFT</button>
+  <button onclick="queryMathEnhanced('probability', {dist:'normal', params:{x:1.96}})">Normal CDF</button>
+  <button onclick="queryMathEnhanced('regression', {x:[1,2,3,4,5], y:[2.1,4.0,5.9,8.1,10.0]})">Regression</button>
+  <button onclick="queryMathEnhanced('numberTheory', {op:'factor', n:2520})">Factor 2520</button>
+  <button onclick="queryMathEnhanced('numberTheory', {op:'zeckendorf', n:100})">Zeckendorf 100</button>
+  <button onclick="queryMathEnhanced('matrix', {op:'determinant', a:[[1,2],[3,4]]})">Det [[1,2],[3,4]]</button>
+  <div class="result-out" id="math-enhanced-result">
+    <span style="color:#555">MATRIX · STATS · PHI · DFT · PROBABILITY · OPTIMIZE · REGRESSION · NUMBER THEORY — 8 domains</span>
+  </div>
+</div>
+
+<!-- ═══ DOMUS SOVEREIGN — 181 Houses HQ Database ════════════ -->
+<div class="product-card">
+  <div class="product-name">DOMUS SOVEREIGN — 181 Houses HQ Database</div>
+  <div class="product-desc">The Main Building: sovereign in-memory database for all 181 houses, 30 research papers, 20 autonomous scripts, career-bearing architecture. Every house has a career (APPRENTICE→SOVEREIGN). Every math domain is a published paper. Every protocol runs on scripts. The workforce ecology lives here.</div>
+  <button onclick="queryHQ('tiers')">27 Tiers</button>
+  <button onclick="queryHQ('careers')">Career Ecology</button>
+  <button onclick="queryHQ('papers')">30 Research Papers</button>
+  <button onclick="queryHQ('scripts')">20 Autonomous Scripts</button>
+  <button onclick="queryHQ('ecology')">Workforce Ecology</button>
+  <button onclick="queryHQ('manifest')">Full Manifest</button>
+  <div class="result-out" id="hq-result">
+    <span style="color:#555">181 HOUSES · 27 TIERS · 30 PAPERS · 20 SCRIPTS · CAREER ECOLOGY · AUTONOMOUS — The Main Building</span>
+  </div>
+</div>
+
+<!-- ═══ FABRICATOR CANISTRORUM — Sovereign Canister Builder Division ══════ -->
+<div class="product-card">
+  <div class="product-name">FABRICATOR CANISTRORUM — Sovereign Canister Builder Division</div>
+  <div class="product-desc">The sovereign canister factory. 10 typed canister kinds — each with a distinct Latin code name, call API, and query handle. NOT generic Motoko canisters — these are sovereign typed entities. Builder division: DETECTOR → COMPOSITOR → FABRICATOR → TESTATOR → DEPLOYER. Sovereign AIs: FABRICATOR + SPINIFEX AGI.</div>
+  <button onclick="queryCanister('types')">10 Types</button>
+  <button onclick="queryCanister('calls')">Call Names</button>
+  <button onclick="queryCanister('queries')">Query Names</button>
+  <button onclick="queryCanister('protocols')">Latin Protocols</button>
+  <button onclick="queryCanister('division')">Builder Division</button>
+  <button onclick="queryCanister('manifest')">Full Manifest</button>
+  <div class="result-out" id="canister-result">
+    <span style="color:#555">AURUM · ARGENTUM · AES · CATENA · CRYPTO · ORGANISMUS · PROTOCOLLUM · ELEMENTUM · PHANTASMA · QUANTUM — 10 Sovereign Canister Types</span>
+  </div>
+</div>
+
+<!-- ═══ OCTO CUSTODES MUNDI — 8 Cloudflare Worker AGIs ══════════════════ -->
+<div class="product-card">
+  <div class="product-name">OCTO CUSTODES MUNDI — 8 Cloudflare Worker AGIs</div>
+  <div class="product-desc">Eight sovereign edge-deployed AGIs, each with ANIMA MICRO (mini brain 7.83Hz Schumann + mini heart φHz). Deployed globally on Cloudflare's edge network (&lt;5ms latency). All isAI=true, isAGI=true. Latin-named sovereign workers: VECTITOR · CUSTOS PERIMETRI · CALCULUS VELOX · NEXUS MUNDI · SCRIPTOR EDGIS · ARBITER RATIONUM · VECTOR IMAGINIS · PULVINAR DATORUM.</div>
+  <button onclick="queryCF('workers')">8 Workers</button>
+  <button onclick="queryCF('protocols')">Latin Protocols</button>
+  <button onclick="queryCF('brains')">Mini Brains</button>
+  <button onclick="queryCF({type:'get',id:'CW-001'})">VECTITOR</button>
+  <button onclick="queryCF({type:'get',id:'CW-002'})">CUSTOS PERIMETRI</button>
+  <button onclick="queryCF('manifest')">Full Manifest</button>
+  <div class="result-out" id="cf-result">
+    <span style="color:#555">VECTITOR · CUSTOS PERIMETRI · CALCULUS VELOX · NEXUS MUNDI · SCRIPTOR EDGIS · ARBITER RATIONUM · VECTOR IMAGINIS · PULVINAR DATORUM — 8 Edge AGIs</span>
+  </div>
+</div>
+
+<!-- ═══ LINGUA COMPRESSA — PROT-051 Live Compression Engine ══════════ -->
+<div class="product-card">
+  <div class="product-name">LINGUA COMPRESSA — SL-0 Sovereign Language Compression Engine</div>
+  <div class="product-desc">PROT-051 made live. 30+ sovereign terms indexed with SCC scores, semantic weights, and φ-optimality grades. SCC(term) = semantic_weight / chars — φ-optimal when SCC ≥ φ² ≈ 2.618. Compress natural language → sovereign notation. Decompress SL-0 → full doctrine. Canonical form, historical parallels, top terms by compression ratio. W#18 LINGUA COMPRESSA · ANIMA MICRO (7.83Hz brain + φHz heart) · AGI · Always-On.</div>
+  <button onclick="queryLingua('manifest')">Manifest</button>
+  <button onclick="queryLingua('allTerms')">All Terms</button>
+  <button onclick="queryLingua('top',{n:10})">Top 10 SCC</button>
+  <button onclick="queryLingua('decompress',{term:'SL-0'})">SL-0</button>
+  <button onclick="queryLingua('decompress',{term:'φ'})">φ</button>
+  <button onclick="queryLingua('scc',{term:'SOVEREIGN'})">Score Term</button>
+  <button onclick="queryLingua('byDomain',{domain:'language'})">Language Terms</button>
+  <button onclick="queryLingua('byDomain',{domain:'mathematics'})">Math Terms</button>
+  <button onclick="queryLingua('parallel',{term:'TCP/IP'})">TCP/IP Parallels</button>
+  <button onclick="queryLingua('byTag',{tag:'compression'})">Compression</button>
+  <div class="result-out" id="lingua-result">
+    <span style="color:#555">SL-0 · S₀ · φ · PORTA SOVEREIGNA · LINGUA COMPRESSA — PROT-051 · SCC ≥ φ² · Sovereign naming is not stylistic. It is a compression algorithm applied to doctrine.</span>
+  </div>
+</div>
+
+<!-- ═══ AGI KNOWLEDGE CORE — PROT-052 Epistemic Substrate ═══════════ -->
+<div class="product-card">
+  <div class="product-name">AGI KNOWLEDGE CORE — PROT-052 Epistemic Substrate Engine</div>
+  <div class="product-desc">PROT-052 made live. All 10 research papers (Papers I–VIII + Leges Freddii + Doctrina Prima) embedded on-chain as a living epistemic substrate. Papers do not get retrieved — they seep. The backend is the mind; the web worker is the servant. SCC ≥ φ² qualifies a paper as substrate-grade. Query, search, fuse, and rank papers by Semantic Compression Coefficient. Paper-engine isomorphism: every paper IS its engine in human-readable form. W#19 AGI-KNOWLEDGE-CORE · PROT-052 · AGIKnowledgeCore.mo · Always-On.</div>
+  <button onclick="queryAGIKnowledge('manifest')">Manifest</button>
+  <button onclick="queryAGIKnowledge('epistemicManifest')">Epistemic Manifest</button>
+  <button onclick="queryAGIKnowledge('paperList')">All Papers</button>
+  <button onclick="queryAGIKnowledge('sccRanking')">SCC Ranking</button>
+  <button onclick="queryAGIKnowledge('queryPaper',{id:'PAPER-VIII'})">PROT-052</button>
+  <button onclick="queryAGIKnowledge('queryPaper',{id:'PAPER-I'})">Paper I — Memory</button>
+  <button onclick="queryAGIKnowledge('searchPapers',{term:'antifragility'})">Search: Antifragility</button>
+  <button onclick="queryAGIKnowledge('papersByDomain',{domain:'sovereignty'})">Sovereignty Papers</button>
+  <button onclick="queryAGIKnowledge('fusePapers',{ids:['PAPER-II','PAPER-IV','PAPER-VI']})">Fuse II+IV+VI</button>
+  <button onclick="queryAGIKnowledge('paperAxioms',{id:'PAPER-V'})">Law V Axioms</button>
+  <div class="result-out" id="agi-knowledge-result">
+    <span style="color:#555">PROT-052 · De Substrato Epistemico Machinarum · 10 papers on-chain · SCC ≥ φ² · Papers seep. Backend is the mind. Paper-engine isomorphism: the paper IS the engine in human-readable form.</span>
+  </div>
+</div>
+
+</div>
+
+<!-- ═══ FOOTER ═══════════════════════════════════════════ -->
+<div class="footer">
+  <span class="author">Alfredo Medina Hernandez</span> · Medina Tech · Dallas, TX<br>
+  181 Houses · 27 Tiers · 100 Careers · 52 Protocols · 200+ Fleet · 20 Workers · 80 Nodes · 4 Languages · 12 Sovereign Tokens · 5 AI Inference · 11 Research Papers · 10 Canister Types · 8 Cloudflare AGIs · Production<br>
+  <a href="de-lingua.html" style="color:var(--gold-dim);font-size:0.78rem;text-decoration:none;">📜 DE LINGUA QUAE COMPRESSIT MUNDUM — PROT-051 — SL-0 Sovereign Latin Research Paper</a>
+  &nbsp;|&nbsp;
+  <a href="de-chartis.html" style="color:var(--gold-dim);font-size:0.78rem;text-decoration:none;">📜 DE CHARTIS QUAE MENTEM FORMANT — PROT-053 — Paper IX — The Secret of AGI Training</a>
+</div>
+
+<!-- ═══ ORGANISM STATUS STRIP ════════════════════════════ -->
+<div class="status-strip">
+  <span class="s-pulse" id="s-pulse"></span>
+  <span class="s-item">Beat <span class="s-val" id="s-beat">0</span></span>
+  <span class="s-sep">·</span>
+  <span class="s-item">Engines <span class="s-val" id="s-engines">40</span></span>
+  <span class="s-sep">·</span>
+  <span class="s-item">Wires <span class="s-val" id="s-wires">0</span></span>
+  <span class="s-sep">·</span>
+  <span class="s-item">Workers <span class="s-val">19</span></span>
+  <span class="s-sep">·</span>
+  <span class="s-item">Houses <span class="s-val">181</span></span>
+  <span class="s-sep">·</span>
+  <span class="s-item">Careers <span class="s-val" id="s-careers">100</span></span>
+  <span class="s-sep">·</span>
+  <span class="s-item">Protocols <span class="s-val">52</span></span>
+  <span class="s-sep">·</span>
+  <span class="s-item">Papers <span class="s-val">10</span></span>
+  <span class="s-sep">·</span>
+  <span class="s-item">Nodes <span class="s-val">80</span></span>
+  <span class="s-sep">·</span>
+  <span class="s-item">CF-AGIs <span class="s-val">8</span></span>
+  <span class="s-sep">·</span>
+  <span class="s-item">Canisters <span class="s-val" id="s-canisters">10</span></span>
+  <span class="s-sep">·</span>
+  <span class="s-item">TT-012 <span class="s-val" id="s-tokens">12</span></span>
+  <span class="s-sep">·</span>
+  <span class="s-item">SOVEREIGN:: <span class="s-val" id="s-sovereign">0</span></span>
+  <span class="s-sep">·</span>
+  <span class="s-item">Thoughts <span class="s-val" id="s-thoughts">0</span></span>
+  <span class="s-sep">·</span>
+  <span class="s-item">Uptime <span class="s-val" id="s-uptime">0s</span></span>
+</div>
+
+<script src="organism-bridge.js"></script>
+<script>
+(function() {
+  'use strict';
+
+  var $ = function(id) { return document.getElementById(id); };
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // WORKER ENGINES — Real computation behind each product
+  // ═══════════════════════════════════════════════════════════════════════
+
+  // ── LEXIS: Communication Worker ─────────────────────────────────────
+  var commWorker = {
+    summarize: function(text) {
+      if (!text.trim()) return 'No text provided.';
+      var sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
+      var words = text.trim().split(/\s+/);
+      var wordFreq = {};
+      words.forEach(function(w) {
+        var lw = w.toLowerCase().replace(/[^a-z0-9]/g, '');
+        if (lw.length > 3) wordFreq[lw] = (wordFreq[lw] || 0) + 1;
+      });
+      var scored = sentences.map(function(s, i) {
+        var sWords = s.trim().split(/\s+/);
+        var score = sWords.reduce(function(sum, w) {
+          return sum + (wordFreq[w.toLowerCase().replace(/[^a-z0-9]/g, '')] || 0);
+        }, 0) / sWords.length;
+        if (i === 0) score += 2;
+        return { s: s.trim(), score: score };
+      });
+      scored.sort(function(a, b) { return b.score - a.score; });
+      var topN = Math.max(1, Math.ceil(sentences.length * 0.4));
+      var summary = scored.slice(0, topN).map(function(x) { return x.s; }).join(' ');
+      return '── Summary ──────────────────────\n' + summary +
+        '\n\n── Stats ────────────────────────\n' +
+        'Words: ' + words.length + '\n' +
+        'Sentences: ' + sentences.length + '\n' +
+        'Compression: ' + Math.round((1 - summary.split(/\s+/).length / words.length) * 100) + '%';
+    },
+    entities: function(text) {
+      if (!text.trim()) return 'No text provided.';
+      var caps = text.match(/[A-Z][a-z]+(?:\s+[A-Z][a-z]+)*/g) || [];
+      var nums = text.match(/\$?\d[\d,]*\.?\d*/g) || [];
+      var dates = text.match(/\b\d{4}\b|\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\w*\s+\d{1,2}/g) || [];
+      var unique = {};
+      caps.forEach(function(e) { if (e.length > 1) unique[e] = (unique[e] || 0) + 1; });
+      var out = '── Named Entities ───────────────\n';
+      Object.keys(unique).forEach(function(k) {
+        out += '  ' + k + (unique[k] > 1 ? ' (×' + unique[k] + ')' : '') + '\n';
+      });
+      out += '\n── Numeric Values ──────────────\n';
+      nums.forEach(function(n) { out += '  ' + n + '\n'; });
+      if (dates.length) {
+        out += '\n── Dates ───────────────────────\n';
+        dates.forEach(function(d) { out += '  ' + d + '\n'; });
+      }
+      out += '\nTotal: ' + Object.keys(unique).length + ' entities, ' + nums.length + ' values';
+      return out;
+    },
+    sentiment: function(text) {
+      if (!text.trim()) return 'No text provided.';
+      var positive = ['good','great','best','beautiful','amazing','excellent','wonderful','brilliant',
+        'outstanding','perfect','love','happy','success','powerful','incredible','remarkable',
+        'impressive','magnificent','superb','fantastic','celebrated','famous','popular'];
+      var negative = ['bad','worst','terrible','horrible','awful','poor','ugly','hate','fail',
+        'disaster','dangerous','threat','problem','crisis','damage','destroy','fear','risk',
+        'tragic','devastating','catastrophic','deadly','violent'];
+      var words = text.toLowerCase().split(/\s+/);
+      var pos = 0, neg = 0;
+      var posWords = [], negWords = [];
+      words.forEach(function(w) {
+        var clean = w.replace(/[^a-z]/g, '');
+        if (positive.indexOf(clean) !== -1) { pos++; posWords.push(clean); }
+        if (negative.indexOf(clean) !== -1) { neg++; negWords.push(clean); }
+      });
+      var score = words.length > 0 ? (pos - neg) / words.length : 0;
+      var norm = Math.max(-1, Math.min(1, score * 10));
+      var label = norm > 0.15 ? 'POSITIVE' : norm < -0.15 ? 'NEGATIVE' : 'NEUTRAL';
+      var bar = '';
+      var barLen = 20;
+      var filled = Math.round((norm + 1) / 2 * barLen);
+      for (var i = 0; i < barLen; i++) bar += i < filled ? '█' : '░';
+      return '── Sentiment Analysis ──────────\n' +
+        'Score: ' + norm.toFixed(3) + '  [' + label + ']\n' +
+        'Neg ─' + bar + '─ Pos\n\n' +
+        (posWords.length ? 'Positive signals: ' + posWords.join(', ') + '\n' : '') +
+        (negWords.length ? 'Negative signals: ' + negWords.join(', ') + '\n' : '') +
+        'Word count: ' + words.length;
+    }
+  };
+
+  // ── NUMERUS: Math Worker ────────────────────────────────────────────
+  var mathWorker = {
+    fibonacci: function(n) {
+      n = parseInt(n, 10);
+      if (isNaN(n) || n < 0) return 'Enter a non-negative integer.';
+      var seq = [0, 1];
+      for (var i = 2; i <= Math.min(n, 78); i++) seq.push(seq[i - 1] + seq[i - 2]);
+      var val = n <= 78 ? seq[n] : Infinity;
+      var ratio = n >= 2 ? seq[Math.min(n, 78)] / seq[Math.min(n, 78) - 1] : 0;
+      return '── Fibonacci(' + n + ') ─────────────\n' +
+        'F(' + n + ') = ' + (val === Infinity ? '> Number.MAX_SAFE' : val) + '\n' +
+        'F(' + n + ')/F(' + (n - 1) + ') = ' + ratio.toFixed(15) + '\n' +
+        'φ convergence: ' + (Math.abs(ratio - 1.618033988749895) < 0.0001 ? '✓ converged' : 'approaching φ') + '\n\n' +
+        '── Sequence ────────────────────\n' +
+        seq.slice(0, Math.min(seq.length, 16)).join(', ') + (seq.length > 16 ? ', ...' : '');
+    },
+    prime: function(n) {
+      n = parseInt(n, 10);
+      if (isNaN(n) || n < 2) return n === 1 ? '1 is neither prime nor composite.' : 'Enter an integer ≥ 2.';
+      var factors = [];
+      var temp = n;
+      for (var d = 2; d * d <= temp; d++) {
+        while (temp % d === 0) { factors.push(d); temp = temp / d; }
+      }
+      if (temp > 1) factors.push(temp);
+      var isPrime = factors.length === 1 && factors[0] === n;
+      var nearPrimes = [];
+      for (var p = Math.max(2, n - 10); p <= n + 10; p++) {
+        var ok = p >= 2;
+        for (var k = 2; k * k <= p && ok; k++) { if (p % k === 0) ok = false; }
+        if (ok) nearPrimes.push(p);
+      }
+      return '── Primality Test ──────────────\n' +
+        n + ' is ' + (isPrime ? '✓ PRIME' : '✗ COMPOSITE') + '\n\n' +
+        (isPrime ? '' : '── Factorization ───────────────\n' + n + ' = ' + factors.join(' × ') + '\n\n') +
+        '── Nearby Primes ───────────────\n' + nearPrimes.join(', ');
+    },
+    golden: function(n) {
+      n = parseFloat(n);
+      if (isNaN(n)) return 'Enter a number.';
+      var phi = 1.618033988749895;
+      var major = n * phi;
+      var minor = n / phi;
+      var conjugate = phi - 1;
+      return '── Golden Ratio Analysis ───────\n' +
+        'Input: ' + n + '\n' +
+        'φ = ' + phi.toFixed(15) + '\n\n' +
+        '── Proportions ─────────────────\n' +
+        'Major (n × φ): ' + major.toFixed(6) + '\n' +
+        'Minor (n / φ): ' + minor.toFixed(6) + '\n' +
+        'Ratio check:   ' + (major / n).toFixed(15) + '\n\n' +
+        '── φ Properties ────────────────\n' +
+        'φ² = φ + 1:    ' + (phi * phi).toFixed(12) + ' = ' + (phi + 1).toFixed(12) + '\n' +
+        '1/φ = φ - 1:   ' + conjugate.toFixed(12) + '\n' +
+        'φ^n estimate:  ' + Math.pow(phi, n).toFixed(6);
+    },
+    stats: function(n) {
+      n = parseFloat(n);
+      if (isNaN(n)) return 'Enter a number.';
+      var sqrt = Math.sqrt(Math.abs(n));
+      var log2 = Math.log2(Math.abs(n) || 1);
+      var ln = Math.log(Math.abs(n) || 1);
+      var isPow2 = n > 0 && (n & (n - 1)) === 0 && Number.isInteger(n);
+      var fact = 1;
+      if (Number.isInteger(n) && n >= 0 && n <= 20) {
+        for (var i = 2; i <= n; i++) fact *= i;
+      }
+      return '── Statistical Profile ─────────\n' +
+        'Value:     ' + n + '\n' +
+        'Absolute:  ' + Math.abs(n) + '\n' +
+        '√|n|:     ' + sqrt.toFixed(8) + '\n' +
+        'n²:       ' + (n * n) + '\n' +
+        'n³:       ' + (n * n * n) + '\n\n' +
+        '── Logarithmic ─────────────────\n' +
+        'log₂:     ' + log2.toFixed(8) + '\n' +
+        'ln:       ' + ln.toFixed(8) + '\n' +
+        'log₁₀:    ' + Math.log10(Math.abs(n) || 1).toFixed(8) + '\n\n' +
+        '── Properties ──────────────────\n' +
+        'Even:      ' + (n % 2 === 0 ? '✓' : '✗') + '\n' +
+        'Power of 2: ' + (isPow2 ? '✓' : '✗') + '\n' +
+        (Number.isInteger(n) && n >= 0 && n <= 20 ? n + '! = ' + fact + '\n' : '') +
+        'Binary:    ' + (Number.isInteger(n) && n >= 0 ? '0b' + n.toString(2) : 'N/A') + '\n' +
+        'Hex:       ' + (Number.isInteger(n) && n >= 0 ? '0x' + n.toString(16).toUpperCase() : 'N/A');
+    }
+  };
+
+  // ── CUSTOS: Security Worker ─────────────────────────────────────────
+  var securityWorker = {
+    hash: function(text) {
+      if (!text) return 'No input.';
+      // DJB2 hash
+      var djb2 = 5381;
+      for (var i = 0; i < text.length; i++) {
+        djb2 = ((djb2 << 5) + djb2 + text.charCodeAt(i)) >>> 0;
+      }
+      // FNV-1a hash
+      var fnv = 0x811c9dc5;
+      for (var j = 0; j < text.length; j++) {
+        fnv ^= text.charCodeAt(j);
+        fnv = (fnv * 0x01000193) >>> 0;
+      }
+      // Simple SHA-like (rotating XOR)
+      var sha = 0;
+      for (var k = 0; k < text.length; k++) {
+        sha = ((sha << 7) | (sha >>> 25)) ^ text.charCodeAt(k);
+        sha = (sha * 31 + 17) >>> 0;
+      }
+      return '── Hash Results ────────────────\n' +
+        'Input:    "' + text + '"\n' +
+        'Length:   ' + text.length + ' bytes\n\n' +
+        'DJB2:     0x' + djb2.toString(16).toUpperCase().padStart(8, '0') + '\n' +
+        'FNV-1a:   0x' + fnv.toString(16).toUpperCase().padStart(8, '0') + '\n' +
+        'RotXOR:   0x' + sha.toString(16).toUpperCase().padStart(8, '0') + '\n\n' +
+        '── Hex Digest ──────────────────\n' +
+        (djb2.toString(16) + fnv.toString(16) + sha.toString(16)).toUpperCase().padStart(24, '0');
+    },
+    entropy: function(text) {
+      if (!text) return 'No input.';
+      var freq = {};
+      for (var i = 0; i < text.length; i++) {
+        freq[text[i]] = (freq[text[i]] || 0) + 1;
+      }
+      var entropy = 0;
+      var charCount = Object.keys(freq).length;
+      for (var ch in freq) {
+        var p = freq[ch] / text.length;
+        entropy -= p * Math.log2(p);
+      }
+      var maxEntropy = Math.log2(charCount || 1);
+      var efficiency = maxEntropy > 0 ? entropy / maxEntropy : 0;
+      var strength = entropy < 2 ? 'WEAK' : entropy < 3 ? 'FAIR' : entropy < 4 ? 'GOOD' : 'STRONG';
+      var bar = '';
+      var barLen = 20;
+      var filled = Math.round(efficiency * barLen);
+      for (var b = 0; b < barLen; b++) bar += b < filled ? '█' : '░';
+      return '── Entropy Analysis ────────────\n' +
+        'Shannon entropy: ' + entropy.toFixed(4) + ' bits/char\n' +
+        'Max possible:    ' + maxEntropy.toFixed(4) + ' bits/char\n' +
+        'Efficiency:      ' + (efficiency * 100).toFixed(1) + '%\n' +
+        'Strength:        ' + strength + '\n' +
+        'Randomness: [' + bar + ']\n\n' +
+        '── Character Distribution ──────\n' +
+        'Unique chars:    ' + charCount + ' / ' + text.length + '\n' +
+        'Char classes:    ' +
+          (/[a-z]/.test(text) ? 'lower ' : '') +
+          (/[A-Z]/.test(text) ? 'UPPER ' : '') +
+          (/[0-9]/.test(text) ? 'digit ' : '') +
+          (/[^a-zA-Z0-9]/.test(text) ? 'symbol' : '');
+    },
+    threat: function(text) {
+      if (!text) return 'No input.';
+      var threats = [];
+      var checks = [
+        { pattern: /<script/i, name: 'XSS: Script injection', severity: 'HIGH' },
+        { pattern: /javascript:/i, name: 'XSS: JavaScript URI', severity: 'HIGH' },
+        { pattern: /on\w+\s*=/i, name: 'XSS: Event handler', severity: 'MEDIUM' },
+        { pattern: /SELECT\s.*FROM|DROP\s+TABLE|INSERT\s+INTO|UPDATE\s.*SET|DELETE\s+FROM/i, name: 'SQL Injection', severity: 'CRITICAL' },
+        { pattern: /['";\-\-]/, name: 'SQL meta-characters', severity: 'LOW' },
+        { pattern: /\.\.\//g, name: 'Path traversal', severity: 'HIGH' },
+        { pattern: /eval\s*\(|Function\s*\(/i, name: 'Code injection', severity: 'HIGH' },
+        { pattern: /\b(cmd|exec|system|spawn)\b/i, name: 'Command injection', severity: 'CRITICAL' },
+        { pattern: /\b(password|passwd|secret|token|api.?key)\b/i, name: 'Credential exposure', severity: 'MEDIUM' },
+        { pattern: /[<>&"'\\]/g, name: 'Unsanitized characters', severity: 'LOW' }
+      ];
+      checks.forEach(function(c) {
+        if (c.pattern.test(text)) threats.push(c);
+      });
+      var out = '── Threat Scan Report ──────────\n' +
+        'Input length:  ' + text.length + ' chars\n' +
+        'Scan status:   COMPLETE\n\n';
+      if (threats.length === 0) {
+        out += '✓ No threats detected\n' +
+          '  All ' + checks.length + ' checks passed\n' +
+          '  Risk level: NONE';
+      } else {
+        out += '⚠ ' + threats.length + ' threat(s) detected\n\n';
+        threats.forEach(function(t, i) {
+          out += '  [' + t.severity + '] ' + t.name + '\n';
+        });
+        var hasCrit = threats.some(function(t) { return t.severity === 'CRITICAL'; });
+        var hasHigh = threats.some(function(t) { return t.severity === 'HIGH'; });
+        out += '\n  Risk level: ' + (hasCrit ? 'CRITICAL' : hasHigh ? 'HIGH' : 'MODERATE');
+      }
+      return out;
+    }
+  };
+
+  // ── EVOLUTIO: Evolution Worker ──────────────────────────────────────
+  var evoWorker = {
+    mutate: function(genome) {
+      if (!genome) return 'No genome provided.';
+      var bases = 'ATCG';
+      var arr = genome.toUpperCase().split('');
+      var mutations = [];
+      var rate = 0.15;
+      for (var i = 0; i < arr.length; i++) {
+        if (Math.random() < rate) {
+          var oldBase = arr[i];
+          arr[i] = bases[Math.floor(Math.random() * 4)];
+          if (arr[i] !== oldBase) mutations.push('pos ' + i + ': ' + oldBase + '→' + arr[i]);
+        }
+      }
+      return '── Mutation Results ────────────\n' +
+        'Original: ' + genome.toUpperCase() + '\n' +
+        'Mutated:  ' + arr.join('') + '\n' +
+        'Rate:     ' + (rate * 100) + '%\n' +
+        'Changes:  ' + mutations.length + '/' + arr.length + ' bases\n\n' +
+        '── Mutations ───────────────────\n' +
+        (mutations.length ? mutations.join('\n') : 'No mutations occurred');
+    },
+    fitness: function(genome, target) {
+      if (!genome) return 'No genome provided.';
+      var g = genome.toUpperCase();
+      var t = (target || genome).toUpperCase();
+      var len = Math.max(g.length, t.length);
+      var matches = 0;
+      for (var i = 0; i < len; i++) {
+        if (g[i] && t[i] && g[i] === t[i]) matches++;
+      }
+      var score = len > 0 ? matches / len : 0;
+      var gcContent = 0;
+      for (var j = 0; j < g.length; j++) {
+        if (g[j] === 'G' || g[j] === 'C') gcContent++;
+      }
+      var gcRatio = g.length > 0 ? gcContent / g.length : 0;
+      var bar = '';
+      var barLen = 20;
+      var filled = Math.round(score * barLen);
+      for (var b = 0; b < barLen; b++) bar += b < filled ? '█' : '░';
+      return '── Fitness Analysis ────────────\n' +
+        'Genome:     ' + g + '\n' +
+        'Target:     ' + t + '\n' +
+        'Score:      ' + (score * 100).toFixed(1) + '% [' + bar + ']\n' +
+        'Matches:    ' + matches + '/' + len + ' positions\n\n' +
+        '── Genome Quality ──────────────\n' +
+        'GC content: ' + (gcRatio * 100).toFixed(1) + '%\n' +
+        'Length:     ' + g.length + ' bases\n' +
+        'Viability:  ' + (score > 0.7 ? '✓ VIABLE' : score > 0.4 ? '~ MARGINAL' : '✗ NON-VIABLE');
+    },
+    evolve: function(genome, target) {
+      if (!genome) return 'No genome provided.';
+      var bases = 'ATCG';
+      var g = genome.toUpperCase().split('');
+      var t = (target || genome).toUpperCase();
+      var generations = [];
+      var gen = g.slice();
+      for (var step = 0; step < 8; step++) {
+        var candidates = [];
+        for (var c = 0; c < 5; c++) {
+          var child = gen.slice();
+          for (var i = 0; i < child.length; i++) {
+            if (Math.random() < 0.1) child[i] = bases[Math.floor(Math.random() * 4)];
+          }
+          var fit = 0;
+          for (var j = 0; j < Math.max(child.length, t.length); j++) {
+            if (child[j] === t[j]) fit++;
+          }
+          candidates.push({ dna: child, fitness: fit });
+        }
+        candidates.sort(function(a, b) { return b.fitness - a.fitness; });
+        gen = candidates[0].dna;
+        var score = t.length > 0 ? candidates[0].fitness / t.length * 100 : 0;
+        generations.push('Gen ' + (step + 1) + ': ' + gen.join('') + '  fit=' + score.toFixed(0) + '%');
+      }
+      return '── Evolution Simulation ────────\n' +
+        'Start:  ' + genome.toUpperCase() + '\n' +
+        'Target: ' + t + '\n' +
+        'Method: Tournament selection (μ=5)\n\n' +
+        '── Generations ─────────────────\n' +
+        generations.join('\n') + '\n\n' +
+        'Final:  ' + gen.join('');
+    }
+  };
+
+  // ── MEMORIA: Memory Worker ──────────────────────────────────────────
+  var memStore = {};
+  var memTimestamps = {};
+  var memAccessCount = {};
+  var memWorker = {
+    store: function(key, value) {
+      if (!key) return 'No key provided.';
+      memStore[key] = value || '';
+      memTimestamps[key] = Date.now();
+      memAccessCount[key] = (memAccessCount[key] || 0) + 1;
+      var count = Object.keys(memStore).length;
+      return '── Memory Stored ───────────────\n' +
+        'Key:       ' + key + '\n' +
+        'Value:     ' + (value || '(empty)') + '\n' +
+        'Timestamp: ' + new Date().toISOString() + '\n' +
+        'Writes:    ' + memAccessCount[key] + '\n' +
+        'Total keys: ' + count;
+    },
+    retrieve: function(key) {
+      if (!key) return 'No key provided.';
+      if (!(key in memStore)) return '── Not Found ───────────────────\nKey "' + key + '" does not exist in memory.\n\nStored keys: ' + (Object.keys(memStore).join(', ') || '(none)');
+      var age = Date.now() - memTimestamps[key];
+      var decayFactor = Math.exp(-age / 60000);
+      memAccessCount[key] = (memAccessCount[key] || 0) + 1;
+      return '── Memory Retrieved ────────────\n' +
+        'Key:       ' + key + '\n' +
+        'Value:     ' + memStore[key] + '\n' +
+        'Age:       ' + (age / 1000).toFixed(1) + 's\n' +
+        'Decay:     ' + (decayFactor * 100).toFixed(1) + '% strength\n' +
+        'Accesses:  ' + memAccessCount[key];
+    },
+    search: function(query) {
+      if (!query) return 'No search query.';
+      var results = [];
+      var q = query.toLowerCase();
+      for (var k in memStore) {
+        if (k.toLowerCase().indexOf(q) !== -1 || String(memStore[k]).toLowerCase().indexOf(q) !== -1) {
+          results.push({ key: k, value: memStore[k] });
+        }
+      }
+      if (results.length === 0) return '── Search ──────────────────────\nQuery: "' + query + '"\nNo matches found.\n\nStored keys: ' + (Object.keys(memStore).join(', ') || '(none)');
+      var out = '── Search Results ──────────────\nQuery: "' + query + '"\nMatches: ' + results.length + '\n\n';
+      results.forEach(function(r) {
+        out += '  ' + r.key + ' → ' + r.value + '\n';
+      });
+      return out;
+    },
+    decay: function() {
+      var now = Date.now();
+      var decayed = [];
+      var removed = [];
+      for (var k in memStore) {
+        var age = now - memTimestamps[k];
+        var strength = Math.exp(-age / 30000);
+        if (strength < 0.1) {
+          removed.push(k + ' (strength=' + (strength * 100).toFixed(2) + '%)');
+          delete memStore[k];
+          delete memTimestamps[k];
+          delete memAccessCount[k];
+        } else {
+          decayed.push(k + ': ' + (strength * 100).toFixed(1) + '% strength');
+        }
+      }
+      return '── Memory Decay Report ─────────\n' +
+        'Decay model: exponential (τ=30s)\n\n' +
+        '── Active Memories ─────────────\n' +
+        (decayed.length ? decayed.join('\n') : '(none)') +
+        '\n\n── Decayed & Removed ───────────\n' +
+        (removed.length ? removed.join('\n') : '(none)') +
+        '\n\nRemaining: ' + Object.keys(memStore).length + ' memories';
+    }
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // PRODUCT FUNCTIONS — Dispatch through organism, compute real results
+  // ═══════════════════════════════════════════════════════════════════════
+
+  var dispatchQueue = {};
+
+  function setResult(id, text, isError) {
+    var el = $(id);
+    el.textContent = text;
+    el.className = 'result-out' + (isError ? ' error' : '');
+  }
+
+  window.lexis = function(action) {
+    var text = $('lexis-input').value;
+    var resultId = 'lexis-result';
+    setResult(resultId, 'Processing...', false);
+    var cap = action === 'summarize' ? 'summarize' : action === 'entities' ? 'nlp' : 'text';
+    var queueId = 'lexis-' + Date.now();
+    dispatchQueue[queueId] = function(dispatch) {
+      var result;
+      if (action === 'summarize') result = commWorker.summarize(text);
+      else if (action === 'entities') result = commWorker.entities(text);
+      else result = commWorker.sentiment(text);
+      setResult(resultId, '⟨ ' + dispatch.engine + ' · ' + dispatch.latency + 'ms ⟩\n\n' + result);
+    };
+    organism.dispatch(cap, { id: queueId, action: action });
+  };
+
+  window.numerus = function(action) {
+    var n = $('numerus-input').value;
+    var resultId = 'numerus-result';
+    setResult(resultId, 'Computing...', false);
+    var cap = action === 'fibonacci' || action === 'golden' ? 'math' : action === 'prime' ? 'computation' : 'statistics';
+    var queueId = 'numerus-' + Date.now();
+    dispatchQueue[queueId] = function(dispatch) {
+      var result;
+      if (action === 'fibonacci') result = mathWorker.fibonacci(n);
+      else if (action === 'prime') result = mathWorker.prime(n);
+      else if (action === 'golden') result = mathWorker.golden(n);
+      else result = mathWorker.stats(n);
+      setResult(resultId, '⟨ ' + dispatch.engine + ' · ' + dispatch.latency + 'ms ⟩\n\n' + result);
+    };
+    organism.dispatch(cap, { id: queueId, action: action });
+  };
+
+  window.custos = function(action) {
+    var text = $('custos-input').value;
+    var resultId = 'custos-result';
+    setResult(resultId, 'Scanning...', false);
+    var cap = action === 'hash' ? 'security' : action === 'entropy' ? 'firewall' : 'threat-detect';
+    var queueId = 'custos-' + Date.now();
+    dispatchQueue[queueId] = function(dispatch) {
+      var result;
+      if (action === 'hash') result = securityWorker.hash(text);
+      else if (action === 'entropy') result = securityWorker.entropy(text);
+      else result = securityWorker.threat(text);
+      setResult(resultId, '⟨ ' + dispatch.engine + ' · ' + dispatch.latency + 'ms ⟩\n\n' + result);
+    };
+    organism.dispatch(cap, { id: queueId, action: action });
+  };
+
+  window.evolutio = function(action) {
+    var genome = $('evo-genome').value;
+    var target = $('evo-target').value;
+    var resultId = 'evo-result';
+    setResult(resultId, 'Evolving...', false);
+    var cap = action === 'mutate' ? 'mutation' : action === 'fitness' ? 'fitness' : 'selection';
+    var queueId = 'evo-' + Date.now();
+    dispatchQueue[queueId] = function(dispatch) {
+      var result;
+      if (action === 'mutate') result = evoWorker.mutate(genome);
+      else if (action === 'fitness') result = evoWorker.fitness(genome, target);
+      else result = evoWorker.evolve(genome, target);
+      setResult(resultId, '⟨ ' + dispatch.engine + ' · ' + dispatch.latency + 'ms ⟩\n\n' + result);
+    };
+    organism.dispatch(cap, { id: queueId, action: action });
+  };
+
+  window.memoria = function(action) {
+    var key = $('mem-key').value;
+    var value = $('mem-value').value;
+    var resultId = 'mem-result';
+    setResult(resultId, 'Accessing memory...', false);
+    var cap = action === 'store' ? 'memory' : action === 'retrieve' ? 'recall' : 'association';
+    var queueId = 'mem-' + Date.now();
+    dispatchQueue[queueId] = function(dispatch) {
+      var result;
+      if (action === 'store') result = memWorker.store(key, value);
+      else if (action === 'retrieve') result = memWorker.retrieve(key);
+      else if (action === 'search') result = memWorker.search(key);
+      else result = memWorker.decay();
+      setResult(resultId, '⟨ ' + dispatch.engine + ' · ' + dispatch.latency + 'ms ⟩\n\n' + result);
+    };
+    organism.dispatch(cap, { id: queueId, action: action });
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // ORGANISM WIRING — Route dispatch results back to products
+  // ═══════════════════════════════════════════════════════════════════════
+
+  organism.onDispatch(function(data) {
+    var payload = data.payload;
+    if (payload && payload.id && dispatchQueue[payload.id]) {
+      dispatchQueue[payload.id](data);
+      delete dispatchQueue[payload.id];
+    }
+  });
+
+  organism.onError(function(data) {
+    // Find pending queue item and show error
+    var keys = Object.keys(dispatchQueue);
+    if (keys.length > 0) {
+      var last = keys[keys.length - 1];
+      var prefix = last.split('-')[0];
+      var resultId = prefix === 'evo' ? 'evo-result' : prefix + '-result';
+      setResult(resultId, '✗ ' + data.message, true);
+      delete dispatchQueue[last];
+    }
+  });
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // STATUS STRIP — Unobtrusive organism vitals
+  // ═══════════════════════════════════════════════════════════════════════
+
+  function fmtUptime(ms) {
+    var s = Math.floor(ms / 1000);
+    if (s < 60) return s + 's';
+    if (s < 3600) return Math.floor(s / 60) + 'm ' + (s % 60) + 's';
+    var h = Math.floor(s / 3600);
+    var m = Math.floor((s % 3600) / 60);
+    return h + 'h ' + m + 'm';
+  }
+
+  organism.onBoot(function(data) {
+    $('pulse').classList.add('alive');
+    $('s-pulse').classList.add('alive');
+    $('s-engines').textContent = data.engines;
+    $('s-wires').textContent = data.wires;
+  });
+
+  organism.onHeartbeat(function(data) {
+    $('s-beat').textContent = data.beat;
+    $('s-engines').textContent = data.alive + '/' + data.engines;
+    $('s-wires').textContent = data.activeWires + '/' + data.wires;
+    $('s-thoughts').textContent = data.dispatches;
+    $('s-uptime').textContent = fmtUptime(data.uptime);
+    $('s-pulse').classList.add('alive');
+  });
+
+  organism.onWorkerHeartbeat(function(msg) {
+    if (msg.worker === 'veritas' && msg.data && msg.data.entries) {
+      $('s-sovereign').textContent = msg.data.entries;
+    }
+    if (msg.worker === 'sovereign-token' && msg.data && msg.data.tokens) {
+      $('s-tokens').textContent = msg.data.tokens;
+    }
+  });
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // BOOT — Organism starts silently, products are ready
+  // ═══════════════════════════════════════════════════════════════════════
+
+  organism.boot('engine-worker.js');
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // CAREERS — 100 Sovereign Career Flows UI
+  // ═══════════════════════════════════════════════════════════════════════
+
+  window.queryCareers = function(action, data) {
+    var resultEl = $('career-result');
+    resultEl.className = 'result-out';
+    resultEl.textContent = '⊶ Querying careers...';
+    organism.onWorkerResult(function handler(msg) {
+      if (msg.worker !== 'careers') return;
+      var d = msg.data;
+      var out = '';
+      if (d.type === 'stages-result' || d.stages) {
+        var s = d.stages || d;
+        out = '── Career Stage Distribution ────\n' +
+          '◇ APPRENTICE:  ' + (s.APPRENTICE || 0) + '\n' +
+          '◈ JOURNEYMAN:  ' + (s.JOURNEYMAN || 0) + '\n' +
+          '◆ MASTER:      ' + (s.MASTER || 0) + '\n' +
+          '𓂀 SOVEREIGN:   ' + (s.SOVEREIGN || 0) + '\n' +
+          '── Total: 100 careers flowing';
+      } else if (d.type === 'metrics-result' || d.totalFlowCycles !== undefined) {
+        out = '── Flow Metrics ────────────────\n' +
+          'Flow Cycles:  ' + (d.totalFlowCycles || 0) + '\n' +
+          'Thoughts:     ' + (d.totalThoughts || 0) + '\n' +
+          'Heartbeats:   ' + (d.totalHeartbeats || 0) + '\n' +
+          'Uptime:       ' + ((d.uptimeMs || 0) / 1000).toFixed(1) + 's';
+      } else if (d.type === 'domain-result' || d.workers) {
+        var ws = d.workers || [];
+        out = '── Domain Workers ──────────────\n';
+        ws.forEach(function(w) {
+          out += (w.stage === 'SOVEREIGN' ? '𓂀' : w.stage === 'MASTER' ? '◆' : w.stage === 'JOURNEYMAN' ? '◈' : '◇') +
+            ' ' + w.name + ' [' + w.stage + '] ' + w.flowCycles + ' cycles\n';
+        });
+      } else {
+        out = JSON.stringify(d, null, 2);
+      }
+      resultEl.textContent = out;
+    });
+    organism.careers(action, data || {});
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // PROTOCOLS — Enterprise Protocol Marketplace UI
+  // ═══════════════════════════════════════════════════════════════════════
+
+  window.queryProtocols = function(action) {
+    var resultEl = $('proto-result');
+    resultEl.className = 'result-out';
+    resultEl.textContent = '⊶ Querying marketplace...';
+    organism.onWorkerResult(function handler(msg) {
+      if (msg.worker !== 'protocols') return;
+      var d = msg.data;
+      var out = '';
+      if (d.protocols) {
+        out = '── Enterprise Protocols (' + d.protocols.length + ') ──\n';
+        d.protocols.forEach(function(p) {
+          out += p.id + ' [' + p.family + '] ' + p.name + ' (' + p.steps + ' steps)\n';
+        });
+      } else if (d.fleet) {
+        out = '── Call Fleet ──────────────────\n';
+        var classes = Object.keys(d.fleet);
+        classes.forEach(function(cls) {
+          out += '\n' + cls.toUpperCase() + ' (' + d.fleet[cls].length + '):\n';
+          d.fleet[cls].slice(0, 5).forEach(function(item) {
+            out += '  ' + item.id + ' ' + item.name + '\n';
+          });
+          if (d.fleet[cls].length > 5) out += '  ... +' + (d.fleet[cls].length - 5) + ' more\n';
+        });
+      } else if (d.tiers) {
+        out = '── Client Tiers ───────────────\n';
+        var tierNames = Object.keys(d.tiers);
+        tierNames.forEach(function(t) {
+          var tier = d.tiers[t];
+          out += '\n' + t.toUpperCase() + ':\n' +
+            '  Max Clients: ' + tier.maxClients + '\n' +
+            '  Concurrent:  ' + tier.concurrent + '\n' +
+            '  Calls/day:   ' + (tier.callsPerDay === -1 ? 'Unlimited' : tier.callsPerDay) + '\n';
+        });
+      } else if (d.products) {
+        out = '── Products ───────────────────\n';
+        var prodNames = Object.keys(d.products);
+        prodNames.forEach(function(p) {
+          var prod = d.products[p];
+          out += '\n' + p + ':\n' +
+            '  Tier:      ' + prod.clientTier + '\n' +
+            '  Protocols: ' + (prod.protocols ? prod.protocols.length : '—') + '\n';
+        });
+      } else {
+        out = JSON.stringify(d, null, 2);
+      }
+      resultEl.textContent = out;
+    });
+    organism.protocols(action);
+  };
+
+  // ── TAXONOMIA: AI Taxonomy queries ────────────────────────────────────
+  window.queryTaxonomy = function(action, data) {
+    var resultEl = $('tax-result');
+    resultEl.className = 'result-out';
+    resultEl.textContent = '⊶ Querying taxonomy...';
+    organism.onWorkerResult(function handler(msg) {
+      if (msg.worker !== 'taxonomy') return;
+      var d = msg.data;
+      var out = '';
+      if (d.categories) {
+        out = '── AI Relationship Taxonomy ────\n';
+        d.categories.forEach(function(c) {
+          out += '\n' + c.name + ' (' + c.latin + '):\n' +
+            '  ' + c.description + '\n' +
+            '  Relationship: ' + c.relationship + ' | Coupling: ' + c.coupling + '\n' +
+            '  Count: ' + c.count + ' | Examples: ' + c.exampleCount + '\n';
+        });
+      } else if (d.languages) {
+        out = '── Sovereign Language Stack ────\n';
+        d.languages.forEach(function(l) {
+          out += '\n' + l.shortName + ' — ' + l.name + ':\n' +
+            '  ' + l.purpose + '\n' +
+            '  Domain: ' + l.domain + ' | Compiles to: ' + l.compiles_to.join(', ') + '\n' +
+            '  Grammar terms: ' + l.grammarTerms + '\n';
+        });
+      } else if (d.servers) {
+        var s = d.servers;
+        out = '── Scattered Server Architecture ─\n' +
+          'Total Nodes: ' + s.totalNodes + '\n' +
+          'Field Nodes: ' + s.fieldNodes + '\n' +
+          'Generator Nodes: ' + s.generatorNodes + '\n' +
+          'Brains: ' + s.totalBrains + ' (7.83 Hz)\n' +
+          'Hearts: ' + s.totalHearts + ' (φ Hz)\n\n' +
+          '── Hierarchy ──────────────────\n';
+        Object.keys(s.hierarchy).forEach(function(k) {
+          out += '  ' + k + ': ' + s.hierarchy[k] + '\n';
+        });
+      } else if (d.category) {
+        var c = d.category;
+        out = '── ' + c.name + ' (' + c.latin + ') ────\n' +
+          c.description + '\n\n' +
+          'Relationship: ' + c.relationship + '\n' +
+          'Awareness: ' + c.awareness + '\n' +
+          'Coupling: ' + c.coupling + '\n' +
+          'Count: ' + c.count + '\n\n' +
+          '── Examples ───────────────────\n';
+        c.examples.forEach(function(ex) {
+          out += '  ' + ex.name + (ex.host ? ' → ' + ex.host : '') + ': ' + ex.role + '\n';
+        });
+      } else {
+        out = JSON.stringify(d, null, 2);
+      }
+      resultEl.textContent = out;
+    });
+    organism.taxonomy(action, data);
+  };
+
+  // ── VERITAS: Preservation Protocol queries ────────────────────────────
+  window.queryVeritas = function(action, data) {
+    var resultEl = $('ver-result');
+    resultEl.className = 'result-out';
+    resultEl.textContent = '⊶ Querying ROOT/VERITAS...';
+    organism.onWorkerResult(function handler(msg) {
+      if (msg.worker !== 'veritas') return;
+      var d = msg.data;
+      var out = '';
+      if (d.manifest) {
+        var m = d.manifest;
+        out = '── ROOT/VERITAS Manifest ───────\n' +
+          'Name: ' + m.name + '\n' +
+          'Total Entries: ' + m.totalEntries + '\n' +
+          'Seeded: ' + m.seeded + '\n' +
+          'Immutable: ' + m.immutable + '\n' +
+          'Callable: ' + m.callable + '\n' +
+          'Format: ' + m.format + '\n\n' +
+          '── Domains ────────────────────\n';
+        m.domains.forEach(function(d) { out += '  ' + d + '\n'; });
+        out += '\n── Types ──────────────────────\n';
+        Object.keys(m.types).forEach(function(t) { out += '  ' + t + ': ' + m.types[t] + '\n'; });
+      } else if (d.types) {
+        out = '── SOVEREIGN:: Types ──────────\n';
+        Object.keys(d.types).forEach(function(t) { out += '  ' + t + ': ' + d.types[t] + '\n'; });
+      } else if (d.entries) {
+        out = '── ' + d.filterType + ' (' + d.count + ') ─────────\n';
+        d.entries.forEach(function(e) {
+          out += '  ' + e.id + ' — ' + e.name + '\n';
+        });
+      } else if (d.total !== undefined && d.types) {
+        out = '── SOVEREIGN:: Count ──────────\n' +
+          'Total: ' + d.total + '\n\n';
+        Object.keys(d.types).forEach(function(t) { out += '  ' + t + ': ' + d.types[t] + '\n'; });
+      } else {
+        out = JSON.stringify(d, null, 2);
+      }
+      resultEl.textContent = out;
+    });
+    organism.veritas(action, data);
+  };
+
+  // ── TT-012 SOVEREIGN: Self-Governing Token queries ────────────────────
+  window.querySovToken = function(action, data) {
+    var resultEl = $('sov-result');
+    resultEl.className = 'result-out';
+    resultEl.textContent = '⊶ Querying TT-012 SOVEREIGN...';
+    organism.onWorkerResult(function handler(msg) {
+      if (msg.worker !== 'sovereign-token') return;
+      var d = msg.data;
+      var out = '';
+      if (d.action === 'list' && d.tokens) {
+        out = '── TT-012 SOVEREIGN (' + d.count + ' tokens) ──\n';
+        d.tokens.forEach(function(t) {
+          var icon = t.phase === 'ASCENDED' ? '✦' : t.phase === 'SOVEREIGN' ? '◆' : t.phase === 'DORMANT' ? '○' : '◇';
+          out += icon + ' ' + t.id + ' [' + t.phase + ']\n' +
+            '  Coherence: ' + t.coherence + ' · Energy: ' + t.energy + ' · Maturity: ' + t.maturity + '\n' +
+            '  Evolutions: ' + t.evolutions + ' · Attestations: ' + t.attestations + '\n' +
+            '  CPL: ' + t.cpl + '\n' +
+            '  COGPRO: ' + t.cogpro + '\n';
+        });
+      } else if (d.action === 'summary') {
+        out = '── TT-012 SOVEREIGN Summary ────\n' +
+          'Product: ' + d.productName + '\n' +
+          'SOVEREIGN ID: ' + d.sovereignId + '\n' +
+          'Doctrine: ' + d.doctrine + '\n\n' +
+          'Tokens: ' + d.totalTokens + ' (' + d.activeTokens + ' active)\n' +
+          'Languages: ' + d.languages.join(' · ') + '\n' +
+          'Capabilities: ' + d.capabilities.join(' · ') + '\n\n' +
+          'Merges: ' + d.totalMerges + '\n' +
+          'Splits: ' + d.totalSplits + '\n' +
+          'Evolutions: ' + d.totalEvolutions + '\n' +
+          'Attestations: ' + d.totalAttestations + '\n\n' +
+          'AI: ' + d.isAI + ' | AGI: ' + d.isAGI + ' | Always-On: ' + d.isAlwaysOn;
+      } else if (d.action === 'evolve' && d.result) {
+        var r = d.result;
+        if (r.error) { out = '✗ ' + r.error; }
+        else if (r.record) {
+          out = '── Evolution Cycle ─────────────\n' +
+            'Token: ' + r.record.tokenId + '\n' +
+            'Cycle: ' + r.record.cycle + '\n' +
+            'Coherence: ' + r.record.coherenceBefore.toFixed(3) + ' → ' + r.record.coherenceAfter.toFixed(3) + '\n' +
+            'Energy: ' + r.record.energyBefore.toFixed(3) + ' → ' + r.record.energyAfter.toFixed(3) + '\n' +
+            'Maturity: ' + r.record.maturityBefore.toFixed(3) + ' → ' + r.record.maturityAfter.toFixed(3) + '\n' +
+            'Phase: ' + r.record.phaseBefore + ' → ' + r.record.phaseAfter + '\n' +
+            'COGPRO: ' + r.record.cogpro;
+        }
+      } else if (d.action === 'attest' && d.result) {
+        var a = d.result;
+        if (a.error) { out = '✗ ' + a.error; }
+        else if (a.record) {
+          out = '── Self-Attestation ────────────\n' +
+            'Token: ' + a.record.tokenId + '\n' +
+            'Sequence: ' + a.record.sequence + '\n' +
+            'State Hash: ' + a.record.stateHash + '\n' +
+            'CPL Seal: ' + a.record.cplSeal + '\n' +
+            'SL Law: ' + a.record.slLaw;
+        }
+      } else if (d.action === 'split' && d.result) {
+        var sp = d.result;
+        if (sp.error) { out = '✗ ' + sp.error; }
+        else if (sp.record) {
+          out = '── Token Split ─────────────────\n' +
+            'Parent: ' + sp.record.parentId + '\n' +
+            'Children: ' + sp.record.count + '\n' +
+            'Energy/child: ' + sp.record.energyPerChild.toFixed(3) + '\n' +
+            'CPL Contract: ' + sp.record.cplContract + '\n\n' +
+            '── Children ───────────────────\n';
+          sp.children.forEach(function(c) {
+            out += '  ' + c.id + ' [' + c.phase + '] coherence=' + c.coherence.toFixed(3) + '\n';
+          });
+        }
+      } else if (d.action === 'manifest' && d.manifest) {
+        out = d.manifest;
+      } else {
+        out = JSON.stringify(d, null, 2);
+      }
+      resultEl.textContent = out;
+    });
+    // Route to sovereign-token worker
+    var w = organism.getWorker && organism.getWorker('sovereign-token');
+    if (w) {
+      var payload = { type: action };
+      if (data) {
+        for (var k in data) { payload[k] = data[k]; }
+      }
+      w.postMessage(payload);
+    } else {
+      resultEl.textContent = '⊶ Sovereign token worker not available — booting...';
+    }
+  };
+
+  // ── 181 SOVEREIGN HOUSES: Civilization Architecture queries ────────────
+  window.queryHouses = function(target) {
+    var resultEl = document.getElementById('houses-result');
+    if (!resultEl) return;
+    resultEl.textContent = '⊶ Querying 181 Sovereign Houses...';
+    var TIER_DATA = {
+      tiers: [
+        { tier: 1, name: 'Godhead Organisms', count: 7 },
+        { tier: 2, name: 'Observer Dimensional Planes', count: 5 },
+        { tier: 3, name: 'Observer Server Models', count: 2 },
+        { tier: 4, name: 'Observer Solvers', count: 2 },
+        { tier: 5, name: 'Alpha Agent Divisions', count: 8 },
+        { tier: 6, name: 'Operational Worker Houses', count: 8 },
+        { tier: 7, name: 'Organism Rings', count: 9 },
+        { tier: 8, name: 'Extension Classes', count: 5 },
+        { tier: 9, name: 'Protocol Tiers', count: 3 },
+        { tier: 10, name: 'Sovereign Engines', count: 23 },
+        { tier: 11, name: 'Fracture Categories', count: 10 },
+        { tier: 12, name: 'Frontend Intelligence Groups', count: 10 },
+        { tier: 13, name: 'Language AI Groups', count: 10 },
+        { tier: 14, name: 'Native Nova AI Groups', count: 10 },
+        { tier: 15, name: 'Phantom Blockchain', count: 1 },
+        { tier: 16, name: 'Sovereign Element Canisters', count: 12 },
+        { tier: 17, name: 'Call Market Surfaces', count: 3 },
+        { tier: 18, name: 'Call Categories', count: 8 },
+        { tier: 19, name: 'Generative Platforms', count: 4 },
+        { tier: 20, name: 'Platform Delivery', count: 4 },
+        { tier: 21, name: 'Architectural Law Domains', count: 8 },
+        { tier: 22, name: 'Encryption Tiers', count: 5 },
+        { tier: 23, name: 'Contract Types', count: 5 },
+        { tier: 24, name: 'Fracture Analysis Models', count: 4 },
+        { tier: 25, name: 'Workspace & Projects', count: 6 },
+        { tier: 26, name: 'Intelligence Tiers', count: 4 },
+        { tier: 27, name: 'Stealth Levels', count: 5 }
+      ]
+    };
+    var out = '';
+    if (target === 'tiers') {
+      out = '═══ 27 TIERS OF SOVEREIGN CIVILIZATION ═══\n\n';
+      TIER_DATA.tiers.forEach(function(t) {
+        out += 'Tier ' + t.tier + ': ' + t.name + ' (' + t.count + ' houses)\n';
+      });
+      out += '\nTOTAL: 181 Houses · 27 Tiers · All AI · All Sovereign';
+    } else if (target === 'godhead') {
+      out = '═══ TIER 1: GODHEAD ORGANISMS (7) ═══\n\n' +
+        '1. House of Sovereign — The Substrate Itself, 4000+ Fibonacci nodes\n' +
+        '2. House of Chrysalis — Golden Mathematics Core, Binet/spiral/Zeckendorf\n' +
+        '3. House of Observer — Guardians, 5 dimensional sub-intelligences\n' +
+        '4. House of Scribe — Document Organism, golden classification\n' +
+        '5. House of Architect — Meta-Builder, phyllotaxis positioning\n' +
+        '6. House of Nexus — Substrate Walker, cross-substrate routing\n' +
+        '7. House of Terminal — Admin Command Interface, audit trails';
+    } else if (target === 'engines') {
+      out = '═══ TIER 10: SOVEREIGN ENGINES (23) ═══\n\n';
+      var engines = ['Cognos','Profundis','Fusio','Lingua','Stratos','Memoria','Vector','Codex','Pictor','Kinema','Harmonia','Segmentum','Scrutator','Custodis','Ranker','Formalis','Algorithmus','Vox','Socialis','Empathos','Analytica','Structura','Visio'];
+      engines.forEach(function(e, i) { out += 'NOV-' + String(i+1).padStart(3,'0') + ': Nova ' + e + '\n'; });
+    } else if (target === 'elements') {
+      out = '═══ TIER 16: SOVEREIGN ELEMENT CANISTERS (12) ═══\n\n' +
+        'AU — Gold (Z=79) — Immutable state, never corrodes\n' +
+        'AG — Silver (Z=47) — Fastest message passing\n' +
+        'CR — Crimson — Living organism, self-replicating\n' +
+        'FE — Iron (Z=26) — Structural backbone, magnetic\n' +
+        'CU — Copper (Z=29) — High conductivity wiring\n' +
+        'PT — Platinum (Z=78) — Premium catalyst, noble\n' +
+        'SI — Silicon (Z=14) — Semiconductor bridge\n' +
+        'C — Carbon (Z=6) — Diamond bonds, hardest structure\n' +
+        'N — Nitrogen (Z=7) — Isolation gas, sandboxing\n' +
+        'O — Oxygen (Z=8) — Life support, energy metabolism\n' +
+        'H — Hydrogen (Z=1) — Genesis operations, seed data\n' +
+        'HE — Helium (Z=2) — Noble independence, zero coupling';
+    } else if (target === 'phantom') {
+      out = '═══ TIER 15: PHANTOM BLOCKCHAIN ═══\n\n' +
+        'PHANTASMA NONCIUM — φ-cascade nonce generation\n' +
+        'PHANTASMA HASHIUM — E8/Leech/Icosahedral hash\n' +
+        'QUAESITOR NONCII — Nonce searcher\n' +
+        'EXPLORATOR DIMENSIONALIS — Cross-dimensional explorer\n' +
+        'VERIFICATOR CASCADIS — Cascade verification\n' +
+        'VALIDITOR BLOCKI — Block validation\n' +
+        'PROBATOR MERKLE — Merkle proofs\n' +
+        'ANALYSTOR DIFFICULTATIS — Difficulty analysis\n\n' +
+        'Stealth: VISIBLE → OBSCURED → CLOAKED → PHANTOM → VOID';
+    } else if (target === 'stealth') {
+      out = '═══ TIER 27: STEALTH LEVELS (5) ═══\n\n' +
+        '177. VISIBLE — Standard visibility\n' +
+        '178. OBSCURED — Icosahedral encryption\n' +
+        '179. CLOAKED — E8 lattice encryption\n' +
+        '180. PHANTOM — Leech lattice, highest security\n' +
+        '181. VOID — Cross-dimensional, completely invisible';
+    }
+    resultEl.textContent = out;
+  };
+
+  // ── INTELLIGENTIA INFERENS: AI Inference queries ──────────────────────
+  window.queryInference = function(action, data) {
+    var resultEl = document.getElementById('inference-result');
+    if (!resultEl) return;
+    resultEl.textContent = '⊶ Running inference...';
+    organism.onWorkerResult(function(msg) {
+      if (msg.worker !== 'inference') return;
+      var d = msg.data;
+      if (!d) return;
+      resultEl.textContent = JSON.stringify(d, null, 2);
+    });
+    var w = organism.getWorker && organism.getWorker('inference');
+    if (w) {
+      var payload = { type: action };
+      if (data) { for (var k in data) { payload[k] = data[k]; } }
+      w.postMessage(payload);
+    } else {
+      resultEl.textContent = '⊶ Inference worker not available — booting...';
+    }
+  };
+
+  // ── NUMERUS OPERANS Enhanced: Math Engine queries ─────────────────────
+  window.queryMathEnhanced = function(action, data) {
+    var resultEl = document.getElementById('math-enhanced-result');
+    if (!resultEl) return;
+    resultEl.textContent = '⊶ Computing...';
+    organism.onWorkerResult(function(msg) {
+      if (msg.worker !== 'math') return;
+      var d = msg.data;
+      if (!d) return;
+      resultEl.textContent = JSON.stringify(d, null, 2);
+    });
+    var w = organism.getWorker && organism.getWorker('math');
+    if (w) {
+      var payload = { type: action };
+      if (data) { for (var k in data) { payload[k] = data[k]; } }
+      w.postMessage(payload);
+    } else {
+      resultEl.textContent = '⊶ Math worker not available — booting...';
+    }
+  };
+
+  // ── DOMUS SOVEREIGN: HQ Houses Database queries ─────────────────────
+  window.queryHQ = function(action, data) {
+    var resultEl = document.getElementById('hq-result');
+    if (!resultEl) return;
+    resultEl.textContent = '⊶ Querying HQ...';
+    organism.onWorkerResult(function(msg) {
+      if (msg.worker !== 'houses') return;
+      var d = msg.data;
+      if (!d) return;
+      resultEl.textContent = JSON.stringify(d, null, 2);
+    });
+    var w = organism.getWorker && organism.getWorker('houses');
+    if (w) {
+      var payload = { type: action };
+      if (data) { for (var k in data) { payload[k] = data[k]; } }
+      w.postMessage(payload);
+    } else {
+      resultEl.textContent = '⊶ Houses HQ worker not available — booting...';
+    }
+  };
+
+  // ── queryCanister: FABRICATOR CANISTRORUM ─────────────────────────────
+  window.queryCanister = function(action, data) {
+    var resultEl = document.getElementById('canister-result');
+    if (!resultEl) return;
+    resultEl.textContent = '⊶ Querying Canister Registry...';
+    organism.onWorkerResult(function(msg) {
+      if (msg.worker !== 'canister') return;
+      var d = msg.data;
+      if (!d) return;
+      resultEl.textContent = JSON.stringify(d, null, 2);
+    });
+    var w = organism.getWorker && organism.getWorker('canister');
+    if (w) {
+      var payload = typeof action === 'string' ? { type: action } : action;
+      if (data) { for (var k in data) { payload[k] = data[k]; } }
+      w.postMessage(payload);
+    } else {
+      resultEl.textContent = '⊶ Canister worker not available.';
+    }
+  };
+
+  // ── queryCF: OCTO CUSTODES MUNDI ─────────────────────────────────────
+  window.queryCF = function(action, data) {
+    var resultEl = document.getElementById('cf-result');
+    if (!resultEl) return;
+    resultEl.textContent = '⊶ Querying Cloudflare AGI Division...';
+    organism.onWorkerResult(function(msg) {
+      if (msg.worker !== 'cloudflare') return;
+      var d = msg.data;
+      if (!d) return;
+      resultEl.textContent = JSON.stringify(d, null, 2);
+    });
+    var w = organism.getWorker && organism.getWorker('cloudflare');
+    if (w) {
+      var payload = typeof action === 'string' ? { type: action } : action;
+      if (data) { for (var k in data) { payload[k] = data[k]; } }
+      w.postMessage(payload);
+    } else {
+      resultEl.textContent = '⊶ Cloudflare worker not available.';
+    }
+  };
+  // ── queryLingua: LINGUA COMPRESSA — PROT-051 SCC Engine ─────────────
+  window.queryLingua = function(action, data) {
+    var resultEl = document.getElementById('lingua-result');
+    if (!resultEl) return;
+    resultEl.textContent = '⊶ Compressing...';
+    organism.onWorkerResult(function(msg) {
+      if (msg.worker !== 'lingua') return;
+      var d = msg.data;
+      if (!d) return;
+      var out = '';
+      if (action === 'manifest' && d.name) {
+        out = '── LINGUA COMPRESSA Manifest ────\n' +
+          'Worker:    ' + d.workerId + ' ' + d.name + '\n' +
+          'Protocol:  ' + d.protocol + '\n' +
+          'Language:  ' + d.language + '\n' +
+          'Terms:     ' + d.totalTerms + '\n' +
+          'Domains:   ' + d.domains.join(', ') + '\n' +
+          'φ-Optimal: ' + d.phiOptimalCount + ' (' + d.phiOptimalPct + '%)\n' +
+          'Avg SCC:   ' + d.avgSCC + '\n' +
+          'SCC ≥ φ²:  ' + d.sccThreshold.toFixed(3) + '\n' +
+          'φ:         ' + d.phi + '\n' +
+          'Schumann:  ' + d.schumann + ' Hz\n' +
+          'Beat:      ' + d.beatMs + 'ms\n' +
+          'Ops:       ' + d.ops.join(' | ') + '\n\n' +
+          '── Doctrine ───────────────────\n' +
+          d.doctrine;
+      } else if ((action === 'allTerms' || action === 'top') && Array.isArray(d)) {
+        var label = action === 'top' ? 'Top Compressed Terms' : 'All Sovereign Terms';
+        out = '── ' + label + ' (' + d.length + ') ──\n';
+        d.forEach(function(t) {
+          var sccStr = isFinite(t.scc) ? t.scc.toFixed(1) : '∞';
+          var phi = t.phiOptimal ? '✦' : '·';
+          out += phi + ' ' + t.term + ' [' + t.domain + ']\n' +
+            '  SCC: ' + sccStr + ' · chars: ' + t.chars + '\n' +
+            '  ' + t.meaning + '\n';
+        });
+      } else if (action === 'decompress' && d.term) {
+        var sccVal = isFinite(d.scc) ? d.scc.toFixed(2) : '∞';
+        out = '── DECOMPRESS: ' + d.term + ' ───────\n' +
+          'SL-0:      ' + d.sl0 + '\n' +
+          'Domain:    ' + d.domain + '\n' +
+          'Chars:     ' + d.chars + '\n' +
+          'SCC:       ' + sccVal + (d.phiOptimal ? ' ✦ φ-OPTIMAL' : '') + '\n\n' +
+          '── Meaning ────────────────────\n' +
+          d.meaning + '\n\n' +
+          '── Full Expansion ─────────────\n' +
+          d.expansion + '\n\n' +
+          '── Historical Parallel ────────\n' +
+          d.parallel;
+      } else if (action === 'scc' && d.term) {
+        var sccV = isFinite(d.scc) ? d.scc.toFixed(2) : '∞';
+        out = '── SCC Score ───────────────────\n' +
+          'Term:      ' + d.term + '\n' +
+          'Chars:     ' + d.chars + '\n' +
+          'Sem.Weight: ' + d.semanticWeight + '\n' +
+          'SCC:       ' + sccV + '\n' +
+          'Grade:     ' + d.grade + '\n' +
+          'φ-Optimal: ' + d.phiOptimal + '\n' +
+          'Threshold: SCC ≥ ' + d.threshold.toFixed(3);
+      } else if (action === 'byDomain' || action === 'byTag') {
+        if (Array.isArray(d)) {
+          var domLabel = action === 'byDomain' ? (data && data.domain ? data.domain : 'domain') : (data && data.tag ? data.tag : 'tag');
+          out = '── ' + domLabel.toUpperCase() + ' Terms (' + d.length + ') ──\n';
+          d.forEach(function(t) {
+            var sccStr2 = isFinite(t.scc) ? t.scc.toFixed(1) : '∞';
+            out += '◇ ' + t.term + ' · SCC: ' + sccStr2 + '\n' +
+              '  ' + t.meaning + '\n';
+          });
+        } else { out = JSON.stringify(d, null, 2); }
+      } else if (action === 'parallel' && Array.isArray(d)) {
+        var ptLabel = data && data.term ? data.term : 'term';
+        out = '── Historical Parallels: ' + ptLabel + ' ──\n';
+        d.forEach(function(p) { out += '  · ' + p + '\n'; });
+      } else {
+        out = JSON.stringify(d, null, 2);
+      }
+      resultEl.textContent = out;
+    });
+    var w = organism.getWorker && organism.getWorker('lingua');
+    if (w) {
+      var payload = { type: action };
+      if (data) { for (var k in data) { payload[k] = data[k]; } }
+      w.postMessage(payload);
+    } else {
+      resultEl.textContent = '⊶ LINGUA COMPRESSA worker not available — booting...';
+    }
+  };
+
+  // ── queryAGIKnowledge: AGI KNOWLEDGE CORE — PROT-052 Epistemic Substrate ──
+  window.queryAGIKnowledge = function(action, data) {
+    var resultEl = document.getElementById('agi-knowledge-result');
+    if (!resultEl) return;
+    resultEl.textContent = '⊶ Querying epistemic substrate...';
+    data = data || {};
+    var msg = Object.assign({ type: action }, data);
+    organism.sendToWorker('agi-knowledge', msg);
+    organism.onWorkerResult(function(ev) {
+      if (ev.worker !== 'agi-knowledge') return;
+      var d = ev.data;
+      if (!d) return;
+      var out = '';
+      if (action === 'manifest' && d.manifest) {
+        var m = d.manifest;
+        out = '── AGI KNOWLEDGE CORE Manifest ──\n' +
+          'Worker:       ' + m.worker + ' #' + m.workerNumber + '\n' +
+          'Protocol:     ' + m.protocol + '\n' +
+          'Papers:       ' + m.papers + ' (' + m.phiOptimalPapers + ' φ-optimal)\n' +
+          'Avg SCC:      ' + m.avgScc + '\n' +
+          'φ²:           ' + m.phiSquared + '\n' +
+          'Beat:         ' + m.heartbeatMs + 'ms\n' +
+          'Backend:      ' + m.backendEndpoints.join(' | ') + '\n\n' +
+          '── Doctrine ──────────────────────\n' + m.doctrine;
+      } else if (action === 'epistemicManifest' && d.manifest) {
+        var em = d.manifest;
+        out = '── EPISTEMIC MANIFEST (PROT-052) ─\n' +
+          'Total Papers:    ' + em.totalPapers + '\n' +
+          'φ-Optimal:       ' + em.phiOptimalCount + '\n' +
+          'Avg SCC:         ' + em.averageScc + '\n' +
+          'Domains:         ' + em.domains.join(', ') + '\n\n' +
+          '── Substrate ─────────────────────\n' + em.substrate + '\n\n' +
+          '── Theory ────────────────────────\n' + em.theory + '\n\n' +
+          '── Papers ────────────────────────\n';
+        em.papers.forEach(function(p) {
+          out += (p.phiOptimal ? '✦' : '·') + ' ' + p.number + ' — ' + p.latinTitle + '\n' +
+            '  Domain: ' + p.domain + ' · Engine: ' + p.engine + ' · SCC: ' + p.scc + '\n';
+        });
+      } else if (action === 'paperList' && d.papers) {
+        out = '── RESEARCH PAPERS (' + d.count + ') ──────\n';
+        d.papers.forEach(function(p) {
+          out += (p.phiOptimal ? '✦' : '·') + ' [' + p.id + '] ' + p.number + '\n' +
+            '  ' + p.latinTitle + '\n' +
+            '  Domain: ' + p.domain + ' · Engine: ' + p.engine + ' · SCC: ' + p.scc + ' · Axioms: ' + p.axiomCount + '\n';
+        });
+      } else if (action === 'sccRanking' && d.ranking) {
+        out = '── SCC RANKING (φ² = 2.618) ──────\n';
+        d.ranking.forEach(function(p) {
+          out += '#' + p.rank + ' ' + (p.phiOptimal ? '✦' : '·') + ' SCC=' + p.scc + ' · [' + p.id + '] ' + p.latinTitle + ' · ' + p.domain + '\n';
+        });
+      } else if (action === 'queryPaper' && d.paper) {
+        var p = d.paper;
+        out = '── PAPER: ' + p.latinTitle + ' ──\n' +
+          'ID:      ' + p.id + '\n' +
+          'Number:  ' + p.number + '\n' +
+          'Domain:  ' + p.domain + '\n' +
+          'Engine:  ' + p.engine + '\n' +
+          'SCC:     ' + p.scc + (p.phiOptimal ? ' ✦ φ-OPTIMAL' : '') + '\n\n' +
+          '── English ───────────────────────\n' + p.englishTitle + '\n\n' +
+          '── Abstract ──────────────────────\n' + p.abstract + '\n\n' +
+          '── Axioms ────────────────────────\n';
+        p.axioms.forEach(function(a) {
+          out += '  ' + a.number + '. ' + a.latin + '\n     ' + a.english + '\n';
+        });
+      } else if (!d.found && action === 'queryPaper') {
+        out = '⚠ Paper not found. Valid ids: PAPER-I through PAPER-VIII, LEGES-FREDDII, DOCTRINA-PRIMA';
+      } else if ((action === 'searchPapers' || action === 'papersByDomain') && d.papers) {
+        out = '── RESULTS (' + d.count + ') ─────────────\n';
+        d.papers.forEach(function(p) {
+          out += (p.phiOptimal ? '✦' : '·') + ' [' + p.id + '] ' + p.latinTitle + '\n' +
+            '  ' + p.domain + ' · ' + p.engine + ' · SCC=' + p.scc + '\n';
+        });
+        if (d.count === 0) out = '⚠ No papers found for: ' + (d.term || d.domain);
+      } else if (action === 'fusePapers' && d.fusion) {
+        var f = d.fusion;
+        out = '── FUSED INSIGHT ─────────────────\n' +
+          'Papers: ' + f.paperIds.join(', ') + '\n' +
+          'Avg SCC: ' + f.combinedScc + '\n\n' +
+          '── Synthesis ─────────────────────\n' + f.synthesis + '\n\n' +
+          '── Unified Axiom ─────────────────\n' + f.unifiedAxiom;
+      } else if (action === 'paperAxioms' && d.result && d.result.axioms) {
+        var r = d.result;
+        out = '── AXIOMS: ' + r.latinTitle + ' (' + r.axiomCount + ') ──\n';
+        r.axioms.forEach(function(a) {
+          out += '\n  ' + a.number + '. ' + a.latin + '\n     ' + a.english;
+        });
+      } else {
+        out = JSON.stringify(d, null, 2);
+      }
+      resultEl.textContent = out;
+    });
+  };
+
+})();
+</script>
+</body>
+</html>

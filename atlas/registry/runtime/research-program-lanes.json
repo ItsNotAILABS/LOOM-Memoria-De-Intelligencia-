@@ -1,0 +1,79 @@
+{
+  "id": "atlas://registry/runtime/research-program-lanes",
+  "version": "1.1.0",
+  "description": "Canonical executable research program lanes wired into lab/runtime surfaces.",
+  "lanes": [
+    {
+      "lane_id": "lane://ssn",
+      "canonical_target": "SSN",
+      "aliases": ["ssn", "sovereign social network", "social substrate network"],
+      "python_module": "nova_ovo/research_lab/__init__.py",
+      "access_module": "nova_ovo/research_lab/access.py",
+      "web_worker": "organism-cli/web/research-lab-worker.js",
+      "workflow": ["topic_intake", "draft", "review", "approve", "publish"]
+    },
+    {
+      "lane_id": "lane://research-websites",
+      "canonical_target": "RESEARCH_WEBSITES",
+      "aliases": ["research websites", "research sites", "research web", "novato", "cars"],
+      "python_module": "nova_ovo/research_lab/__init__.py",
+      "access_module": "nova_ovo/research_lab/access.py",
+      "web_worker": "organism-cli/web/research-lab-worker.js",
+      "workflow": ["topic_intake", "program_create", "live_organism_provision", "draft", "review", "approve", "publish"]
+    },
+    {
+      "lane_id": "lane://education",
+      "canonical_target": "EDUCATION",
+      "aliases": ["education", "learning", "edtech"],
+      "python_module": "nova_ovo/research_lab/__init__.py",
+      "access_module": "nova_ovo/research_lab/access.py",
+      "web_worker": "organism-cli/web/research-lab-worker.js",
+      "workflow": ["topic_intake", "draft", "review", "approve", "publish"]
+    },
+    {
+      "lane_id": "lane://health",
+      "canonical_target": "HEALTH",
+      "aliases": ["health", "healthcare", "medical"],
+      "python_module": "nova_ovo/research_lab/__init__.py",
+      "access_module": "nova_ovo/research_lab/access.py",
+      "web_worker": "organism-cli/web/research-lab-worker.js",
+      "workflow": ["topic_intake", "draft", "review", "approve", "publish"]
+    },
+    {
+      "lane_id": "lane://legal",
+      "canonical_target": "LEGAL",
+      "aliases": ["legal", "law", "compliance"],
+      "python_module": "nova_ovo/research_lab/__init__.py",
+      "access_module": "nova_ovo/research_lab/access.py",
+      "web_worker": "organism-cli/web/research-lab-worker.js",
+      "workflow": ["topic_intake", "draft", "review", "approve", "publish"]
+    },
+    {
+      "lane_id": "lane://economics",
+      "canonical_target": "ECONOMICS",
+      "aliases": ["economics", "finance", "market"],
+      "python_module": "nova_ovo/research_lab/__init__.py",
+      "access_module": "nova_ovo/research_lab/access.py",
+      "web_worker": "organism-cli/web/research-lab-worker.js",
+      "workflow": ["topic_intake", "draft", "review", "approve", "publish"]
+    },
+    {
+      "lane_id": "lane://governance",
+      "canonical_target": "GOVERNANCE",
+      "aliases": ["governance", "public policy", "government"],
+      "python_module": "nova_ovo/research_lab/__init__.py",
+      "access_module": "nova_ovo/research_lab/access.py",
+      "web_worker": "organism-cli/web/research-lab-worker.js",
+      "workflow": ["topic_intake", "draft", "review", "approve", "publish"]
+    },
+    {
+      "lane_id": "lane://infrastructure",
+      "canonical_target": "INFRASTRUCTURE",
+      "aliases": ["infrastructure", "infra", "platform"],
+      "python_module": "nova_ovo/research_lab/__init__.py",
+      "access_module": "nova_ovo/research_lab/access.py",
+      "web_worker": "organism-cli/web/research-lab-worker.js",
+      "workflow": ["topic_intake", "draft", "review", "approve", "publish"]
+    }
+  ]
+}

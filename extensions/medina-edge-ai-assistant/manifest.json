@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "Medina Edge AI Assistant",
+  "version": "1.0.0",
+  "description": "ASSISTENS INTELLIGENTIAE ORAE — Edge model routing, context bridge, API mesh, knowledge sync, and signal relay. Sovereign Medina browser extension. φ=1.618033988749895",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "tabs",
+    "alarms"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Medina Edge AI Assistant"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": {}
+}

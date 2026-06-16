@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#1a1a2e">
+    <meta name="description" content="MEDINA Alpha PWA — Enterprise AI Interface">
+    <title>MEDINA Alpha PWA — Sovereign Enterprise AI</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="/icons/icon-192.png">
+    <style>
+        :root {
+            --phi: 1.618033988749895;
+            --gold: #d4af37;
+            --purple: #8b5cf6;
+            --cyan: #06b6d4;
+            --dark: #1a1a2e;
+            --darker: #16213e;
+            --light: #eee;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, var(--dark) 0%, var(--darker) 100%);
+            color: var(--light);
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--gold);
+        }
+        
+        .header h1 {
+            font-size: 1.5rem;
+            color: var(--gold);
+        }
+        
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--cyan);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .main {
+            display: grid;
+            grid-template-columns: 250px 1fr 300px;
+            gap: 1rem;
+            padding: 1rem;
+            height: calc(100vh - 80px);
+        }
+        
+        .sidebar {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+        
+        .nav-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .nav-section h3 {
+            color: var(--gold);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+        
+        .nav-item {
+            padding: 0.5rem;
+            margin: 0.25rem 0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .nav-item:hover {
+            background: rgba(212, 175, 55, 0.1);
+        }
+        
+        .nav-item.active {
+            background: rgba(212, 175, 55, 0.2);
+            border-left: 2px solid var(--gold);
+        }
+        
+        .content {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+        
+        .terminal {
+            background: #0a0a0a;
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.875rem;
+            height: 100%;
+            overflow-y: auto;
+        }
+        
+        .terminal-line {
+            margin: 0.25rem 0;
+        }
+        
+        .terminal-prompt {
+            color: var(--gold);
+        }
+        
+        .terminal-input {
+            background: transparent;
+            border: none;
+            color: var(--light);
+            font-family: inherit;
+            font-size: inherit;
+            width: 100%;
+            outline: none;
+        }
+        
+        .panel {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+        
+        .metric-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .metric-card h4 {
+            color: var(--cyan);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+        
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--gold);
+        }
+        
+        .phi-badge {
+            display: inline-block;
+            background: var(--gold);
+            color: var(--dark);
+            padding: 0.125rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        
+        .offline-indicator {
+            display: none;
+            background: #ef4444;
+            color: white;
+            padding: 0.5rem 1rem;
+            text-align: center;
+            font-size: 0.875rem;
+        }
+        
+        .offline .offline-indicator {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-indicator">⚠️ Offline Mode — Using cached data</div>
+    
+    <header class="header">
+        <h1>🧬 MEDINA Alpha PWA</h1>
+        <div class="status-indicator">
+            <span class="status-dot"></span>
+            <span id="connection-status">Connected</span>
+            <span class="phi-badge">φ = 1.618034</span>
+        </div>
+    </header>
+    
+    <main class="main">
+        <aside class="sidebar">
+            <nav class="nav-section">
+                <h3>Platforms</h3>
+                <div class="nav-item active" data-platform="terminus">📟 Terminus</div>
+                <div class="nav-item" data-platform="cognitio">🧠 Cognitio</div>
+                <div class="nav-item" data-platform="memoria">💾 Memoria</div>
+                <div class="nav-item" data-platform="sensoria">👁️ Sensoria</div>
+                <div class="nav-item" data-platform="decisio">⚖️ Decisio</div>
+                <div class="nav-item" data-platform="research">🔬 Research</div>
+                <div class="nav-item" data-platform="productio">🏭 Productio</div>
+                <div class="nav-item" data-platform="analytics">📊 Analytics</div>
+                <div class="nav-item" data-platform="governance">🏛️ Governance</div>
+                <div class="nav-item" data-platform="nexus">🔗 Nexus</div>
+            </nav>
+            
+            <nav class="nav-section">
+                <h3>Enterprise AI</h3>
+                <div class="nav-item" data-ai="orchestrator">🎯 Orchestrator</div>
+                <div class="nav-item" data-ai="sentinel">🛡️ Sentinel</div>
+                <div class="nav-item" data-ai="architect">🏗️ Architect</div>
+                <div class="nav-item" data-ai="sovereign">👑 Sovereign</div>
+            </nav>
+            
+            <nav class="nav-section">
+                <h3>Extensions</h3>
+                <div class="nav-item" data-ext="quantum">⚛️ Quantum</div>
+                <div class="nav-item" data-ext="neural">🧬 Neural</div>
+                <div class="nav-item" data-ext="temporal">⏱️ Temporal</div>
+                <div class="nav-item" data-ext="sovereign">👑 Sovereign</div>
+            </nav>
+        </aside>
+        
+        <section class="content">
+            <div class="terminal" id="terminal">
+                <div class="terminal-line">╔══════════════════════════════════════════════════════════╗</div>
+                <div class="terminal-line">║       MEDINA ALPHA PWA — SOVEREIGN ENTERPRISE AI          ║</div>
+                <div class="terminal-line">║   "Intelligentia Ex Primitivo — Intelligence From The     ║</div>
+                <div class="terminal-line">║                      Primitive"                           ║</div>
+                <div class="terminal-line">╠══════════════════════════════════════════════════════════╣</div>
+                <div class="terminal-line">║  φ = 1.6180339887498948482                                ║</div>
+                <div class="terminal-line">║  Protocols: PROT-421 to PROT-460                          ║</div>
+                <div class="terminal-line">║  Status: ONLINE                                           ║</div>
+                <div class="terminal-line">╚══════════════════════════════════════════════════════════╝</div>
+                <div class="terminal-line">&nbsp;</div>
+                <div class="terminal-line">Welcome to the Sovereign Enterprise AI Interface.</div>
+                <div class="terminal-line">Type 'help' for available commands.</div>
+                <div class="terminal-line">&nbsp;</div>
+                <div class="terminal-line" id="input-line">
+                    <span class="terminal-prompt">medina@alpha ❯ </span>
+                    <input type="text" class="terminal-input" id="terminal-input" autofocus>
+                </div>
+            </div>
+        </section>
+        
+        <aside class="panel">
+            <div class="metric-card">
+                <h4>Frequency</h4>
+                <div class="metric-value" id="frequency">φ²⁰ Hz</div>
+            </div>
+            
+            <div class="metric-card">
+                <h4>Active Platforms</h4>
+                <div class="metric-value">10</div>
+            </div>
+            
+            <div class="metric-card">
+                <h4>Enterprise AI</h4>
+                <div class="metric-value">10</div>
+            </div>
+            
+            <div class="metric-card">
+                <h4>Extensions</h4>
+                <div class="metric-value">10</div>
+            </div>
+            
+            <div class="metric-card">
+                <h4>Adapters</h4>
+                <div class="metric-value">10</div>
+            </div>
+            
+            <div class="metric-card">
+                <h4>Protocols</h4>
+                <div class="metric-value">PROT-421-460</div>
+            </div>
+            
+            <div class="metric-card">
+                <h4>Uptime</h4>
+                <div class="metric-value" id="uptime">0:00:00</div>
+            </div>
+        </aside>
+    </main>
+    
+    <script src="src/app.js"></script>
+    <script>
+        // Register service worker for offline capability
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+                .then(reg => console.log('SW registered:', reg.scope))
+                .catch(err => console.error('SW registration failed:', err));
+        }
+        
+        // Uptime counter
+        const startTime = Date.now();
+        setInterval(() => {
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const h = Math.floor(elapsed / 3600);
+            const m = Math.floor((elapsed % 3600) / 60);
+            const s = elapsed % 60;
+            document.getElementById('uptime').textContent = 
+                `${h}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        }, 1000);
+        
+        // Offline detection
+        window.addEventListener('online', () => {
+            document.body.classList.remove('offline');
+            document.getElementById('connection-status').textContent = 'Connected';
+        });
+        
+        window.addEventListener('offline', () => {
+            document.body.classList.add('offline');
+            document.getElementById('connection-status').textContent = 'Offline';
+        });
+    </script>
+</body>
+</html>

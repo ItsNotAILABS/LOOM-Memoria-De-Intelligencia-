@@ -1,0 +1,147 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# FASCICULUS — BOT 2: THE AUTOMATIC PACKAGER
+# "Fasciculus Automaticus" — Auto-package stable work into SDKs on main
+#
+# Detects changed substrate paths, runs package-stable-work.sh for each,
+# and commits packaged artifacts back to the repository.
+#
+# House: Delivery tier  |  Law: L-005 (always-on, not alive)
+# Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+# ═══════════════════════════════════════════════════════════════════════════
+
+name: "[FASCICULUS] Auto-Package"
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "icp/**"
+      - "organism-cli/**"
+      - "nova_ovo/**"
+      - "packages/**"
+      - "extensions/**"
+      - "rust/**"
+
+permissions:
+  contents: write
+
+jobs:
+  package:
+    name: "📦 Fasciculus — Package Stable Work"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Configure FASCICULUS-BOT identity
+        run: |
+          git config user.name  "FASCICULUS-BOT"
+          git config user.email "fasciculus-bot@medina.sovereign"
+
+      - name: Detect changed substrate components
+        id: detect
+        run: |
+          CHANGED=$(git diff --name-only HEAD~1 HEAD 2>/dev/null || git diff --name-only HEAD)
+          echo "changed_files<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$CHANGED" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
+          ICP=false; CLI=false; NOVA=false; PKG=false; EXT=false; RUST=false
+          echo "$CHANGED" | grep -q "^icp/"        && ICP=true  || true
+          echo "$CHANGED" | grep -q "^organism-cli/" && CLI=true  || true
+          echo "$CHANGED" | grep -q "^nova_ovo/"   && NOVA=true || true
+          echo "$CHANGED" | grep -q "^packages/"   && PKG=true  || true
+          echo "$CHANGED" | grep -q "^extensions/" && EXT=true  || true
+          echo "$CHANGED" | grep -q "^rust/"       && RUST=true || true
+
+          echo "icp=$ICP"   >> "$GITHUB_OUTPUT"
+          echo "cli=$CLI"   >> "$GITHUB_OUTPUT"
+          echo "nova=$NOVA" >> "$GITHUB_OUTPUT"
+          echo "pkg=$PKG"   >> "$GITHUB_OUTPUT"
+          echo "ext=$EXT"   >> "$GITHUB_OUTPUT"
+          echo "rust=$RUST" >> "$GITHUB_OUTPUT"
+
+      - name: Package — ICP canister substrate
+        if: steps.detect.outputs.icp == 'true'
+        run: |
+          if [ -f "scripts/package-stable-work.sh" ]; then
+            bash scripts/package-stable-work.sh --component=icp-canister --version=1.0.0
+          else
+            echo "[FASCICULUS] package-stable-work.sh not found — skipping ICP packaging"
+          fi
+
+      - name: Package — Organism CLI substrate
+        if: steps.detect.outputs.cli == 'true'
+        run: |
+          if [ -f "scripts/package-stable-work.sh" ]; then
+            bash scripts/package-stable-work.sh --component=organism-cli --version=1.0.0
+          else
+            echo "[FASCICULUS] package-stable-work.sh not found — skipping CLI packaging"
+          fi
+
+      - name: Package — Nova OVO substrate
+        if: steps.detect.outputs.nova == 'true'
+        run: |
+          if [ -f "scripts/package-stable-work.sh" ]; then
+            bash scripts/package-stable-work.sh --component=nova-ovo --version=1.0.0
+          else
+            echo "[FASCICULUS] package-stable-work.sh not found — skipping Nova packaging"
+          fi
+
+      - name: Package — Extensions substrate
+        if: steps.detect.outputs.ext == 'true'
+        run: |
+          if [ -f "scripts/package-stable-work.sh" ]; then
+            bash scripts/package-stable-work.sh --component=extensions --version=1.0.0
+          else
+            echo "[FASCICULUS] package-stable-work.sh not found — skipping Extensions packaging"
+          fi
+
+      - name: Commit packaged artifacts
+        run: |
+          git add packages/ || true
+          if git diff --cached --quiet; then
+            echo "[FASCICULUS] Nothing new to commit — all packages up to date."
+          else
+            git commit -m "[FASCICULUS] Auto-package: stable work packaged into SDKs
+
+Commit:    ${{ github.sha }}
+Branch:    ${{ github.ref_name }}
+Bot:       FASCICULUS-BOT (Fasciculus Automaticus)
+Law:       L-005 — Always-on, not alive
+φ = 1.618033988749895"
+            git push
+          fi
+
+      - name: Summary
+        if: always()
+        run: |
+          echo ""
+          echo "╔═══════════════════════════════════════════════╗"
+          echo "║   [FASCICULUS] Packaging Complete             ║"
+          echo "║   φ = 1.618033988749895                       ║"
+          echo "╚═══════════════════════════════════════════════╝"
+
+      - name: BotProofRecord
+        if: always()
+        run: |
+          echo "┌─ BotProofRecord ─────────────────────────────────────────────┐"
+          echo "│ id:          FASCICULUS                                      │"
+          echo "│ latin:       Fasciculus Automaticus                          │"
+          echo "│ role:        auto-package                                    │"
+          echo "│ law:         L-005 — Always-on, not alive                   │"
+          echo "│ authority:   OBSERVE + PACKAGE + COMMIT (artifacts only)    │"
+          echo "│ prohibited:  modify source code, delete files, open issues  │"
+          echo "│ run_id:      ${{ github.run_id }}"
+          echo "│ sha:         ${{ github.sha }}"
+          echo "│ proof_ref:   docs/bot-fleet/proof-index.md                  │"
+          echo "└───────────────────────────────────────────────────────────────┘"

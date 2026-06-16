@@ -1,0 +1,525 @@
+{
+  "id": "atlas://registry/runtime/pack-runs",
+  "version": "1.0.0",
+  "last_run_id": "pack-20260518T093641Z",
+  "runs": [
+    {
+      "run_id": "pack-20260508T002901Z",
+      "profile": "ops",
+      "mode": "incremental",
+      "created_at": "2026-05-08T00:29:01.366268+00:00",
+      "lineage": {
+        "foundation_run": null,
+        "overlay_run": "pack-20260508T002901Z",
+        "active_snapshot": "inventory-20260508T002901Z"
+      },
+      "checkpoints": {
+        "preflight": {
+          "passed": true,
+          "checks": {
+            "atlas/registry/runtime/pack-profiles.json": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "atlas/registry/runtime/internal-native-agents.json": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "organism-cli/web/organism-bridge.js": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "activation_graph": {
+              "ok": true,
+              "detail": "ok"
+            }
+          }
+        },
+        "snapshot": "inventory-snapshots/inventory-20260508T002901Z.json",
+        "rollback_snapshot": "inventory-snapshots/latest.json",
+        "postflight": {
+          "passed": true,
+          "checks": {
+            "latest_snapshot_exists": {
+              "ok": true,
+              "detail": "atlas/registry/runtime/inventory-snapshots/latest.json"
+            },
+            "latest_snapshot_json": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "latest_snapshot_id_match": {
+              "ok": true,
+              "detail": "expected=inventory-20260508T002901Z actual=inventory-20260508T002901Z"
+            }
+          }
+        }
+      },
+      "status": "passed"
+    },
+    {
+      "run_id": "pack-20260508T002927Z",
+      "profile": "ops",
+      "mode": "incremental",
+      "created_at": "2026-05-08T00:29:27.995810+00:00",
+      "lineage": {
+        "foundation_run": "pack-20260508T002901Z",
+        "overlay_run": "pack-20260508T002927Z",
+        "active_snapshot": "inventory-20260508T002927Z"
+      },
+      "checkpoints": {
+        "preflight": {
+          "passed": true,
+          "checks": {
+            "atlas/registry/runtime/pack-profiles.json": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "atlas/registry/runtime/internal-native-agents.json": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "organism-cli/web/organism-bridge.js": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "activation_graph": {
+              "ok": true,
+              "detail": "ok"
+            }
+          }
+        },
+        "snapshot": "inventory-snapshots/inventory-20260508T002927Z.json",
+        "rollback_snapshot": "inventory-snapshots/latest.json",
+        "postflight": {
+          "passed": true,
+          "checks": {
+            "latest_snapshot_exists": {
+              "ok": true,
+              "detail": "atlas/registry/runtime/inventory-snapshots/latest.json"
+            },
+            "latest_snapshot_json": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "latest_snapshot_id_match": {
+              "ok": true,
+              "detail": "expected=inventory-20260508T002927Z actual=inventory-20260508T002927Z"
+            }
+          }
+        }
+      },
+      "status": "passed"
+    },
+    {
+      "run_id": "pack-20260508T003302Z",
+      "profile": "ops",
+      "mode": "incremental",
+      "created_at": "2026-05-08T00:33:02.212372+00:00",
+      "lineage": {
+        "foundation_run": "pack-20260508T002927Z",
+        "overlay_run": "pack-20260508T003302Z",
+        "active_snapshot": "inventory-20260508T003302Z"
+      },
+      "checkpoints": {
+        "preflight": {
+          "passed": true,
+          "checks": {
+            "atlas/registry/runtime/pack-profiles.json": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "atlas/registry/runtime/internal-native-agents.json": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "organism-cli/web/organism-bridge.js": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "activation_graph": {
+              "ok": true,
+              "detail": "ok"
+            }
+          }
+        },
+        "snapshot": "inventory-snapshots/inventory-20260508T003302Z.json",
+        "rollback_snapshot": "inventory-snapshots/latest.json",
+        "postflight": {
+          "passed": true,
+          "checks": {
+            "latest_snapshot_exists": {
+              "ok": true,
+              "detail": "atlas/registry/runtime/inventory-snapshots/latest.json"
+            },
+            "latest_snapshot_json": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "latest_snapshot_id_match": {
+              "ok": true,
+              "detail": "expected=inventory-20260508T003302Z actual=inventory-20260508T003302Z"
+            }
+          }
+        }
+      },
+      "status": "passed"
+    },
+    {
+      "run_id": "pack-20260508T004126Z",
+      "profile": "ops",
+      "mode": "incremental",
+      "created_at": "2026-05-08T00:41:26.726187+00:00",
+      "lineage": {
+        "foundation_run": "pack-20260508T003302Z",
+        "overlay_run": "pack-20260508T004126Z",
+        "active_snapshot": "inventory-20260508T004126Z"
+      },
+      "checkpoints": {
+        "preflight": {
+          "passed": true,
+          "checks": {
+            "atlas/registry/runtime/pack-profiles.json": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "atlas/registry/runtime/internal-native-agents.json": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "atlas/registry/runtime/native-validation-config.json": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "organism-cli/web/organism-bridge.js": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "activation_graph": {
+              "ok": true,
+              "detail": "ok"
+            }
+          }
+        },
+        "native_validation": {
+          "ok": true,
+          "artifact_path": "atlas/registry/runtime/validation-artifacts/native-validation-20260508T004126Z.json",
+          "token_count": 5,
+          "total_tokens": 20
+        },
+        "snapshot": "inventory-snapshots/inventory-20260508T004126Z.json",
+        "rollback_snapshot": "inventory-snapshots/latest.json",
+        "postflight": {
+          "passed": true,
+          "checks": {
+            "latest_snapshot_exists": {
+              "ok": true,
+              "detail": "atlas/registry/runtime/inventory-snapshots/latest.json"
+            },
+            "latest_snapshot_json": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "latest_snapshot_id_match": {
+              "ok": true,
+              "detail": "expected=inventory-20260508T004126Z actual=inventory-20260508T004126Z"
+            }
+          }
+        }
+      },
+      "status": "passed"
+    },
+    {
+      "run_id": "pack-20260508T004508Z",
+      "profile": "ops",
+      "mode": "incremental",
+      "created_at": "2026-05-08T00:45:08.342002+00:00",
+      "lineage": {
+        "foundation_run": "pack-20260508T004126Z",
+        "overlay_run": "pack-20260508T004508Z",
+        "active_snapshot": "inventory-20260508T004508Z"
+      },
+      "checkpoints": {
+        "preflight": {
+          "passed": true,
+          "checks": {
+            "atlas/registry/runtime/pack-profiles.json": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "atlas/registry/runtime/internal-native-agents.json": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "atlas/registry/runtime/native-validation-config.json": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "organism-cli/web/organism-bridge.js": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "activation_graph": {
+              "ok": true,
+              "detail": "ok"
+            }
+          }
+        },
+        "native_validation": {
+          "ok": true,
+          "artifact_path": "atlas/registry/runtime/validation-artifacts/native-validation-20260508T004508Z.json",
+          "token_count": 5,
+          "total_tokens": 20
+        },
+        "snapshot": "inventory-snapshots/inventory-20260508T004508Z.json",
+        "rollback_snapshot": "inventory-snapshots/inventory-20260508T004126Z.json",
+        "postflight": {
+          "passed": true,
+          "checks": {
+            "latest_snapshot_exists": {
+              "ok": true,
+              "detail": "atlas/registry/runtime/inventory-snapshots/latest.json"
+            },
+            "latest_snapshot_json": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "latest_snapshot_id_match": {
+              "ok": true,
+              "detail": "expected=inventory-20260508T004508Z actual=inventory-20260508T004508Z"
+            }
+          }
+        }
+      },
+      "status": "passed"
+    },
+    {
+      "run_id": "pack-20260517T021247Z",
+      "profile": "ops",
+      "mode": "pyramid",
+      "created_at": "2026-05-17T02:12:47.392619+00:00",
+      "lineage": {
+        "foundation_run": "pack-20260508T004508Z",
+        "overlay_run": "pack-20260517T021247Z",
+        "active_snapshot": "inventory-20260517T021247Z"
+      },
+      "checkpoints": {
+        "preflight": {
+          "passed": true,
+          "checks": {
+            "atlas/registry/runtime/pack-profiles.json": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "atlas/registry/runtime/internal-native-agents.json": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "atlas/registry/runtime/native-validation-config.json": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "atlas/registry/runtime/research-program-lanes.json": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "organism-cli/web/organism-bridge.js": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "activation_graph": {
+              "ok": true,
+              "detail": "ok"
+            }
+          }
+        },
+        "native_validation": {
+          "ok": true,
+          "artifact_path": "atlas/registry/runtime/validation-artifacts/native-validation-20260517T021247Z.json",
+          "token_count": 5,
+          "total_tokens": 20
+        },
+        "snapshot": "inventory-snapshots/inventory-20260517T021247Z.json",
+        "rollback_snapshot": "inventory-snapshots/inventory-20260508T004508Z.json",
+        "postflight": {
+          "passed": true,
+          "checks": {
+            "latest_snapshot_exists": {
+              "ok": true,
+              "detail": "atlas/registry/runtime/inventory-snapshots/latest.json"
+            },
+            "latest_snapshot_json": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "latest_snapshot_id_match": {
+              "ok": true,
+              "detail": "expected=inventory-20260517T021247Z actual=inventory-20260517T021247Z"
+            }
+          }
+        }
+      },
+      "status": "passed"
+    },
+    {
+      "run_id": "pack-20260517T021734Z",
+      "profile": "ops",
+      "mode": "pyramid",
+      "created_at": "2026-05-17T02:17:34.959131+00:00",
+      "lineage": {
+        "foundation_run": "pack-20260517T021247Z",
+        "overlay_run": "pack-20260517T021734Z",
+        "active_snapshot": "inventory-20260517T021734Z"
+      },
+      "checkpoints": {
+        "preflight": {
+          "passed": true,
+          "checks": {
+            "atlas/registry/runtime/pack-profiles.json": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "atlas/registry/runtime/internal-native-agents.json": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "atlas/registry/runtime/native-validation-config.json": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "atlas/registry/runtime/research-program-lanes.json": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "atlas/registry/runtime/intelligence-contract-registry.json": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "atlas/registry/runtime/research-runtime-artifacts.json": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "atlas/registry/runtime/governance-audit-trail.json": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "organism-cli/web/organism-bridge.js": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "activation_graph": {
+              "ok": true,
+              "detail": "ok"
+            }
+          }
+        },
+        "native_validation": {
+          "ok": true,
+          "artifact_path": "atlas/registry/runtime/validation-artifacts/native-validation-20260517T021734Z.json",
+          "token_count": 5,
+          "total_tokens": 20
+        },
+        "snapshot": "inventory-snapshots/inventory-20260517T021734Z.json",
+        "rollback_snapshot": "inventory-snapshots/inventory-20260517T021247Z.json",
+        "postflight": {
+          "passed": true,
+          "checks": {
+            "latest_snapshot_exists": {
+              "ok": true,
+              "detail": "atlas/registry/runtime/inventory-snapshots/latest.json"
+            },
+            "latest_snapshot_json": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "latest_snapshot_id_match": {
+              "ok": true,
+              "detail": "expected=inventory-20260517T021734Z actual=inventory-20260517T021734Z"
+            }
+          }
+        }
+      },
+      "status": "passed"
+    },
+    {
+      "run_id": "pack-20260518T093641Z",
+      "profile": "ops",
+      "mode": "pyramid",
+      "created_at": "2026-05-18T09:36:41.783051+00:00",
+      "lineage": {
+        "foundation_run": "pack-20260517T021734Z",
+        "overlay_run": "pack-20260518T093641Z",
+        "active_snapshot": "inventory-20260518T093641Z"
+      },
+      "checkpoints": {
+        "preflight": {
+          "passed": true,
+          "checks": {
+            "atlas/registry/runtime/pack-profiles.json": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "atlas/registry/runtime/internal-native-agents.json": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "atlas/registry/runtime/native-validation-config.json": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "atlas/registry/runtime/research-program-lanes.json": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "atlas/registry/runtime/intelligence-contract-registry.json": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "atlas/registry/runtime/research-runtime-artifacts.json": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "atlas/registry/runtime/governance-audit-trail.json": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "organism-cli/web/organism-bridge.js": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "activation_graph": {
+              "ok": true,
+              "detail": "ok"
+            }
+          }
+        },
+        "native_validation": {
+          "ok": true,
+          "artifact_path": "atlas/registry/runtime/validation-artifacts/native-validation-20260518T093641Z.json",
+          "token_count": 5,
+          "total_tokens": 20
+        },
+        "snapshot": "inventory-snapshots/inventory-20260518T093641Z.json",
+        "rollback_snapshot": "inventory-snapshots/inventory-20260517T021734Z.json",
+        "postflight": {
+          "passed": true,
+          "checks": {
+            "latest_snapshot_exists": {
+              "ok": true,
+              "detail": "atlas/registry/runtime/inventory-snapshots/latest.json"
+            },
+            "latest_snapshot_json": {
+              "ok": true,
+              "detail": "ok"
+            },
+            "latest_snapshot_id_match": {
+              "ok": true,
+              "detail": "expected=inventory-20260518T093641Z actual=inventory-20260518T093641Z"
+            }
+          }
+        }
+      },
+      "status": "passed"
+    }
+  ]
+}

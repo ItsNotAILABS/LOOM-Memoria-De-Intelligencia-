@@ -1,0 +1,50 @@
+{
+  "_doctrine": "DO NOT BUILD UNTIL CREATOR SAYS SO — Paratum est. Creator solus iubet.",
+  "_classification": "SOVEREIGN-ALPHA — PROPRIETARY AND CONFIDENTIAL",
+  "_attribution": "Alfredo Freddy Medina Hernandez | Medina Tech | Dallas TX",
+  "_status": "FOOL-READY — locked, complete, not deployed",
+
+  "version": "II.φ.0.1",
+  "network": "ic",
+  "canisters": {
+    "semper_memoria_ii_backend": {
+      "type": "motoko",
+      "main": "../../icp/src/medina_backend/SemperMemoria.mo",
+      "description": "Semper Memoria II backend — memory, phantom, registry",
+      "build": {
+        "_note": "DO NOT BUILD — locked until creator authorization",
+        "command": "echo LOCKED — awaiting creator authorization"
+      }
+    },
+    "semper_memoria_ii_phantom": {
+      "type": "motoko",
+      "main": "../../icp/src/medina_backend/MemoryTemple.mo",
+      "description": "Phantom layer — field presences and frequency keying",
+      "build": {
+        "_note": "DO NOT BUILD — locked until creator authorization",
+        "command": "echo LOCKED — awaiting creator authorization"
+      }
+    },
+    "semper_memoria_ii_frontend": {
+      "type": "assets",
+      "source": ["./landing"],
+      "description": "Semper Memoria II landing and client interface",
+      "build": {
+        "_note": "DO NOT BUILD — locked until creator authorization",
+        "command": "echo LOCKED — awaiting creator authorization"
+      }
+    }
+  },
+  "networks": {
+    "ic": {
+      "providers": ["https://icp0.io"],
+      "type": "persistent"
+    }
+  },
+  "phi_constants": {
+    "phi": 1.6180339887498948482,
+    "phi_sq": 2.6180339887498948482,
+    "schumann_hz": 7.83,
+    "torus_r": 16.18033988749895
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "name": "laboratorium-sovereignus",
+  "version": "1.0.0",
+  "description": "LABORATORIUM SOVEREIGNUS — Sovereign Research Lab Desktop Application",
+  "main": "src/main.js",
+  "author": {
+    "name": "Alfredo 'Freddy' Medina Hernandez",
+    "email": "contact@medinatech.io"
+  },
+  "license": "ISIL-1.0",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder",
+    "build:win": "electron-builder --win",
+    "build:mac": "electron-builder --mac",
+    "build:linux": "electron-builder --linux",
+    "pack": "electron-builder --dir",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "dependencies": {
+    "better-sqlite3": "^9.4.3",
+    "electron-store": "^8.1.0",
+    "node-pty": "^1.0.0",
+    "xterm": "^5.3.0",
+    "xterm-addon-fit": "^0.8.0"
+  },
+  "devDependencies": {
+    "electron": "^28.2.0",
+    "electron-builder": "^24.9.1"
+  },
+  "build": {
+    "appId": "io.medinatech.laboratorium",
+    "productName": "Laboratorium Sovereignus",
+    "copyright": "Copyright © 2026 Medina Tech | ISIL-1.0",
+    "directories": {
+      "output": "dist",
+      "buildResources": "assets"
+    },
+    "files": [
+      "src/**/*",
+      "assets/**/*",
+      "node_modules/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "../../nova_ovo",
+        "to": "nova_ovo",
+        "filter": ["**/*"]
+      }
+    ],
+    "mac": {
+      "category": "public.app-category.developer-tools",
+      "icon": "assets/icon.icns",
+      "target": ["dmg", "zip"]
+    },
+    "win": {
+      "icon": "assets/icon.ico",
+      "target": ["nsis", "portable"]
+    },
+    "linux": {
+      "icon": "assets/icon.png",
+      "category": "Development",
+      "target": ["AppImage", "deb", "rpm"]
+    }
+  },
+  "keywords": [
+    "medina",
+    "organism",
+    "research-lab",
+    "ai",
+    "sovereign",
+    "phantom",
+    "phi",
+    "golden-ratio"
+  ],
+  "_meta": {
+    "phi": 1.618033988749895,
+    "frequency": "φ¹³ = 521.002 Hz",
+    "layer": "Application Layer 8",
+    "protocol": "PROT-398",
+    "primitive_trace": "FIELD → DISTINCTION → REPETITION → MEMORY → ADDRESS → φ"
+  }
+}

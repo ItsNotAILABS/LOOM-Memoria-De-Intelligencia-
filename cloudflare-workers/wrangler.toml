@@ -1,0 +1,27 @@
+# Cloudflare Workers Configuration for VIGILIA Edge Gate V2
+# φ-resonant sovereign versioning: φ.0.1.0.2
+
+name = "vigilia-edge-gate"
+main = "vigilia-edge.js"
+compatibility_date = "2024-01-01"
+
+# Free tier: 100,000 requests/day
+# No account_id needed for free tier
+
+# Environment variables
+[env.production]
+vars = { ICP_CANISTER_URL = "https://your-canister-id.ic0.app", VIGILIA_VERSION = "φ.0.1.0.2" }
+
+# KV Namespace for rate limiting (optional, requires paid plan)
+# [[kv_namespaces]]
+# binding = "VIGILIA_KV"
+# id = "your-kv-namespace-id"
+
+# Route configuration
+# [route]
+# pattern = "api.yourdomain.com/*"
+# zone_name = "yourdomain.com"
+
+# Development configuration
+[env.development]
+vars = { ICP_CANISTER_URL = "http://localhost:4943", VIGILIA_VERSION = "φ.0.1.0.2" }

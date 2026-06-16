@@ -1,0 +1,96 @@
+{
+  "name": "TEMPLUM MEMORIAE",
+  "short_name": "Memory Temple",
+  "description": "Progressive Web App for Memory Temple — φ-based memory management",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0f",
+  "theme_color": "#c9a55c",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/icons/icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity", "utilities"],
+  "screenshots": [
+    {
+      "src": "/screenshots/memory-torus.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "label": "Memory Torus Visualization"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Store Memory",
+      "short_name": "Store",
+      "description": "Store a new memory in the temple",
+      "url": "/?action=store",
+      "icons": [{ "src": "/icons/icon-96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Recall Memory",
+      "short_name": "Recall",
+      "description": "Recall a memory from the temple",
+      "url": "/?action=recall",
+      "icons": [{ "src": "/icons/icon-96.png", "sizes": "96x96" }]
+    }
+  ],
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "https://memory-temple.medina.ai"
+    }
+  ],
+  "medina": {
+    "protocol": "PROT-410",
+    "frequency": 122.991,
+    "phi": 1.6180339887498948482
+  }
+}

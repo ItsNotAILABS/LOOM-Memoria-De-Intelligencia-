@@ -1,0 +1,54 @@
+##
+## ╔══════════════════════════════════════════════════════════════════════════════════════════════╗
+## ║                                                                                              ║
+## ║                    MEDINA ORGANISM HELM CHART — KUBERNETES DEPLOYMENT                        ║
+## ║               "Intelligentia Ex Primitivo — Intelligence From The Primitive"                 ║
+## ║                                                                                              ║
+## ║  Classification: SOVEREIGN-ALPHA — PROPRIETARY AND CONFIDENTIAL                             ║
+## ║  Author: Alfredo "Freddy" Medina Hernandez | Medina Tech | Dallas, TX                       ║
+## ║  Protocol: PROT-403 — KUBERNETES DEPLOYMENT INFRASTRUCTURE                                  ║
+## ║                                                                                              ║
+## ╚══════════════════════════════════════════════════════════════════════════════════════════════╝
+##
+
+apiVersion: v2
+name: medina-organism
+description: |
+  The Sovereign Organism deployed to Kubernetes.
+  A complete deployment of the MEDINA computational organism including:
+  - 66+ Web Workers for distributed processing
+  - Full Research Lab with 13 AI Researchers
+  - Phantom Infrastructure (Memory, Passages, Agents)
+  - ICP Canister interfaces
+  - Memory Temple with torus-based persistence
+  
+  FREQUENCY SIGNATURE: φ²⁰ = 15127.003 Hz — Kubernetes Orchestration Layer
+  PRIMITIVE TRACE: FIELD → DISTINCTION → RELATION → REPETITION → MEMORY → ADDRESS → φ
+
+type: application
+version: 2.8.0
+appVersion: "2.8.0"
+
+keywords:
+  - sovereign-ai
+  - medina-organism
+  - phi-frequency
+  - memory-temple
+  - phantom-infrastructure
+  - research-lab
+
+home: https://github.com/FreddyCreates/Medina-Memory-More-AI
+
+sources:
+  - https://github.com/FreddyCreates/Medina-Memory-More-AI
+
+maintainers:
+  - name: Alfredo "Freddy" Medina Hernandez
+    email: freddy@medinatech.io
+    url: https://medinatech.io
+
+annotations:
+  medina.tech/frequency: "15127.003"
+  medina.tech/protocol: "PROT-403"
+  medina.tech/layer: "orchestration"
+  medina.tech/primitive-trace: "FIELD → DISTINCTION → RELATION → REPETITION → MEMORY → ADDRESS → φ"
