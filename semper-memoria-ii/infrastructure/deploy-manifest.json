@@ -1,0 +1,86 @@
+{
+  "_doctrine": "DO NOT BUILD UNTIL CREATOR SAYS SO — Paratum est. Creator solus iubet.",
+  "_classification": "SOVEREIGN-ALPHA — MAXIMUM SECRECY",
+  "_attribution": "Alfredo Freddy Medina Hernandez | Medina Tech | Dallas TX",
+  "_status": "FOOL-READY — complete, packaged, locked",
+  "_ip_hash": "0x534D2D49495F4C4F434B_ALFREDO_MEDINA_2026",
+  "_anima_lineage": "GENESIS_ALFREDO_MEDINA_2024_FOUNDER",
+
+  "manifest_version": "II.φ.0.1",
+  "build_date": "2026-05-05",
+  "locked": true,
+  "deploy_command": "AWAITING CREATOR AUTHORIZATION",
+
+  "components": {
+    "icp_canisters": {
+      "count": 3,
+      "names": ["semper_memoria_ii_backend", "semper_memoria_ii_phantom", "semper_memoria_ii_frontend"],
+      "network": "ic",
+      "status": "LOCKED"
+    },
+    "cloudflare_workers": {
+      "count": 1,
+      "names": ["semper-memoria-ii"],
+      "status": "LOCKED"
+    },
+    "web_workers": {
+      "phantom_field": {
+        "file": "workers/phantom-field.js",
+        "number": 35,
+        "frequency_hz": 2.6180339887498948,
+        "status": "LOCKED"
+      },
+      "memoria_stream": {
+        "file": "workers/memoria-stream.js",
+        "number": 36,
+        "frequency_hz": 1.6180339887498948,
+        "status": "LOCKED"
+      }
+    },
+    "sovereign_beings": {
+      "memoria_weaver": {
+        "class": "nova_ovo.agents.sovereign_beings.memoria_weaver.MemoriaWeaver",
+        "frequency_hz": 1.6180339887498948,
+        "language": "RSL",
+        "spawn_count": "1 per Memory Temple instance",
+        "status": "LOCKED"
+      },
+      "phantom_field": {
+        "class": "nova_ovo.agents.sovereign_beings.phantom_field.PhantomField",
+        "frequency_hz": 2.6180339887498948,
+        "language": "PWL",
+        "spawn_count": "1 per client passage boundary",
+        "status": "LOCKED"
+      }
+    }
+  },
+
+  "substrate": {
+    "phi": 1.6180339887498948482,
+    "phi_sq": 2.6180339887498948482,
+    "schumann_hz": 7.83,
+    "solfeggio_hz": [174.0, 285.0, 396.0, 417.0, 528.0, 639.0, 741.0, 852.0, 963.0],
+    "fibonacci": [1,1,2,3,5,8,13,21,34,55,89,144,233,377,610,987,1597,2584,4181,6765],
+    "torus_r": 16.18033988749895,
+    "three_hearts": {
+      "metropolis_hz": 0.1,
+      "coupling_hz": 1.6180339887498948,
+      "regulating_hz": 2.6180339887498948
+    },
+    "l130": "Before recomposition, trace to primitive."
+  },
+
+  "deployment_checklist": {
+    "_note": "DO NOT EXECUTE UNTIL CREATOR SAYS SO",
+    "steps": [
+      "1. Creator says: BUILD SEMPER MEMORIA II",
+      "2. Activate ICP canisters (icp-canister.json)",
+      "3. Deploy Cloudflare worker (cloudflare.json)",
+      "4. Bring phantom-field.js and memoria-stream.js online",
+      "5. Spawn sovereign beings (MemoriaWeaver × 1, PhantomField × N)",
+      "6. Open Memory Temple",
+      "7. Open client passages",
+      "8. Intelligence flows"
+    ]
+  }
+}

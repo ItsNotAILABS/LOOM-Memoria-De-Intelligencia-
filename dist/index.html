@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MEDINA — Sovereign Distribution</title>
+<style>
+:root {
+    --gold: #d4af37;
+    --gold-bright: #ffd700;
+    --gold-dim: #b8860b;
+    --bg: #050505;
+    --bg2: #0a0a0a;
+    --bg3: #111;
+    --text: #ccc;
+    --green: #00ff88;
+    --red: #ff4444;
+    --cyan: #00bcd4;
+    --phi: 1.618;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'SF Mono', 'Fira Code', 'JetBrains Mono', monospace;
+    min-height: 100vh;
+}
+.header {
+    text-align: center;
+    padding: 40px 20px 30px;
+    border-bottom: 1px solid #222;
+    background: linear-gradient(180deg, #0d0d00 0%, var(--bg) 100%);
+}
+.header h1 { font-size: 28px; color: var(--gold-bright); letter-spacing: 4px; margin-bottom: 6px; }
+.header .latin { font-size: 13px; color: var(--gold-dim); font-style: italic; margin-bottom: 16px; }
+.header .stats { font-size: 12px; color: #666; }
+.header .stats span { color: var(--gold); margin: 0 8px; }
+
+.section {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 30px 20px;
+}
+.section h2 {
+    color: var(--gold);
+    font-size: 16px;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #222;
+    padding-bottom: 8px;
+}
+
+.install-block {
+    background: var(--bg3);
+    border: 1px solid #222;
+    border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+.install-block h3 { color: var(--gold-bright); font-size: 14px; margin-bottom: 10px; }
+.install-block code {
+    display: block;
+    background: #000;
+    color: var(--green);
+    padding: 12px 16px;
+    border-radius: 4px;
+    font-size: 13px;
+    overflow-x: auto;
+    margin: 8px 0;
+    border: 1px solid #1a1a1a;
+}
+.install-block .note { font-size: 11px; color: #666; margin-top: 8px; }
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+}
+.card {
+    background: var(--bg2);
+    border: 1px solid #1a1a1a;
+    border-radius: 6px;
+    padding: 16px;
+    transition: border-color 0.3s;
+}
+.card:hover { border-color: var(--gold-dim); }
+.card .name { color: var(--gold); font-size: 13px; font-weight: bold; margin-bottom: 4px; }
+.card .desc { font-size: 11px; color: #888; margin-bottom: 8px; }
+.card .meta { font-size: 10px; color: #555; }
+
+.workflow-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+.workflow-table th {
+    text-align: left;
+    color: var(--gold);
+    font-size: 11px;
+    padding: 8px 12px;
+    border-bottom: 1px solid #222;
+}
+.workflow-table td {
+    padding: 8px 12px;
+    font-size: 12px;
+    border-bottom: 1px solid #111;
+}
+.workflow-table td:first-child { color: var(--cyan); }
+.badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: bold;
+}
+.badge-auto { background: #1a3320; color: var(--green); }
+.badge-manual { background: #332d1a; color: var(--gold); }
+.badge-tag { background: #1a2233; color: var(--cyan); }
+
+.duality {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 8px;
+    align-items: center;
+    margin: 8px 0;
+}
+.duality .left { text-align: right; color: var(--green); font-size: 12px; }
+.duality .symbol { color: var(--gold); font-size: 16px; }
+.duality .right { text-align: left; color: var(--red); font-size: 12px; }
+
+.footer {
+    text-align: center;
+    padding: 30px;
+    border-top: 1px solid #111;
+    font-size: 11px;
+    color: #444;
+}
+.footer .author { color: var(--gold-dim); }
+</style>
+</head>
+<body>
+
+<div class="header">
+    <h1>⟨ M E D I N A ⟩</h1>
+    <div class="latin">"Totum in se. Nihil externum." — Everything within. Nothing external.</div>
+    <div class="stats">
+        <span>φ = 1.618033988749895</span> ·
+        <span>7 Native Scripts</span> ·
+        <span>20 Extensions</span> ·
+        <span>3 SDKs</span> ·
+        <span>216 Workers</span> ·
+        <span>50 Memory Ops</span>
+    </div>
+</div>
+
+<!-- ── INSTALL ─────────────────────────────────────────────── -->
+<div class="section">
+    <h2>⬇ INSTALL — INSTALLATIO SOVEREIGNA</h2>
+
+    <div class="install-block">
+        <h3>Linux / macOS — One Command</h3>
+        <code>curl -fsSL https://raw.githubusercontent.com/FreddyCreates/Medina-Memory-More-AI/main/dist/install.sh | bash</code>
+        <div class="note">Or download and run locally — no network needed after download.</div>
+    </div>
+
+    <div class="install-block">
+        <h3>Windows — PowerShell</h3>
+        <code>iwr https://raw.githubusercontent.com/FreddyCreates/Medina-Memory-More-AI/main/dist/install.ps1 | iex</code>
+    </div>
+
+    <div class="install-block">
+        <h3>From Sovereign Bundle (Offline)</h3>
+        <code>tar xzf medina-sovereign-1.0.0.tar.gz
+cd medina-sovereign-1.0.0
+bash install.sh</code>
+        <div class="note">Zero network dependency. Everything self-contained.</div>
+    </div>
+
+    <div class="install-block">
+        <h3>npm (SDK only)</h3>
+        <code>npm install @medina/memory-sdk @medina/organism-cli</code>
+    </div>
+</div>
+
+<!-- ── NATIVE SCRIPTS ──────────────────────────────────────── -->
+<div class="section">
+    <h2>⚡ NATIVE SCRIPTS — SCRIPTA NATIVA</h2>
+    <p style="font-size:12px;color:#888;margin-bottom:16px;">No GitHub Actions. Everything runs locally via make or npm run.</p>
+
+    <table class="workflow-table">
+        <tr><th>Command</th><th>Shortcut</th><th>Purpose</th></tr>
+        <tr>
+            <td>make validate</td>
+            <td><span class="badge badge-auto">npm run validate</span></td>
+            <td>Validate all substrates (ICP, Node.js, Rust, Extensions)</td>
+        </tr>
+        <tr>
+            <td>make build</td>
+            <td><span class="badge badge-auto">npm run build:extensions</span></td>
+            <td>Package all 20 extensions + build release bundle</td>
+        </tr>
+        <tr>
+            <td>make deploy-canister-local</td>
+            <td><span class="badge badge-manual">npm run deploy:canister</span></td>
+            <td>Deploy Motoko canister to local ICP replica</td>
+        </tr>
+        <tr>
+            <td>make deploy-canister-ic</td>
+            <td><span class="badge badge-tag">npm run deploy:canister:ic</span></td>
+            <td>Deploy to ICP mainnet</td>
+        </tr>
+        <tr>
+            <td>make publish-sdk</td>
+            <td><span class="badge badge-manual">npm run publish:sdk</span></td>
+            <td>Publish SDK packages to npm</td>
+        </tr>
+        <tr>
+            <td>make dev</td>
+            <td><span class="badge badge-auto">npm run dev</span></td>
+            <td>Launch Organism CLI auto-pilot + download server</td>
+        </tr>
+        <tr>
+            <td>make build-rust</td>
+            <td><span class="badge badge-manual">npm run build:rust</span></td>
+            <td>Build medina_crypto Rust crate</td>
+        </tr>
+    </table>
+</div>
+
+<!-- ── DUALITY ENGINE ─────────────────────────────────────── -->
+<div class="section">
+    <h2>⟺ DUALITY ENGINE — 8 OPPOSING PAIRS</h2>
+    <p style="font-size:12px;color:#888;margin-bottom:16px;">"Omnis actio habet reactionem." — Every action has its reaction.</p>
+
+    <div class="duality"><div class="left">emit →</div><div class="symbol">⇌</div><div class="right">← absorb</div></div>
+    <div class="duality"><div class="left">activate →</div><div class="symbol">⟺</div><div class="right">← deactivate</div></div>
+    <div class="duality"><div class="left">affirm →</div><div class="symbol">✓✗</div><div class="right">← deny</div></div>
+    <div class="duality"><div class="left">energize →</div><div class="symbol">1|0</div><div class="right">← zero</div></div>
+    <div class="duality"><div class="left">expand →</div><div class="symbol">⟨⟩</div><div class="right">← contract</div></div>
+    <div class="duality"><div class="left">surface →</div><div class="symbol">↕</div><div class="right">← deepen</div></div>
+    <div class="duality"><div class="left">link →</div><div class="symbol">⊶</div><div class="right">← unlink</div></div>
+    <div class="duality"><div class="left">reinforce →</div><div class="symbol">∞∅</div><div class="right">← forget</div></div>
+</div>
+
+<!-- ── COMPONENTS ──────────────────────────────────────────── -->
+<div class="section">
+    <h2>🏛 COMPONENTS — MEMBRA SYSTEMATIS</h2>
+    <div class="grid">
+        <div class="card">
+            <div class="name">🏛️ ICP Canister</div>
+            <div class="desc">Motoko backend — Memory Temple, Constitution, 50+ Memory ops, 200+ endpoints</div>
+            <div class="meta">Substrate: Internet Computer · Language: Motoko</div>
+        </div>
+        <div class="card">
+            <div class="name">🧬 Organism CLI</div>
+            <div class="desc">Terminal AI — 216 Alpha workers, 30 terminals, 3 conductor AIs, auto-pilot</div>
+            <div class="meta">Runtime: Node.js · Port: 3618</div>
+        </div>
+        <div class="card">
+            <div class="name">🧩 20 Extensions</div>
+            <div class="desc">Browser extensions — Memory Temple, Three Hearts, Golden Ratio, Intelligence Wire</div>
+            <div class="meta">Platform: Chrome/Chromium · Auto-load via CLI</div>
+        </div>
+        <div class="card">
+            <div class="name">📦 Memory SDK</div>
+            <div class="desc">@medina/memory-sdk — Sovereign memory temple, lineage tracking, phi-traced persistence</div>
+            <div class="meta">Package: npm · License: ISIL-1.0</div>
+        </div>
+        <div class="card">
+            <div class="name">🤖 Agent Incentive</div>
+            <div class="desc">Agent incentive service — reward models, phi-scaled incentives</div>
+            <div class="meta">Package: npm · License: ISIL-1.0</div>
+        </div>
+        <div class="card">
+            <div class="name">🛒 AI Tools Marketplace</div>
+            <div class="desc">Callable tool marketplace — 20 tools with I/O schemas, cost weights</div>
+            <div class="meta">Package: npm · License: ISIL-1.0</div>
+        </div>
+        <div class="card">
+            <div class="name">🦀 Rust Crate</div>
+            <div class="desc">medina_crypto — Sovereign cryptographic primitives</div>
+            <div class="meta">Language: Rust · Crate: medina_crypto</div>
+        </div>
+        <div class="card">
+            <div class="name">📜 Doctrine</div>
+            <div class="desc">Constitution, alignment docs, pattern synthesis, research papers</div>
+            <div class="meta">Format: Markdown · Immutable doctrine</div>
+        </div>
+    </div>
+</div>
+
+<!-- ── MEMORY TEMPLE ──────────────────────────────────────── -->
+<div class="section">
+    <h2>🕍 MEMORY TEMPLE — 50 OPERATIONS</h2>
+    <div class="grid">
+        <div class="card">
+            <div class="name">Core (14)</div>
+            <div class="desc">init · store · get · find · pin · unpin · promote · memoriesAtRing · memoriesInBeatRange · lineage · status · count · toXYZ · distance</div>
+        </div>
+        <div class="card">
+            <div class="name">Extended (19)</div>
+            <div class="desc">consolidate · archive · archiveBelowSalience · decay · decayAll · children · descendants · nearestTo · updateContent · updateTags · replay · mapTopology · salienceDistribution · topSalient · decayCandidates · memoriesByType · typeDistribution · memoriesByState · fullStatus</div>
+        </div>
+        <div class="card">
+            <div class="name">Duality Engine (17)</div>
+            <div class="desc">emit · absorb · activate · deactivate · affirm · deny · energize · zero · expand · contract · surface · deepen · link · unlink · reinforce · forget · dualityManifest</div>
+        </div>
+    </div>
+</div>
+
+<div class="footer">
+    <div class="author">Alfredo "Freddy" Medina Hernandez · Medina Tech · Dallas, TX</div>
+    <div style="margin-top:4px;">φ = 1.618033988749895 · Sovereign Intelligence · ISIL-1.0</div>
+</div>
+
+</body>
+</html>

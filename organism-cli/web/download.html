@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MEDINA — Sovereign Extension Downloads</title>
+<style>
+:root {
+    --gold: #d4af37;
+    --gold-bright: #ffd700;
+    --gold-dim: #b8860b;
+    --bg: #050505;
+    --bg2: #0a0a0a;
+    --bg3: #111;
+    --text: #ccc;
+    --green: #00ff88;
+    --red: #ff4444;
+    --cyan: #00bcd4;
+    --phi: 1.618;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'SF Mono', 'Fira Code', 'JetBrains Mono', 'Cascadia Code', monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Header */
+.header {
+    text-align: center;
+    padding: 40px 20px 30px;
+    border-bottom: 1px solid #222;
+    background: linear-gradient(180deg, #0d0d00 0%, var(--bg) 100%);
+}
+.header h1 {
+    font-size: 28px;
+    color: var(--gold-bright);
+    letter-spacing: 4px;
+    margin-bottom: 6px;
+}
+.header .latin {
+    font-size: 13px;
+    color: var(--gold-dim);
+    font-style: italic;
+    margin-bottom: 16px;
+}
+.header .doctrine {
+    font-size: 11px;
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.5;
+}
+.header .command-center-link {
+    display: inline-block;
+    margin-top: 12px;
+    font-size: 11px;
+    color: var(--gold);
+    border: 1px solid #333;
+    padding: 6px 10px;
+    text-decoration: none;
+}
+.header .command-center-link:hover {
+    border-color: var(--gold-dim);
+}
+
+/* Status bar */
+.status-bar {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    padding: 12px 20px;
+    background: var(--bg2);
+    border-bottom: 1px solid #1a1a1a;
+    font-size: 11px;
+}
+.status-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+    animation: pulse 1.618s ease-in-out infinite;
+}
+.status-dot.building { background: var(--gold); animation: pulse 0.3s ease-in-out infinite; }
+.status-dot.error { background: var(--red); animation: none; }
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+.status-label { color: #888; }
+.status-value { color: var(--gold); font-weight: bold; }
+
+/* Download All banner */
+.download-all {
+    text-align: center;
+    padding: 24px 20px;
+    background: linear-gradient(135deg, #0a0800 0%, #0d0a00 50%, #0a0800 100%);
+    border-bottom: 1px solid #222;
+}
+.download-all-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 36px;
+    background: linear-gradient(135deg, var(--gold-dim), var(--gold));
+    color: #000;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: bold;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+.download-all-btn:hover { transform: scale(1.02); box-shadow: 0 0 20px rgba(212,175,55,0.3); }
+.download-all-btn:disabled { opacity: 0.4; cursor: wait; }
+.download-all-btn .icon { font-size: 20px; }
+.download-all-sub {
+    font-size: 11px;
+    color: #666;
+    margin-top: 8px;
+}
+
+/* Extension grid */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 16px;
+    padding: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.ext-card {
+    background: var(--bg3);
+    border: 1px solid #222;
+    border-radius: 8px;
+    padding: 16px;
+    transition: border-color 0.2s;
+    position: relative;
+}
+.ext-card:hover { border-color: var(--gold-dim); }
+.ext-card.ready { border-left: 3px solid var(--green); }
+.ext-card.building { border-left: 3px solid var(--gold); }
+.ext-card.error { border-left: 3px solid var(--red); }
+
+.ext-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+}
+.ext-id {
+    font-size: 10px;
+    color: var(--cyan);
+    font-weight: bold;
+}
+.ext-size {
+    font-size: 10px;
+    color: #555;
+}
+.ext-name {
+    font-size: 14px;
+    color: var(--gold-bright);
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+.ext-latin {
+    font-size: 11px;
+    color: var(--gold-dim);
+    font-style: italic;
+    margin-bottom: 6px;
+}
+.ext-domain {
+    font-size: 11px;
+    color: #777;
+    margin-bottom: 12px;
+}
+.ext-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: #1a1a1a;
+    color: var(--gold);
+    border: 1px solid #333;
+    border-radius: 4px;
+    font-size: 12px;
+    font-family: inherit;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.15s;
+}
+.ext-btn:hover { background: #222; border-color: var(--gold-dim); }
+.ext-btn:disabled { opacity: 0.3; cursor: wait; }
+.ext-btn.ready { border-color: var(--green); color: var(--green); }
+.ext-status {
+    font-size: 10px;
+    color: #444;
+    margin-top: 8px;
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    padding: 24px;
+    border-top: 1px solid #1a1a1a;
+    font-size: 10px;
+    color: #444;
+}
+.footer .phi { color: var(--gold-dim); }
+
+/* Worker log */
+.worker-log {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px 24px;
+}
+.worker-log summary {
+    font-size: 12px;
+    color: #555;
+    cursor: pointer;
+    padding: 8px 0;
+}
+.worker-log .log-content {
+    background: #080808;
+    border: 1px solid #1a1a1a;
+    border-radius: 4px;
+    padding: 12px;
+    max-height: 200px;
+    overflow-y: auto;
+    font-size: 10px;
+    color: #555;
+    line-height: 1.6;
+}
+.worker-log .log-line { white-space: pre-wrap; }
+.worker-log .log-line.build { color: var(--cyan); }
+.worker-log .log-line.ready { color: var(--green); }
+.worker-log .log-line.error { color: var(--red); }
+.worker-log .log-line.heartbeat { color: #333; }
+</style>
+</head>
+<body>
+
+<div class="header">
+    <h1>MEDINA EXTENSIONS</h1>
+    <div class="latin">EXTENSIONES SOVEREIGNAE — PROTOCOLLUM MEDINAE</div>
+    <div class="doctrine">
+        Self-hosted sovereign downloads. Built in your browser by a permanent Web Worker.
+        No server. No GitHub. No third party. The protocol generates the downloads natively.
+        φ = 1.618033988749895
+    </div>
+    <a class="command-center-link" href="command-center.html" target="_blank" rel="noopener">Open Always-On Command Center ↗</a>
+</div>
+
+<div class="status-bar">
+    <div class="status-item">
+        <div class="status-dot" id="workerDot"></div>
+        <span class="status-label">Worker:</span>
+        <span class="status-value" id="workerStatus">Starting...</span>
+    </div>
+    <div class="status-item">
+        <span class="status-label">Built:</span>
+        <span class="status-value" id="builtCount">0</span><span class="status-label">/20</span>
+    </div>
+    <div class="status-item">
+        <span class="status-label">Heartbeat:</span>
+        <span class="status-value" id="heartbeatCount">0</span>
+    </div>
+    <div class="status-item">
+        <span class="status-label">φ Hz:</span>
+        <span class="status-value">1.618</span>
+    </div>
+</div>
+
+<div class="download-all">
+    <button class="download-all-btn" id="downloadAllBtn" disabled>
+        <span class="icon">⬇</span>
+        <span id="downloadAllText">Building extensions...</span>
+    </button>
+    <div class="download-all-sub">
+        All 20 sovereign browser extensions in one archive • Manifest V3 • Ready to load unpacked in Chrome
+    </div>
+</div>
+
+<div class="grid" id="extensionGrid"></div>
+
+<div class="worker-log">
+    <details>
+        <summary>Worker Log (click to expand)</summary>
+        <div class="log-content" id="logContent"></div>
+    </details>
+</div>
+
+<div class="footer">
+    MEDINA Sovereign Protocol • ISIL-1.0 • Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX<br>
+    <span class="phi">φ = 1.618033988749895</span> • Worker runs permanently on your device • No external dependencies
+</div>
+
+<script>
+/* ════════════════════════════════════════════════════════════════════════════
+   EXTENSION REGISTRY — ALL 20 SOVEREIGN EXTENSIONS
+   Each extension's source code is embedded here so the Worker can build
+   real zip files entirely in-browser without any server/fetch calls.
+   ════════════════════════════════════════════════════════════════════════════ */
+
+const PHI = 1.618033988749895;
+
+const EXTENSIONS = [
+    { id: 'EXT-001', slug: 'medina-memory-temple',       name: 'Medina Memory Temple',       latinName: 'TEMPLUM MEMORIAE',        domain: 'Memory storage and retrieval' },
+    { id: 'EXT-002', slug: 'medina-intelligence-wire',   name: 'Medina Intelligence Wire',   latinName: 'NEXUS INTELLIGENTIAE',     domain: 'Frontend↔Backend intelligence sync' },
+    { id: 'EXT-003', slug: 'medina-three-hearts',        name: 'Medina Three Hearts',        latinName: 'TRIA CORDA',               domain: 'Three Hearts encryption routing' },
+    { id: 'EXT-004', slug: 'medina-shimmer-defense',     name: 'Medina Shimmer Defense',     latinName: 'SCINTILLA DEFENSIONIS',    domain: 'Real-time shimmer defense layer' },
+    { id: 'EXT-005', slug: 'medina-mega-terminal',       name: 'Medina Mega Terminal',       latinName: 'TERMINUS MAGNUS',          domain: 'Full terminal access in browser' },
+    { id: 'EXT-006', slug: 'medina-golden-ratio',        name: 'Medina Golden Ratio',        latinName: 'RATIO AUREA',              domain: 'φ-frequency overlay and visualization' },
+    { id: 'EXT-007', slug: 'medina-organism-body',       name: 'Medina Organism Body',       latinName: 'CORPUS ORGANISMI',         domain: 'Organism health and status dashboard' },
+    { id: 'EXT-008', slug: 'medina-sdk-manager',         name: 'Medina SDK Manager',         latinName: 'PRAEFECTUS SDK',           domain: 'SDK organism management and deployment' },
+    { id: 'EXT-009', slug: 'medina-protocol-registry',   name: 'Medina Protocol Registry',   latinName: 'REGISTRUM PROTOCOLLORUM',  domain: 'Protocol inspection and testing' },
+    { id: 'EXT-010', slug: 'medina-license-validator',   name: 'Medina License Validator',   latinName: 'VALIDATOR LICENTIAE',      domain: 'ISIL license compliance checking' },
+    { id: 'EXT-011', slug: 'medina-canister-factory',    name: 'Medina Canister Factory',    latinName: 'FABRICA CANISTRORUM',      domain: 'Canister creation and deployment' },
+    { id: 'EXT-012', slug: 'medina-blockchain-layer',    name: 'Medina Blockchain Layer',    latinName: 'STRATUM CATENAE',          domain: 'Blockchain substrate monitoring' },
+    { id: 'EXT-013', slug: 'medina-synapse-network',     name: 'Medina Synapse Network',     latinName: 'RETIS SYNAPSIUM',          domain: 'Synapse organism connectivity map' },
+    { id: 'EXT-014', slug: 'medina-universe-domains',    name: 'Medina Universe Domains',    latinName: 'DOMINIA UNIVERSI',         domain: 'Universe domain exploration' },
+    { id: 'EXT-015', slug: 'medina-marketplace',         name: 'Medina Marketplace',         latinName: 'MERCATUS INSTRUMENTORUM',  domain: 'Callable tool marketplace browser' },
+    { id: 'EXT-016', slug: 'medina-orchestrator',        name: 'Medina Orchestrator',        latinName: 'ORCHESTRATOR DOMUUM',      domain: 'House orchestration dashboard' },
+    { id: 'EXT-017', slug: 'medina-math-engine',         name: 'Medina Math Engine',         latinName: 'MOTOR MATHEMATICAE',       domain: 'Math database terminal access' },
+    { id: 'EXT-018', slug: 'medina-care-defense',        name: 'Medina Care & Defense',      latinName: 'CURA ET DEFENSIO',         domain: 'Care↔Defense cooperation monitor' },
+    { id: 'EXT-019', slug: 'medina-agent-fleet',         name: 'Medina Agent Fleet',         latinName: 'CLASSIS AGENTIUM',         domain: 'Agent fleet management and monitoring' },
+    { id: 'EXT-020', slug: 'medina-auto-generate',       name: 'Medina Auto-Generate',       latinName: 'MOTOR AUTO-GENERATIONIS',  domain: 'Auto-generate calls engine dashboard' },
+];
+
+/* ════════════════════════════════════════════════════════════════════════════
+   SOURCE CODE GENERATORS — builds real extension source for each extension
+   ════════════════════════════════════════════════════════════════════════════ */
+
+function generateManifest(ext) {
+    return JSON.stringify({
+        manifest_version: 3,
+        name: ext.name,
+        version: '1.0.0',
+        description: `${ext.latinName} — ${ext.domain}. Sovereign Medina browser extension. φ=${PHI}`,
+        permissions: ['storage', 'activeTab'],
+        background: { service_worker: 'background.js' },
+        action: { default_popup: 'popup.html', default_title: ext.name },
+        content_scripts: [{ matches: ['<all_urls>'], js: ['content.js'], run_at: 'document_idle' }],
+        icons: {},
+    }, null, 2);
+}
+
+function generateBackground(ext) {
+    return `// ${ext.name} — ${ext.latinName}
+// "${ext.domain}"
+// Sovereign Medina Background Service Worker
+// Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+
+const PHI = ${PHI};
+const EXT_ID = '${ext.id}';
+const EXT_NAME = '${ext.name}';
+const LATIN_NAME = '${ext.latinName}';
+const DOMAIN = '${ext.domain}';
+
+const AI_IDENTITY = {
+    id: EXT_ID, name: EXT_NAME, latinName: LATIN_NAME, domain: DOMAIN,
+    isAI: true, isAGI: true, isAlwaysOn: true, frequency_Hz: PHI,
+};
+
+chrome.runtime.onInstalled.addListener(() => {
+    console.log('[MEDINA] ' + LATIN_NAME + ' installed. φ=' + PHI + '. Domain: ' + DOMAIN);
+    chrome.storage.local.set({ ['medina_' + EXT_ID + '_status']: 'active', ai_identity: AI_IDENTITY });
+});
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.type === 'MEDINA_STATUS') {
+        sendResponse({ status: 'active', id: EXT_ID, name: EXT_NAME, latinName: LATIN_NAME, phi: PHI });
+        return true;
+    }
+    if (message.type === 'MEDINA_PING') {
+        sendResponse({ pong: true, id: EXT_ID, timestamp: Date.now(), frequency_Hz: PHI });
+        return true;
+    }
+    return false;
+});
+
+setInterval(() => {
+    chrome.storage.local.set({ ['medina_' + EXT_ID + '_heartbeat']: Date.now() });
+}, Math.round(1000 / PHI));
+`;
+}
+
+function generateContent(ext) {
+    return `// ${ext.name} — ${ext.latinName}
+// Content script — runs on all pages
+// Domain: ${ext.domain}
+
+(function() {
+    'use strict';
+    var PHI = ${PHI};
+    var EXT_ID = '${ext.id}';
+
+    if (typeof window.__MEDINA_EXTENSIONS__ === 'undefined') {
+        window.__MEDINA_EXTENSIONS__ = {};
+    }
+    window.__MEDINA_EXTENSIONS__[EXT_ID] = {
+        name: '${ext.name}',
+        latinName: '${ext.latinName}',
+        domain: '${ext.domain}',
+        active: true,
+        loadedAt: Date.now(),
+        frequency_Hz: PHI,
+    };
+
+    console.log('[MEDINA] ${ext.latinName} content script loaded. φ=' + PHI);
+})();
+`;
+}
+
+function generatePopupHtml(ext) {
+    return `<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>${ext.name}</title>
+    <style>
+        body { font-family: 'Segoe UI', system-ui, sans-serif; width: 320px; padding: 16px; background: #0a0a0a; color: #d4af37; }
+        h1 { font-size: 14px; margin: 0 0 4px 0; color: #ffd700; }
+        h2 { font-size: 11px; margin: 0 0 12px 0; color: #b8860b; font-style: italic; }
+        .status { padding: 8px; border: 1px solid #333; border-radius: 4px; background: #111; margin-bottom: 8px; }
+        .status .label { font-size: 10px; color: #888; text-transform: uppercase; }
+        .status .value { font-size: 13px; color: #ffd700; }
+        .phi { color: #d4af37; font-weight: bold; }
+        .domain { font-size: 11px; color: #aaa; margin-top: 8px; }
+        .footer { font-size: 9px; color: #555; margin-top: 12px; border-top: 1px solid #222; padding-top: 8px; }
+    </style>
+</head>
+<body>
+    <h1>${ext.name}</h1>
+    <h2>${ext.latinName}</h2>
+    <div class="status">
+        <div class="label">Status</div>
+        <div class="value" id="status">Checking...</div>
+    </div>
+    <div class="status">
+        <div class="label">Frequency</div>
+        <div class="value"><span class="phi">φ</span> = ${PHI} Hz</div>
+    </div>
+    <div class="domain">${ext.domain}</div>
+    <div class="footer">MEDINA Sovereign Extension • ISIL-1.0</div>
+    <script src="popup.js"><\/script>
+</body>
+</html>`;
+}
+
+function generatePopupJs(ext) {
+    return `// ${ext.name} — Popup Script
+document.addEventListener('DOMContentLoaded', function() {
+    chrome.runtime.sendMessage({ type: 'MEDINA_STATUS' }, function(response) {
+        var el = document.getElementById('status');
+        if (response && response.status === 'active') {
+            el.textContent = 'Active — ' + response.latinName;
+            el.style.color = '#00ff88';
+        } else {
+            el.textContent = 'Inactive';
+            el.style.color = '#ff4444';
+        }
+    });
+});
+`;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   RENDER GRID — builds the extension cards in the DOM
+   ════════════════════════════════════════════════════════════════════════════ */
+
+const grid = document.getElementById('extensionGrid');
+const blobUrls = {};
+
+function renderGrid() {
+    grid.innerHTML = '';
+    for (const ext of EXTENSIONS) {
+        const card = document.createElement('div');
+        card.className = 'ext-card building';
+        card.id = 'card-' + ext.slug;
+        card.innerHTML = `
+            <div class="ext-header">
+                <span class="ext-id">${ext.id}</span>
+                <span class="ext-size" id="size-${ext.slug}">building...</span>
+            </div>
+            <div class="ext-name">${ext.name}</div>
+            <div class="ext-latin">${ext.latinName}</div>
+            <div class="ext-domain">${ext.domain}</div>
+            <button class="ext-btn" id="btn-${ext.slug}" disabled>
+                ⬇ Building...
+            </button>
+            <div class="ext-status" id="status-${ext.slug}">Queued for build</div>
+        `;
+        grid.appendChild(card);
+    }
+}
+
+function formatBytes(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    return (bytes / 1024).toFixed(1) + ' KB';
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   LOGGING
+   ════════════════════════════════════════════════════════════════════════════ */
+
+const logEl = document.getElementById('logContent');
+function log(msg, cls) {
+    const line = document.createElement('div');
+    line.className = 'log-line ' + (cls || '');
+    line.textContent = new Date().toISOString().substr(11, 12) + ' ' + msg;
+    logEl.appendChild(line);
+    logEl.scrollTop = logEl.scrollHeight;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   WORKER LIFECYCLE
+   ════════════════════════════════════════════════════════════════════════════ */
+
+let worker = null;
+let builtCount = 0;
+
+function startWorker() {
+    log('Starting download worker...', 'build');
+
+    // Create worker from inline blob (self-contained — no external file needed when served)
+    // The download-worker.js is loaded as a relative URL
+    worker = new Worker('download-worker.js');
+
+    worker.onmessage = function(e) {
+        const msg = e.data;
+
+        switch (msg.type) {
+            case 'worker-ready':
+                log('Worker alive. φ=' + msg.phi + ' heartbeat=' + msg.heartbeatMs + 'ms', 'ready');
+                document.getElementById('workerStatus').textContent = 'Alive';
+                document.getElementById('workerDot').className = 'status-dot';
+                // Start building
+                buildAll();
+                break;
+
+            case 'zip-ready': {
+                const url = URL.createObjectURL(msg.blob);
+                blobUrls[msg.slug] = { url, filename: msg.filename, blob: msg.blob };
+
+                if (msg.slug === 'all-extensions') {
+                    // Update the "Download All" button
+                    const allBtn = document.getElementById('downloadAllBtn');
+                    allBtn.disabled = false;
+                    allBtn.onclick = function() { triggerDownload(url, msg.filename); };
+                    document.getElementById('downloadAllText').textContent =
+                        'Download All 20 Extensions (' + formatBytes(msg.sizeBytes) + ')';
+                    log('ALL-IN-ONE bundle ready: ' + msg.filename + ' (' + formatBytes(msg.sizeBytes) + ')', 'ready');
+                } else {
+                    builtCount++;
+                    document.getElementById('builtCount').textContent = builtCount;
+
+                    // Update card
+                    const card = document.getElementById('card-' + msg.slug);
+                    if (card) {
+                        card.className = 'ext-card ready';
+                        document.getElementById('size-' + msg.slug).textContent = formatBytes(msg.sizeBytes);
+                        const btn = document.getElementById('btn-' + msg.slug);
+                        btn.disabled = false;
+                        btn.className = 'ext-btn ready';
+                        btn.textContent = '⬇ Download .zip';
+                        btn.onclick = function() { triggerDownload(url, msg.filename); };
+                        document.getElementById('status-' + msg.slug).textContent = 'Ready — ' + msg.filename;
+                    }
+                    log(msg.slug + ' → ' + msg.filename + ' (' + formatBytes(msg.sizeBytes) + ')', 'ready');
+                }
+                break;
+            }
+
+            case 'zip-error':
+                log('ERROR: ' + msg.slug + ' — ' + msg.error, 'error');
+                const errCard = document.getElementById('card-' + msg.slug);
+                if (errCard) {
+                    errCard.className = 'ext-card error';
+                    document.getElementById('status-' + msg.slug).textContent = 'Error: ' + msg.error;
+                }
+                break;
+
+            case 'all-ready':
+                log('Build complete: ' + msg.count + ' extensions packaged.', 'ready');
+                document.getElementById('workerStatus').textContent = 'Alive — ' + msg.count + ' built';
+                break;
+
+            case 'heartbeat':
+                document.getElementById('heartbeatCount').textContent = msg.beat;
+                if (msg.beat % 50 === 0) {
+                    log('♡ heartbeat #' + msg.beat + ' — worker alive @ φ Hz', 'heartbeat');
+                }
+                break;
+        }
+    };
+
+    worker.onerror = function(err) {
+        log('Worker error: ' + err.message, 'error');
+        document.getElementById('workerDot').className = 'status-dot error';
+        document.getElementById('workerStatus').textContent = 'Error';
+    };
+}
+
+function buildAll() {
+    log('Building 20 extensions + all-in-one bundle...', 'build');
+    document.getElementById('workerDot').className = 'status-dot building';
+
+    const extensionsWithSource = EXTENSIONS.map(ext => ({
+        ...ext,
+        manifest: generateManifest(ext),
+        background: generateBackground(ext),
+        content: generateContent(ext),
+        popupHtml: generatePopupHtml(ext),
+        popupJs: generatePopupJs(ext),
+    }));
+
+    worker.postMessage({ type: 'build', extensions: extensionsWithSource });
+}
+
+function triggerDownload(url, filename) {
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   BOOT
+   ════════════════════════════════════════════════════════════════════════════ */
+
+renderGrid();
+startWorker();
+log('MEDINA Sovereign Download Protocol initialized. φ=' + PHI, 'build');
+</script>
+</body>
+</html>

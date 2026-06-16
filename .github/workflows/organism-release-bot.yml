@@ -1,0 +1,130 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# 🚀 ORGANISM RELEASE BOT — EMISSARIUS ORGANISMI
+# "Quando stellae signant, organismus nascitur." (When stars align, organism is born.)
+#
+# Builds everything, generates changelog, creates GitHub Release with
+# all artifacts on version tags (v*).
+#
+# Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+# ═══════════════════════════════════════════════════════════════════════════
+
+name: 🚀 organism-release-bot
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., v2.0.0)'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  build-release:
+    name: 🚀 Build Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Determine Version
+        id: version
+        run: |
+          if [ -n "${{ github.event.inputs.version }}" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+          else
+            VERSION="${GITHUB_REF#refs/tags/}"
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "🚀 Building release $VERSION"
+
+      - name: Run Full Validation
+        run: bash scripts/validate.sh 2>&1 || true
+
+      - name: Build Extensions
+        run: |
+          bash scripts/build-extensions.sh build/release/extensions
+          echo "🧬 Extensions packaged"
+
+      - name: Package SDKs
+        run: |
+          mkdir -p build/release/sdks
+          for pkg in packages/*/; do
+            name=$(basename "$pkg")
+            if [ -f "$pkg/package.json" ]; then
+              tar czf "build/release/sdks/${name}.tar.gz" -C packages "$name"
+            fi
+          done
+          echo "📦 SDKs packaged"
+
+      - name: Generate Release Notes
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+
+          MO=$(ls icp/src/medina_backend/*.mo 2>/dev/null | wc -l)
+          JS=$(ls organism-cli/web/*.js 2>/dev/null | wc -l)
+          EXT=$(ls -d extensions/*/ 2>/dev/null | wc -l)
+          PKG=$(ls -d packages/*/ 2>/dev/null | wc -l)
+          PROT=$(grep -c "id:.*'PROT-" organism-cli/web/protocol-papers.js 2>/dev/null || echo "0")
+
+          cat > build/release/RELEASE-NOTES.md << EOF
+          # 🚀 Organism Release $VERSION
+
+          **Released:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')
+          **Commit:** ${{ github.sha }}
+
+          ## Organism Census
+
+          | Component | Count |
+          |-----------|-------|
+          | Backend Engines (.mo) | $MO |
+          | Web Workers (.js) | $JS |
+          | Browser Extensions | $EXT |
+          | SDK Packages | $PKG |
+          | Protocols | $PROT |
+
+          ## Artifacts
+
+          - 🧬 \`organism-extensions-$VERSION.zip\` — All $EXT browser extensions
+          - 📦 \`organism-sdks-$VERSION.zip\` — All $PKG SDK packages
+          - 📋 \`RELEASE-NOTES.md\` — This file
+
+          ---
+          *Built by organism-release-bot 🚀*
+          *Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX*
+          EOF
+
+          cat build/release/RELEASE-NOTES.md
+
+      - name: Create Release Archives
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          cd build/release
+          if [ -d extensions ]; then
+            zip -r "organism-extensions-${VERSION}.zip" extensions/
+          fi
+          if [ -d sdks ]; then
+            zip -r "organism-sdks-${VERSION}.zip" sdks/
+          fi
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "Organism ${{ steps.version.outputs.version }}"
+          body_path: build/release/RELEASE-NOTES.md
+          files: |
+            build/release/*.zip
+            build/release/RELEASE-NOTES.md
+          draft: false
+          prerelease: false

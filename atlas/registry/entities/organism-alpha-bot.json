@@ -1,0 +1,32 @@
+{
+  "id": "atlas://bot/organism-alpha-bot",
+  "name": "organism-alpha-bot",
+  "class": "Bot",
+  "division": "VII — Command & Control",
+  "emoji": "👑",
+  "domain": "Fleet commander & unified status reporting",
+  "triggers": ["push:*", "schedule:every_6h", "workflow_dispatch"],
+  "workflow": ".github/workflows/organism-alpha-bot.yml",
+  "outputs": ["docs/fleet-status.md"],
+  "reads": [
+    "docs/extension-manifest.md",
+    "docs/neural-dependency-graph.md",
+    "docs/sdk-catalog.md",
+    "docs/protocol-encyclopedia.md",
+    "docs/health-dashboard.md",
+    "docs/architecture-map.md",
+    "docs/deployment-manifest.md",
+    "docs/security-report.md",
+    "docs/visual-report.md",
+    "docs/deps-report.md",
+    "docs/organism-atlas.md",
+    "docs/evolution-report.md",
+    "docs/economy-report.md"
+  ],
+  "languages": ["atlas://language/ocl", "atlas://language/cpl-l", "atlas://language/cpl-p", "atlas://language/cil"],
+  "governance_pipeline": "pipeline://governance/bot_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "authority": "fleet_commander",
+  "escalation_target": "human://freddy",
+  "scc": 4.61
+}

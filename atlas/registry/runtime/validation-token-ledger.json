@@ -1,0 +1,127 @@
+{
+  "id": "atlas://registry/runtime/validation-token-ledger",
+  "version": "1.0.0",
+  "updated_at": "2026-05-08T00:45:08.338670+00:00",
+  "tokens": [
+    {
+      "token_id": "valtok-vision-1778200886566",
+      "flow": "vision",
+      "profile": "ops",
+      "minted_at": "2026-05-08T00:41:26.566722+00:00",
+      "amount": 4,
+      "evidence_hash": "f5a78c279e5304401affe7ee1867d313a77ec77e24b47b6d9c7ff4ece566bd04"
+    },
+    {
+      "token_id": "valtok-security-1778200886566",
+      "flow": "security",
+      "profile": "ops",
+      "minted_at": "2026-05-08T00:41:26.566846+00:00",
+      "amount": 4,
+      "evidence_hash": "da8ca584264b3b75b2484d61ae967072034ae631485a5ff2b1776931f143e9d7"
+    },
+    {
+      "token_id": "valtok-billing-1778200886566",
+      "flow": "billing",
+      "profile": "ops",
+      "minted_at": "2026-05-08T00:41:26.566964+00:00",
+      "amount": 4,
+      "evidence_hash": "8baff2edf86caba3503e4d59afe744bc68da21aaef8acd605eea11d6f3c42ec7"
+    },
+    {
+      "token_id": "valtok-internal-build-1778200886567",
+      "flow": "internal-build",
+      "profile": "ops",
+      "minted_at": "2026-05-08T00:41:26.567058+00:00",
+      "amount": 4,
+      "evidence_hash": "24f3f6a75961f659b01757a3c3118202929b6fb9f229392574ea243e1058c9d7"
+    },
+    {
+      "token_id": "valtok-governance-1778200886567",
+      "flow": "governance",
+      "profile": "ops",
+      "minted_at": "2026-05-08T00:41:26.567146+00:00",
+      "amount": 4,
+      "evidence_hash": "bc94ab37b1fb13e3ff9dbe187214cdd991b7e7b453065bb1007583f4e0c35e0e"
+    },
+    {
+      "token_id": "valtok-vision-1778200886721",
+      "flow": "vision",
+      "profile": "ops",
+      "minted_at": "2026-05-08T00:41:26.721606+00:00",
+      "amount": 4,
+      "evidence_hash": "831ef6047d7f1a5432b3f9eb54f0f980d545a3779da03cf06f9ce9252f5ea7ee"
+    },
+    {
+      "token_id": "valtok-security-1778200886721",
+      "flow": "security",
+      "profile": "ops",
+      "minted_at": "2026-05-08T00:41:26.721724+00:00",
+      "amount": 4,
+      "evidence_hash": "5cfee247e280883389d655d77569575b50d08b39799c4dbc1633e43185984e91"
+    },
+    {
+      "token_id": "valtok-billing-1778200886721",
+      "flow": "billing",
+      "profile": "ops",
+      "minted_at": "2026-05-08T00:41:26.721814+00:00",
+      "amount": 4,
+      "evidence_hash": "1a44bdcbac3baef0d72025497f3604aea2738502844608c4820475edb09a5529"
+    },
+    {
+      "token_id": "valtok-internal-build-1778200886721",
+      "flow": "internal-build",
+      "profile": "ops",
+      "minted_at": "2026-05-08T00:41:26.721900+00:00",
+      "amount": 4,
+      "evidence_hash": "3fcf2cea18f738581d766881fe3bbaf2848ce182902ca8927a7144395cb7f334"
+    },
+    {
+      "token_id": "valtok-governance-1778200886722",
+      "flow": "governance",
+      "profile": "ops",
+      "minted_at": "2026-05-08T00:41:26.722074+00:00",
+      "amount": 4,
+      "evidence_hash": "973deee25d26ee6264e115214390ca7360033d4713ec1d68915b9119abccd07b"
+    },
+    {
+      "token_id": "valtok-vision-1778201108337",
+      "flow": "vision",
+      "profile": "ops",
+      "minted_at": "2026-05-08T00:45:08.337206+00:00",
+      "amount": 4,
+      "evidence_hash": "4c1a5673378f651743f0fcd23cb3053b022e0030688724eee78110ca81ba9c75"
+    },
+    {
+      "token_id": "valtok-security-1778201108337",
+      "flow": "security",
+      "profile": "ops",
+      "minted_at": "2026-05-08T00:45:08.337369+00:00",
+      "amount": 4,
+      "evidence_hash": "9b63fef07e3d2e54f4bb1f1813ef5bc4bf0fad7419ff90e813d5018b0cb48a37"
+    },
+    {
+      "token_id": "valtok-billing-1778201108337",
+      "flow": "billing",
+      "profile": "ops",
+      "minted_at": "2026-05-08T00:45:08.337498+00:00",
+      "amount": 4,
+      "evidence_hash": "113d075827e5bca35b3fe0dfb76115bbdf83a4d0ccf71e4b3afbe5345690e259"
+    },
+    {
+      "token_id": "valtok-internal-build-1778201108337",
+      "flow": "internal-build",
+      "profile": "ops",
+      "minted_at": "2026-05-08T00:45:08.337599+00:00",
+      "amount": 4,
+      "evidence_hash": "0a690fde5001aa53961c5b568ccb733e09b374198979646cc8629b717a7473ca"
+    },
+    {
+      "token_id": "valtok-governance-1778201108337",
+      "flow": "governance",
+      "profile": "ops",
+      "minted_at": "2026-05-08T00:45:08.337693+00:00",
+      "amount": 4,
+      "evidence_hash": "4de7318cc7de7db79487c6e6e2df00d465ecc66d05a1281bc324a692d30ab8a6"
+    }
+  ]
+}

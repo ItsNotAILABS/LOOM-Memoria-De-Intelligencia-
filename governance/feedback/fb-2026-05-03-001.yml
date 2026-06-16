@@ -1,0 +1,35 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# 📋 HUMAN FEEDBACK EXAMPLE — EXEMPLUM RESPONSI
+# A recorded human override of a bot governance decision.
+# This example: Freddy allows a release even though health dashboard is red,
+# because the red status was caused only by flaky visual tests.
+# ═══════════════════════════════════════════════════════════════════════════
+
+id: "fb-2026-05-03-001"
+timestamp: "2026-05-03T04:17:57Z"
+actor: "human://freddy"
+
+target:
+  type: "decision"
+  entity: "atlas://bot/organism-release-bot"
+  law_id: "BOT_FLEET_SAFETY"
+  rule_name: "NO_RELEASE_ON_RED"
+
+decision:
+  system: "FORBID"
+  human: "ALLOW"
+
+rationale: >
+  Red status was caused only by flaky visual regression tests in organism-visual-bot.
+  The flakiness is a known issue with nightly screenshot diff on CI runners with
+  different font rendering. All other gates (build, test-matrix Node 18/20/22,
+  security, sandcastle) passed. Core organism is healthy. Safe to release.
+
+outcome: "safe"
+
+meta_engine_signal:
+  update_law: true
+  proposed_change: >
+    Relax NO_RELEASE_ON_RED to allow release when the ONLY red source is
+    organism-visual-bot and all other gates are green. Propose new rule:
+    NO_RELEASE_ON_RED_EXCEPT_VISUAL_ONLY with a 48h flakiness grace window.

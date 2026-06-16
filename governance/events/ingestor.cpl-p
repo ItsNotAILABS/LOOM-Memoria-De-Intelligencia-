@@ -1,0 +1,141 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# 🔄 GOVERNANCE EVENT INGESTOR — INGESTOR EVENTUUM
+# "Quod non ingeritur, non regitur." (What is not ingested, is not governed.)
+#
+# CPL-P pipeline spec for ingesting governance events from dist/governance/events/
+# and routing them into CPL-L law evaluation + governance cycle.
+#
+# Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+# ═══════════════════════════════════════════════════════════════════════════
+
+id: "pipeline://governance/event_ingestor"
+version: "1.0.0"
+language: "CPL-P"
+scc: 3.51
+
+meta:
+  name: "Governance Event Ingestor"
+  description: >
+    Scans dist/governance/events/*.json, validates each event against the
+    schema in governance/events/event-shapes.yml, passes validated events
+    into the CPL-L evaluator, and routes decisions to the governance cycle.
+  trigger: "post_bot_run OR scheduled"
+
+# ── Input Sources ─────────────────────────────────────────────────────────
+sources:
+  - type: "filesystem"
+    path: "dist/governance/events/"
+    pattern: "*.json"
+    watch: true
+
+# ── Pipeline Steps ────────────────────────────────────────────────────────
+steps:
+  - id: "scan_events"
+    name: "Scan Event Files"
+    description: "Read all *.json files from dist/governance/events/"
+    use: "ingestor.scan_event_directory"
+    inputs:
+      - "sources[0].path"
+    outputs:
+      - "events.raw_list"
+
+  - id: "validate_events"
+    name: "Validate Event Shapes"
+    description: "Validate each event against governance/events/event-shapes.yml schema"
+    use: "ingestor.validate_event_shapes"
+    inputs:
+      - "events.raw_list"
+      - "schema_ref: governance://events/event-shapes"
+    outputs:
+      - "events.valid"
+      - "events.invalid"
+
+  - id: "evaluate_laws"
+    name: "Evaluate CPL-L Laws"
+    description: "Pass each valid event's context into the CPL-L evaluator"
+    use: "governance.apply_cpl_l"
+    inputs:
+      - "events.valid"
+      - "laws_ref: governance://laws/bot-fleet"
+    outputs:
+      - "decisions.per_event"
+
+  - id: "route_decisions"
+    name: "Route Governance Decisions"
+    description: "Execute FORBID/WARN/REQUIRE/ESCALATE actions from law evaluation"
+    use: "governance.execute_decisions"
+    inputs:
+      - "decisions.per_event"
+    outputs:
+      - "execution.results"
+
+  - id: "update_mml"
+    name: "Update MML Metrics"
+    description: "Extract MML metric values from events and push to Meta Engine"
+    use: "mml.update_metrics"
+    inputs:
+      - "events.valid"
+      - "mml_ref: governance://mml/metrics"
+    outputs:
+      - "mml.updated_keys"
+
+  - id: "write_ril"
+    name: "Write to RIL"
+    description: "Record all ingestor decisions in the Reasoning Instruction Log"
+    use: "governance.write_ril"
+    inputs:
+      - "execution.results"
+      - "mml.updated_keys"
+    outputs:
+      - "ril.entry_ids"
+
+  - id: "generate_summary"
+    name: "Generate Event Summary"
+    description: "Produce docs/governance-events-latest.json for alpha-bot to read"
+    use: "ingestor.write_summary"
+    inputs:
+      - "events.valid"
+      - "decisions.per_event"
+      - "mml.updated_keys"
+    outputs:
+      - "summary.path"
+
+# ── Branches ──────────────────────────────────────────────────────────────
+branches:
+  - id: "if_invalid_events"
+    when: "events.invalid.length > 0"
+    then:
+      type: "WARN"
+      target: "governance_log"
+      message: "{events.invalid.length} events failed schema validation"
+
+  - id: "if_fleet_missing_workflows"
+    when: "events.valid.find(e => e.op == 'fleet_census_completed')?.context.missing_workflows.length > 0"
+    then:
+      type: "REQUIRE"
+      target: "create_missing_workflows"
+      urgency: "MEDIUM"
+
+  - id: "if_dead_links"
+    when: "events.valid.find(e => e.op == 'crawl_completed')?.context.dead_links > 0"
+    then:
+      type: "WARN"
+      target: "governance_log"
+      message: "Topology: {context.dead_links} dead links detected — review docs/ assets"
+
+  - id: "if_coverage_critical"
+    when: "events.valid.find(e => e.op == 'economy_scan_completed')?.context.coverage < 0.5"
+    then:
+      type: "ESCALATE"
+      target: "human://freddy"
+      urgency: "HIGH"
+      message: "Economy coverage critically low: {context.coverage}"
+
+# ── On Error ──────────────────────────────────────────────────────────────
+on_error:
+  - action: "LOG"
+    target: "ril"
+    entry: "Ingestor error in step {step.id}: {error.message}"
+  - action: "WARN"
+    target: "governance_log"
+    message: "Governance event ingestor failed at step {step.id}"

@@ -1,0 +1,20 @@
+/**
+ * ╔═══════════════════════════════════════════════════════════════════════════╗
+ * ║                                                                           ║
+ * ║                    MEDINA - PROPRIETARY AND CONFIDENTIAL                  ║
+ * ║                                                                           ║
+ * ║  Copyright © 2024-2026 Alfredo Medina, Medina Tech, Dallas, Texas, USA   ║
+ * ║                       medinasiftech@outlook.com                           ║
+ * ║                                                                           ║
+ * ║  ALL RIGHTS RESERVED. NO FREE LICENSES. STRICTLY PROPRIETARY.            ║
+ * ║                                                                           ║
+ * ║  Unauthorized use, copying, modification, or distribution of this         ║
+ * ║  software is strictly prohibited and will be prosecuted to the fullest   ║
+ * ║  extent of the law. This includes but is not limited to civil lawsuits,  ║
+ * ║  criminal prosecution, and maximum statutory damages.                     ║
+ * ║                                                                           ║
+ * ║  This software is blockchain-registered on ICP for immutable proof of    ║
+ * ║  ownership and creation date.                                             ║
+ * ║                                                                           ║
+ * ╚═══════════════════════════════════════════════════════════════════════════╝
+ */

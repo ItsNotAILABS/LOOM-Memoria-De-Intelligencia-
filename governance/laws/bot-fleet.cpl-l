@@ -1,0 +1,278 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# ⚖️ BOT FLEET CPL-L LAWS — LEGES CLASSIS
+# "Lex dat ordinem, ordo dat pacem." (Law gives order, order gives peace.)
+#
+# CPL-L (Cognitive Policy Language — Laws) for the organism bot fleet.
+# These laws are evaluated by the CPL-L engine on every bot event.
+# PROT-114 compliant (CPL-L sovereign law protocol).
+#
+# Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+# ═══════════════════════════════════════════════════════════════════════════
+
+id: "BOT_FLEET_SAFETY"
+version: "1.1.0"
+language: "CPL-L"
+scc: 4.08
+subjects:
+  # ── sentinel-bot laws ───────────────────────────────────────────────────
+  - id: "atlas://bot/organism-sentinel-bot"
+    rules:
+      - name: "BLOCK_SECRETS"
+        description: "If sentinel finds secret leak, block merge and require security review"
+        when: 'context.findings.contains("secret_leak")'
+        then:
+          - action: "FORBID"
+            target: "merge"
+          - action: "REQUIRE"
+            target: "human_review"
+            arg: "security_team"
+          - action: "ESCALATE"
+            target: "human://freddy"
+            urgency: "HIGH"
+
+      - name: "BLOCK_EVAL_IN_PROTOCOLS"
+        description: "eval() in web workers is forbidden — triggers quarantine"
+        when: 'context.findings.contains("eval_in_protocols")'
+        then:
+          - action: "FORBID"
+            target: "merge"
+          - action: "REQUIRE"
+            target: "eval_removal"
+
+      - name: "WARN_ELEVATED_PERMISSIONS"
+        description: "Extensions with elevated permissions require documentation"
+        when: 'context.elevated_permission_count > 3'
+        then:
+          - action: "WARN"
+            target: "pull_request_comment"
+            message: "⚠️ {context.elevated_permission_count} extensions have elevated permissions. Review docs/security-report.md."
+
+  # ── release-bot laws ─────────────────────────────────────────────────────
+  - id: "atlas://bot/organism-release-bot"
+    rules:
+      - name: "NO_RELEASE_ON_RED"
+        description: "Block production release when overall health dashboard is red"
+        when: 'context.health_dashboard.overall == "red"'
+        then:
+          - action: "FORBID"
+            target: "release"
+          - action: "REQUIRE"
+            target: "stability_review"
+          - action: "LOG"
+            target: "ril"
+            entry: "Release blocked: health_dashboard=red"
+
+      - name: "NO_RELEASE_WITHOUT_SANDCASTLE"
+        description: "Release requires sandcastle to have passed in the last 24h"
+        when: 'context.sandcastle_last_pass_hours > 24'
+        then:
+          - action: "FORBID"
+            target: "release"
+          - action: "REQUIRE"
+            target: "sandcastle_pass"
+
+      - name: "REQUIRE_DOCS_FOR_RELEASE"
+        description: "All living docs must exist before release"
+        when: 'context.living_docs_count < 8'
+        then:
+          - action: "WARN"
+            target: "release_notes"
+            message: "⚠️ Only {context.living_docs_count}/13 living docs present. Run missing bots first."
+
+  # ── deploy-bot laws ──────────────────────────────────────────────────────
+  - id: "atlas://bot/organism-deploy-bot"
+    rules:
+      - name: "NO_DEPLOY_INVALID_DFX"
+        description: "dfx.json must be valid JSON before any deployment"
+        when: 'context.dfx_valid == false'
+        then:
+          - action: "FORBID"
+            target: "deploy"
+          - action: "REQUIRE"
+            target: "dfx_fix"
+
+      - name: "NO_DEPLOY_ON_SECURITY_BLOCK"
+        description: "Do not deploy when sentinel has active security blocks"
+        when: 'context.sentinel_blocked == true'
+        then:
+          - action: "FORBID"
+            target: "deploy"
+          - action: "REQUIRE"
+            target: "sentinel_clear"
+
+  # ── test-bot laws ────────────────────────────────────────────────────────
+  - id: "atlas://bot/organism-test-bot"
+    rules:
+      - name: "ALL_NODES_MUST_PASS"
+        description: "All three Node versions in the matrix must pass"
+        when: 'context.matrix_failures > 0'
+        then:
+          - action: "WARN"
+            target: "health_dashboard"
+            message: "⚠️ {context.matrix_failures} Node version(s) failing. Check health-dashboard.md."
+          - action: "LOG"
+            target: "ril"
+            entry: "Test matrix partial failure: {context.matrix_failures} failures"
+
+  # ── sandcastle-bot laws ──────────────────────────────────────────────────
+  - id: "atlas://bot/organism-sandcastle-bot"
+    rules:
+      - name: "THREE_GATES_MUST_PASS"
+        description: "All three sandcastle gates (build, test, security) must pass before land"
+        when: 'context.gates_failed > 0'
+        then:
+          - action: "BLOCK"
+            target: "land"
+          - action: "LOG"
+            target: "ril"
+            entry: "Sandcastle blocked: {context.gates_failed} gates failed"
+
+  # ── alpha-bot laws ───────────────────────────────────────────────────────
+  - id: "atlas://bot/organism-alpha-bot"
+    rules:
+      - name: "ESCALATE_HIGH_RISK"
+        description: "Alpha-bot escalates to Freddy when risk score exceeds threshold"
+        when: 'context.risk_score > 0.7'
+        then:
+          - action: "ESCALATE"
+            target: "human://freddy"
+            urgency: "HIGH"
+          - action: "LOG"
+            target: "ril"
+            entry: "Fleet risk escalation: score={context.risk_score}"
+
+      - name: "FLEET_HEALTH_ALERT"
+        description: "Alert when fewer than half of living docs are present"
+        when: 'context.living_docs_count < 7'
+        then:
+          - action: "WARN"
+            target: "fleet_status"
+            message: "⚠️ Fleet documentation coverage low: {context.living_docs_count}/13 docs present"
+
+      - name: "NO_MISSING_WORKFLOWS"
+        description: "When alpha-bot census detects missing workflows, require creation"
+        event_op: "fleet_census_completed"
+        when: 'context.missing_workflows.length > 0'
+        then:
+          - action: "REQUIRE"
+            target: "create_workflow"
+            arg: "missing_workflows"
+          - action: "LOG"
+            target: "ril"
+            entry: "Missing workflows detected: {context.missing_workflows}"
+
+  # ── economy-bot event-driven laws ────────────────────────────────────────
+  - id: "atlas://bot/organism-economy-bot"
+    rules:
+      - name: "LOW_COVERAGE_BLOCK"
+        description: "When economy coverage < 0.5, block new SDK additions"
+        event_op: "economy_scan_completed"
+        when: 'context.coverage < 0.5'
+        then:
+          - action: "FORBID"
+            target: "new_sdk_addition"
+          - action: "ESCALATE"
+            target: "human://freddy"
+            urgency: "HIGH"
+            message: "Economy coverage critically low ({context.coverage}): block new SDKs"
+
+      - name: "HIGH_COMPLEXITY_WARN"
+        description: "When complexity_score > 25 AND coverage < 0.7, warn and flag for audit"
+        event_op: "economy_scan_completed"
+        when: 'context.complexity_score > 25 && context.coverage < 0.7'
+        then:
+          - action: "WARN"
+            target: "governance_log"
+            message: "⚠️ High complexity ({context.complexity_score}) + low coverage ({context.coverage}) — audit recommended"
+          - action: "LOG"
+            target: "ril"
+            entry: "Economy audit trigger: complexity={context.complexity_score}, coverage={context.coverage}"
+
+  # ── crawler-bot event-driven laws ─────────────────────────────────────────
+  - id: "atlas://bot/organism-crawler-bot"
+    rules:
+      - name: "DEAD_LINKS_BLOCK_RELEASE"
+        description: "When crawl detects dead links, block release until resolved"
+        event_op: "crawl_completed"
+        when: 'context.dead_links > 0'
+        then:
+          - action: "FORBID"
+            target: "release"
+          - action: "WARN"
+            target: "governance_log"
+            message: "🕷️ {context.dead_links} dead links in topology — release blocked until fixed"
+          - action: "LOG"
+            target: "ril"
+            entry: "Release blocked: dead_links={context.dead_links}"
+
+      - name: "HIGH_CENTRALITY_REVIEW"
+        description: "Flag the most-connected module for extra review when degree > 30"
+        event_op: "crawl_completed"
+        when: 'context.most_connected_degree > 30'
+        then:
+          - action: "REQUIRE"
+            target: "module_review"
+            arg: "context.most_connected"
+          - action: "WARN"
+            target: "governance_log"
+            message: "🕷️ High centrality: {context.most_connected} has {context.most_connected_degree} connections"
+
+      - name: "ORPHAN_SPIKE_ALERT"
+        description: "When orphan count exceeds 200, propose cleanup pipeline"
+        event_op: "crawl_completed"
+        when: 'context.orphans > 200'
+        then:
+          - action: "WARN"
+            target: "governance_log"
+            message: "🕷️ {context.orphans} orphan files detected — orphan-cleanup pipeline recommended"
+          - action: "LOG"
+            target: "ril"
+            entry: "Orphan spike: {context.orphans} files with no inbound refs"
+
+  # ── learning-bot event-driven laws ────────────────────────────────────────
+  - id: "atlas://bot/organism-learning-bot"
+    rules:
+      - name: "LOW_SIGNAL_WARN"
+        description: "When training signals < 10, warn that protocol diversity is too low"
+        event_op: "learning_cycle_completed"
+        when: 'context.training_signals < 10'
+        then:
+          - action: "WARN"
+            target: "governance_log"
+            message: "🎓 Low learning signal ({context.training_signals}): increase protocol domain diversity"
+
+      - name: "HIGH_EXPANSION_PRESSURE"
+        description: "When > 8 domains are under-populated, require protocol proposals"
+        event_op: "learning_cycle_completed"
+        when: 'context.expansion_domains.length > 8'
+        then:
+          - action: "REQUIRE"
+            target: "protocol_proposals"
+            arg: "context.expansion_domains"
+          - action: "LOG"
+            target: "ril"
+            entry: "Protocol expansion pressure: {context.expansion_domains.length} thin domains"
+
+# ── universal fleet law ───────────────────────────────────────────────────
+global_rules:
+  - name: "NO_BOT_WRITES_SOURCE"
+    description: "No bot may commit changes to src/, icp/src/, or organism-cli/web/ source files"
+    applies_to: "all"
+    when: 'context.commit_paths.any(p => p.startsWith("icp/src/") || p.startsWith("organism-cli/web/"))'
+    then:
+      - action: "FORBID"
+        target: "commit"
+      - action: "ESCALATE"
+        target: "human://freddy"
+        urgency: "CRITICAL"
+
+  - name: "NO_BOT_EXPOSES_SECRETS"
+    description: "Universal: no bot commit may contain credential patterns"
+    applies_to: "all"
+    when: 'context.contains_secret_pattern == true'
+    then:
+      - action: "FORBID"
+        target: "commit"
+      - action: "ESCALATE"
+        target: "human://freddy"
+        urgency: "CRITICAL"
