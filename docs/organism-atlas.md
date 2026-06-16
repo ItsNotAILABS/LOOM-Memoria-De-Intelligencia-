@@ -1,7 +1,7 @@
 # 🕷️ Organism Atlas
 
-**Crawled:** 2026-06-16 09:13:16 UTC
-**Commit:** `e34ace4`
+**Crawled:** 2026-06-16 21:22:57 UTC
+**Commit:** `e320330`
 
 ## Complete Census
 
