@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#9b59b6">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="EduAGI">
+    <meta name="description" content="Free AI-powered learning platform for students">
+
+    <title>EduAGI — AI Learning Platform</title>
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="./manifest.json">
+
+    <!-- Icons -->
+    <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="./icons/icon-512.png">
+    <link rel="apple-touch-icon" href="./icons/icon-192.png">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #9b59b6;
+            --primary-dark: #8e44ad;
+            --secondary: #3498db;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+            --white: #ffffff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ============================================================ */
+        /* HEADER */
+        /* ============================================================ */
+
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 1rem 2rem;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .install-button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: none; /* Show when installable */
+        }
+
+        .install-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .install-button.show {
+            display: block;
+        }
+
+        /* ============================================================ */
+        /* MAIN CONTAINER */
+        /* ============================================================ */
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .hero {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 2rem;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: #555;
+            margin-bottom: 2rem;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 600;
+            margin-bottom: 2rem;
+        }
+
+        /* ============================================================ */
+        /* STUDENT DASHBOARD */
+        /* ============================================================ */
+
+        .dashboard {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .student-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* ============================================================ */
+        /* LEARNING PATHS */
+        /* ============================================================ */
+
+        .learning-paths {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .path-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .path-card:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-lg);
+            transform: translateX(5px);
+        }
+
+        .path-card.branch {
+            margin-left: 2rem;
+            border-left: 4px solid var(--secondary);
+        }
+
+        .path-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .path-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: var(--dark);
+        }
+
+        .branch-badge {
+            background: var(--secondary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .main-badge {
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            background: #e0e0e0;
+            border-radius: 10px;
+            height: 30px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: width 0.5s ease;
+        }
+
+        /* ============================================================ */
+        /* AI TUTOR CHAT */
+        /* ============================================================ */
+
+        .ai-chat {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 2rem;
+        }
+
+        .tutor-selection {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+        }
+
+        .tutor-button {
+            background: var(--light);
+            border: 2px solid transparent;
+            padding: 1rem;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .tutor-button:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .tutor-button.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary-dark);
+        }
+
+        .chat-messages {
+            height: 300px;
+            overflow-y: auto;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: #f9f9f9;
+        }
+
+        .message {
+            background: white;
+            padding: 1rem;
+            border-radius: 15px;
+            margin-bottom: 0.75rem;
+            box-shadow: var(--shadow);
+        }
+
+        .message.ai {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            margin-left: 2rem;
+        }
+
+        .message.user {
+            background: var(--light);
+            margin-right: 2rem;
+        }
+
+        .message-sender {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .chat-input {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .chat-input input:focus {
+            border-color: var(--primary);
+        }
+
+        .send-button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .send-button:hover {
+            background: var(--primary-dark);
+            transform: scale(1.05);
+        }
+
+        /* ============================================================ */
+        /* OFFLINE INDICATOR */
+        /* ============================================================ */
+
+        .offline-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--warning);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 25px;
+            box-shadow: var(--shadow-lg);
+            display: none;
+            z-index: 1000;
+        }
+
+        .offline-indicator.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* ============================================================ */
+        /* RESPONSIVE */
+        /* ============================================================ */
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .path-card.branch {
+                margin-left: 1rem;
+            }
+
+            header {
+                padding: 1rem;
+            }
+
+            .container {
+                margin: 1rem auto;
+            }
+
+            .hero, .dashboard, .ai-chat {
+                padding: 1.5rem;
+            }
+        }
+
+        /* ============================================================ */
+        /* LOADING ANIMATION */
+        /* ============================================================ */
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                🎓 EduAGI
+            </div>
+            <button class="install-button" id="installButton">
+                📱 Install App
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero">
+            <div class="hero-badge">100% FREE for Students</div>
+            <h1>🚀 Welcome to EduAGI</h1>
+            <p>Your AI-powered learning companion with GitHub-style branching</p>
+        </div>
+
+        <!-- Student Dashboard -->
+        <div class="dashboard">
+            <div class="dashboard-header">
+                <div class="student-info">
+                    <div class="avatar">AR</div>
+                    <div>
+                        <h2>Alex Rivera</h2>
+                        <p style="color: #888;">Grade 10 • Visual Learner</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">65%</div>
+                    <div class="stat-label">📊 Completion Rate</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">1.2x</div>
+                    <div class="stat-label">⚡ Learning Velocity</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">8</div>
+                    <div class="stat-label">🏆 Badges Earned</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">142</div>
+                    <div class="stat-label">🔥 Day Streak</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Learning Paths -->
+        <div class="learning-paths">
+            <h2 class="section-title">📚 Your Learning Paths</h2>
+
+            <div class="path-card" onclick="selectPath('main')">
+                <div class="path-header">
+                    <div class="path-title">Main: Python Programming</div>
+                    <span class="main-badge">main</span>
+                </div>
+                <p>Master Python from basics to advanced topics</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 65%;">65% Complete</div>
+                </div>
+            </div>
+
+            <div class="path-card branch" onclick="selectPath('web')">
+                <div class="path-header">
+                    <div class="path-title">Branch: Web Development with Flask</div>
+                    <span class="branch-badge">branch</span>
+                </div>
+                <p>Build dynamic websites using Python and Flask</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 30%;">30% Complete</div>
+                </div>
+            </div>
+
+            <div class="path-card branch" onclick="selectPath('data')">
+                <div class="path-header">
+                    <div class="path-title">Branch: Data Science Basics</div>
+                    <span class="branch-badge">branch</span>
+                </div>
+                <p>Explore data analysis with pandas and numpy</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 15%;">15% Complete</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Tutor Chat -->
+        <div class="ai-chat">
+            <h2 class="section-title">🤖 AI Tutors</h2>
+
+            <div class="tutor-selection">
+                <div class="tutor-button active" onclick="selectTutor('code')">
+                    👨‍💻<br>CodeMentor
+                </div>
+                <div class="tutor-button" onclick="selectTutor('math')">
+                    🔢<br>MathBot
+                </div>
+                <div class="tutor-button" onclick="selectTutor('write')">
+                    ✍️<br>WriteWise
+                </div>
+                <div class="tutor-button" onclick="selectTutor('science')">
+                    🔬<br>SciExplorer
+                </div>
+                <div class="tutor-button" onclick="selectTutor('study')">
+                    📖<br>StudyBuddy
+                </div>
+            </div>
+
+            <div class="chat-messages" id="chatMessages">
+                <div class="message ai">
+                    <div class="message-sender">👨‍💻 CodeMentor</div>
+                    <div>Hey there! I'm CodeMentor, your friendly coding tutor. I love helping students master programming! Ask me anything about Python, algorithms, or debugging. 🚀</div>
+                </div>
+            </div>
+
+            <div class="chat-input">
+                <input type="text" id="chatInput" placeholder="Ask your AI tutor anything..." onkeypress="handleEnter(event)">
+                <button class="send-button" onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Offline Indicator -->
+    <div class="offline-indicator" id="offlineIndicator">
+        📡 You're offline. Data will sync when reconnected.
+    </div>
+
+    <script>
+        // ============================================================
+        // PWA INSTALLATION
+        // ============================================================
+
+        let deferredPrompt;
+        const installButton = document.getElementById('installButton');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installButton.classList.add('show');
+        });
+
+        installButton.addEventListener('click', async () => {
+            if (!deferredPrompt) return;
+
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+
+            if (outcome === 'accepted') {
+                console.log('✅ User installed EduAGI PWA');
+            }
+
+            deferredPrompt = null;
+            installButton.classList.remove('show');
+        });
+
+        // ============================================================
+        // SERVICE WORKER REGISTRATION
+        // ============================================================
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./service-worker.js')
+                    .then(reg => console.log('✅ Service Worker registered', reg))
+                    .catch(err => console.log('❌ Service Worker registration failed', err));
+            });
+        }
+
+        // ============================================================
+        // ONLINE/OFFLINE DETECTION
+        // ============================================================
+
+        const offlineIndicator = document.getElementById('offlineIndicator');
+
+        window.addEventListener('online', () => {
+            offlineIndicator.classList.remove('show');
+            console.log('✅ Back online');
+        });
+
+        window.addEventListener('offline', () => {
+            offlineIndicator.classList.add('show');
+            console.log('📡 Offline mode');
+        });
+
+        // ============================================================
+        // CHAT FUNCTIONALITY
+        // ============================================================
+
+        let currentTutor = 'code';
+        const tutorNames = {
+            code: '👨‍💻 CodeMentor',
+            math: '🔢 MathBot',
+            write: '✍️ WriteWise',
+            science: '🔬 SciExplorer',
+            study: '📖 StudyBuddy'
+        };
+
+        function selectTutor(tutor) {
+            currentTutor = tutor;
+
+            // Update active button
+            document.querySelectorAll('.tutor-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.closest('.tutor-button').classList.add('active');
+
+            // Clear chat and show greeting
+            const chatMessages = document.getElementById('chatMessages');
+            const greetings = {
+                code: 'Hey there! I\'m CodeMentor. Let\'s write some awesome code together! 🚀',
+                math: 'Hi! I\'m MathBot. Math is beautiful - let me show you why! 🔢',
+                write: 'Hello! I\'m WriteWise. Let\'s craft some compelling writing! ✍️',
+                science: 'Greetings! I\'m SciExplorer. Ready to discover the wonders of science? 🔬',
+                study: 'Hey! I\'m StudyBuddy. Let\'s ace those exams together! 📖'
+            };
+
+            chatMessages.innerHTML = `
+                <div class="message ai">
+                    <div class="message-sender">${tutorNames[tutor]}</div>
+                    <div>${greetings[tutor]}</div>
+                </div>
+            `;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+
+            if (!message) return;
+
+            const chatMessages = document.getElementById('chatMessages');
+
+            // Add user message
+            chatMessages.innerHTML += `
+                <div class="message user">
+                    <div class="message-sender">You</div>
+                    <div>${message}</div>
+                </div>
+            `;
+
+            // Clear input
+            input.value = '';
+
+            // Show loading
+            chatMessages.innerHTML += `
+                <div class="message ai">
+                    <div class="message-sender">${tutorNames[currentTutor]}</div>
+                    <div><span class="loading"></span> Thinking...</div>
+                </div>
+            `;
+
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Simulate AI response
+            setTimeout(() => {
+                const responses = {
+                    code: '🚀 Great question! In Python, you can solve that by...',
+                    math: '🔢 Let me break that down step by step for you...',
+                    write: '✍️ Here\'s how to make your writing stronger...',
+                    science: '🔬 That\'s fascinating! Here\'s what\'s happening...',
+                    study: '📖 Good thinking! Here\'s a study tip...'
+                };
+
+                // Remove loading message
+                const messages = chatMessages.querySelectorAll('.message');
+                const lastMessage = messages[messages.length - 1];
+                lastMessage.querySelector('div:last-child').innerHTML = responses[currentTutor] + ' ' + message;
+
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 1500);
+        }
+
+        function handleEnter(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function selectPath(path) {
+            console.log('Selected learning path:', path);
+            alert(`Opening ${path} learning path...`);
+        }
+
+        // ============================================================
+        // INITIALIZE
+        // ============================================================
+
+        console.log('🎓 EduAGI PWA loaded successfully!');
+        console.log('✅ Offline support enabled');
+        console.log('📱 Installable on all devices');
+    </script>
+</body>
+</html>

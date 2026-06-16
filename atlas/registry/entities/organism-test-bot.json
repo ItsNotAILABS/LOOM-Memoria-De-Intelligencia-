@@ -1,0 +1,15 @@
+{
+  "id": "atlas://bot/organism-test-bot",
+  "name": "organism-test-bot",
+  "class": "Bot",
+  "division": "II — Validate & Test",
+  "emoji": "🧪",
+  "domain": "Cross-matrix testing (Node 18/20/22)",
+  "triggers": ["push:organism-cli/", "push:packages/", "push:icp/", "pull_request"],
+  "workflow": ".github/workflows/organism-test-bot.yml",
+  "outputs": ["docs/health-dashboard.md"],
+  "languages": ["atlas://language/cpl-l", "atlas://language/cpl-c"],
+  "governance_pipeline": "pipeline://governance/bot_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "scc": 3.27
+}

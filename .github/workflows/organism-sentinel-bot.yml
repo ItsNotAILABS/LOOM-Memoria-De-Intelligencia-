@@ -1,0 +1,172 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# 🛡️ ORGANISM SENTINEL BOT — VIGILIA IMMUNITATIS
+# "Immunitas perpetua. Nulla vulnera." (Perpetual immunity. No vulnerabilities.)
+#
+# Security audit: extension permissions, CSP, secret scanning, eval()
+# detection in protocols, dependency audit.
+#
+# Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+# ═══════════════════════════════════════════════════════════════════════════
+
+name: 🛡️ organism-sentinel-bot
+
+on:
+  push:
+  schedule:
+    - cron: '0 6 * * 1'  # Weekly Monday 6 AM UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  security-events: write
+
+jobs:
+  security-audit:
+    name: 🛡️ Security Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Scan for Secrets
+        run: |
+          echo "🛡️ Scanning for exposed secrets..."
+          FOUND=0
+
+          # Common secret patterns
+          PATTERNS=(
+            'PRIVATE.KEY'
+            'api[_-]?key\s*[:=]'
+            'secret[_-]?key\s*[:=]'
+            'password\s*[:=]'
+            'AWS_ACCESS_KEY'
+            'AKIA[0-9A-Z]{16}'
+          )
+
+          for pattern in "${PATTERNS[@]}"; do
+            MATCHES=$(grep -rn --include='*.js' --include='*.ts' --include='*.mo' --include='*.json' \
+              -iE "$pattern" . 2>/dev/null | \
+              grep -v node_modules | grep -v '.git/' | grep -v 'package-lock' || true)
+            if [ -n "$MATCHES" ]; then
+              echo "  ⚠ Pattern '$pattern' found:"
+              echo "$MATCHES" | head -5
+              FOUND=$((FOUND + 1))
+            fi
+          done
+
+          if [ $FOUND -eq 0 ]; then
+            echo "  ✓ No exposed secrets detected"
+          else
+            echo "  ⚠ $FOUND patterns flagged — review above"
+          fi
+
+      - name: Audit Extension Permissions
+        run: |
+          echo "🛡️ Auditing extension permissions..."
+          DANGEROUS=0
+          for ext in extensions/*/; do
+            manifest="$ext/manifest.json"
+            if [ -f "$manifest" ]; then
+              name=$(basename "$ext")
+              # Check for dangerous permissions
+              PERMS=$(python3 -c "
+          import json
+          try:
+              d = json.load(open('$manifest'))
+              perms = d.get('permissions', []) + d.get('host_permissions', [])
+              dangerous = [p for p in perms if p in ['<all_urls>', 'tabs', 'webRequest', 'debugger', 'nativeMessaging']]
+              if dangerous:
+                  print(', '.join(dangerous))
+          except: pass
+          " 2>/dev/null)
+              if [ -n "$PERMS" ]; then
+                echo "  ⚠ $name — elevated permissions: $PERMS"
+                DANGEROUS=$((DANGEROUS + 1))
+              else
+                echo "  ✓ $name — permissions OK"
+              fi
+            fi
+          done
+          echo ""
+          echo "  $DANGEROUS extensions with elevated permissions"
+
+      - name: Check for eval() in Protocols
+        run: |
+          echo "🛡️ Scanning for eval() usage..."
+          EVALS=$(grep -rn 'eval(' organism-cli/web/*.js 2>/dev/null | grep -v '// ' | grep -v 'evaluate' || true)
+          if [ -n "$EVALS" ]; then
+            echo "  ⚠ eval() found:"
+            echo "$EVALS"
+          else
+            echo "  ✓ No eval() usage in web workers"
+          fi
+
+          EVALS_MO=$(grep -rn 'eval' icp/src/medina_backend/*.mo 2>/dev/null || true)
+          if [ -z "$EVALS_MO" ]; then
+            echo "  ✓ No eval patterns in Motoko engines"
+          fi
+
+      - name: Check CSP Headers
+        run: |
+          echo "🛡️ Checking Content Security Policy..."
+          if [ -f cloudflare-workers/vigilia-edge.js ]; then
+            if grep -q "Content-Security-Policy\|CSP\|content-security" cloudflare-workers/vigilia-edge.js 2>/dev/null; then
+              echo "  ✓ CSP headers found in vigilia-edge.js"
+            else
+              echo "  ℹ Consider adding CSP headers to edge worker"
+            fi
+          fi
+
+          # Check for inline scripts in HTML
+          INLINE=$(grep -rn 'onclick\|onerror\|onload' docs/*.html 2>/dev/null | grep -v '// ' || true)
+          if [ -n "$INLINE" ]; then
+            echo "  ⚠ Inline event handlers found in HTML:"
+            echo "$INLINE" | head -5
+          else
+            echo "  ✓ No inline event handlers in HTML"
+          fi
+
+      - name: Generate Security Report
+        run: |
+          mkdir -p build/security
+          echo "# 🛡️ Organism Security Report" > build/security/security-report.md
+          echo "" >> build/security/security-report.md
+          echo "**Scanned:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> build/security/security-report.md
+          echo "**Commit:** \`${{ github.sha }}\`" >> build/security/security-report.md
+          echo "" >> build/security/security-report.md
+
+          MO=$(ls icp/src/medina_backend/*.mo 2>/dev/null | wc -l)
+          JS=$(ls organism-cli/web/*.js 2>/dev/null | wc -l)
+          EXT=$(ls -d extensions/*/ 2>/dev/null | wc -l)
+          CF=$(ls cloudflare-workers/*.js 2>/dev/null | wc -l)
+
+          echo "## Scan Coverage" >> build/security/security-report.md
+          echo "" >> build/security/security-report.md
+          echo "- Backend engines scanned: $MO" >> build/security/security-report.md
+          echo "- Web workers scanned: $JS" >> build/security/security-report.md
+          echo "- Extensions audited: $EXT" >> build/security/security-report.md
+          echo "- Cloudflare workers checked: $CF" >> build/security/security-report.md
+          echo "" >> build/security/security-report.md
+          echo "## Checks Performed" >> build/security/security-report.md
+          echo "" >> build/security/security-report.md
+          echo "- ✓ Secret scanning (API keys, passwords, private keys)" >> build/security/security-report.md
+          echo "- ✓ Extension permission audit" >> build/security/security-report.md
+          echo "- ✓ eval() detection in protocols" >> build/security/security-report.md
+          echo "- ✓ CSP header verification" >> build/security/security-report.md
+          echo "- ✓ Inline event handler scan" >> build/security/security-report.md
+
+          cat build/security/security-report.md
+
+      - name: Commit Security Report
+        run: |
+          git config user.name "organism-sentinel-bot"
+          git config user.email "organism-sentinel-bot[bot]@users.noreply.github.com"
+          cp build/security/security-report.md docs/security-report.md
+          git add docs/security-report.md
+          git diff --cached --quiet || git commit -m "🛡️ organism-sentinel-bot: Updated security report [$(date -u '+%Y-%m-%d')]"
+          git push || echo "Nothing to push"

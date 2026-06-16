@@ -1,0 +1,124 @@
+{
+  "name": "EduAGI - AI Learning Platform",
+  "short_name": "EduAGI",
+  "description": "Free AI-powered learning platform with GitHub-style branching for students",
+  "start_url": "/docs/eduagi-pwa.html",
+  "display": "standalone",
+  "background_color": "#9b59b6",
+  "theme_color": "#9b59b6",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/docs/icons/icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/docs/icons/icon-96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/docs/icons/icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/docs/icons/icon-144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/docs/icons/icon-152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/docs/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/docs/icons/icon-384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/docs/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/docs/screenshots/desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "/docs/screenshots/mobile.png",
+      "sizes": "750x1334",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ],
+  "categories": ["education", "productivity"],
+  "shortcuts": [
+    {
+      "name": "My Learning Paths",
+      "short_name": "Paths",
+      "description": "View your learning paths",
+      "url": "/docs/eduagi-pwa.html#paths",
+      "icons": [
+        {
+          "src": "/docs/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "AI Tutors",
+      "short_name": "Tutors",
+      "description": "Chat with AI tutors",
+      "url": "/docs/eduagi-pwa.html#chat",
+      "icons": [
+        {
+          "src": "/docs/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Progress",
+      "short_name": "Progress",
+      "description": "View your progress",
+      "url": "/docs/eduagi-pwa.html#progress",
+      "icons": [
+        {
+          "src": "/docs/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
+  "share_target": {
+    "action": "/docs/eduagi-pwa.html",
+    "method": "GET",
+    "enctype": "application/x-www-form-urlencoded",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  },
+  "prefer_related_applications": false
+}
