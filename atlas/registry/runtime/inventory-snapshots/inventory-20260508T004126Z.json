@@ -1,0 +1,326 @@
+{
+  "snapshot_id": "inventory-20260508T004126Z",
+  "version": "1.0.0",
+  "created_at": "2026-05-08T00:41:26.723498+00:00",
+  "profile": "ops",
+  "mode": "incremental",
+  "math_surface": {
+    "phi": 1.618033988749895,
+    "phi_sq": 2.618033988749895,
+    "inv_phi": 0.6180339887498948
+  },
+  "counts": {
+    "atlas_entities": 18,
+    "internal_native_agents": 12,
+    "web_workers": 38,
+    "model_registry_entries": 57,
+    "sdk_packages": 4,
+    "runtime_bridges": 2,
+    "total_components": 131
+  },
+  "profile_config": {
+    "description": "Operational command center profile.",
+    "workers": [
+      "protocol",
+      "memory",
+      "communication",
+      "security",
+      "math",
+      "veritas",
+      "inference",
+      "edge-gate",
+      "houses",
+      "cognitive-language",
+      "frequency-stack"
+    ],
+    "tools": [
+      "registry",
+      "status",
+      "analysis",
+      "alerts"
+    ],
+    "queries": [
+      "status",
+      "health",
+      "incidents",
+      "drift"
+    ],
+    "bridges": [
+      "engine",
+      "organism"
+    ],
+    "surfaces": [
+      "command-center",
+      "memory",
+      "governance"
+    ],
+    "allow_shutdown_foundational": false
+  },
+  "inventory": {
+    "atlas_entities": [
+      "organism-alpha-bot.json",
+      "organism-build-bot.json",
+      "organism-crawler-bot.json",
+      "organism-deploy-bot.json",
+      "organism-deps-bot.json",
+      "organism-docs-bot.json",
+      "organism-economy-bot.json",
+      "organism-guardian.json",
+      "organism-learning-bot.json",
+      "organism-neural-bot.json",
+      "organism-oracle.json",
+      "organism-protocol-bot.json",
+      "organism-release-bot.json",
+      "organism-sandcastle-bot.json",
+      "organism-sdk-bot.json",
+      "organism-sentinel-bot.json",
+      "organism-test-bot.json",
+      "organism-visual-bot.json"
+    ],
+    "internal_native_agents": [
+      {
+        "entity_id": "native://agent/test-orchestrator",
+        "name": "TestOrchestrator",
+        "latin_name": "ORCHESTRATOR PROBATIONIS",
+        "module": "nova_ovo/agents/orchestrator.py",
+        "group": "testing_agents",
+        "operational_state": "active"
+      },
+      {
+        "entity_id": "native://agent/internal-agents",
+        "name": "InternalAgents",
+        "latin_name": "AGENTES INTERNI",
+        "module": "nova_ovo/agents/internal_agents.py",
+        "group": "testing_agents",
+        "operational_state": "active"
+      },
+      {
+        "entity_id": "native://agent/workforce-orchestrator",
+        "name": "AIWorkforceOrchestrator",
+        "latin_name": "ORCHESTRATOR OPERIS",
+        "module": "nova_ovo/orchestrators/ai_workforce_orchestrator.py",
+        "group": "governance_agents",
+        "operational_state": "active"
+      },
+      {
+        "entity_id": "native://agent/platinum-engine",
+        "name": "PlatinumEngine",
+        "latin_name": "MACHINA PLATINA",
+        "module": "nova_ovo/agents/platinum_engine.py",
+        "group": "foundation_agents",
+        "operational_state": "active"
+      },
+      {
+        "entity_id": "native://agent/memory-index-bot",
+        "name": "MemoriaIndexBot",
+        "latin_name": "INDEXATOR MEMORIAE",
+        "module": "nova_ovo/agents/memoria/memoria_index_bot.py",
+        "group": "memory_agents",
+        "operational_state": "active"
+      },
+      {
+        "entity_id": "native://agent/memory-compress-bot",
+        "name": "MemoriaCompressBot",
+        "latin_name": "COMPRESSOR MEMORIAE",
+        "module": "nova_ovo/agents/memoria/memoria_compress_bot.py",
+        "group": "memory_agents",
+        "operational_state": "active"
+      },
+      {
+        "entity_id": "native://agent/memory-recall-bot",
+        "name": "MemoriaRecallBot",
+        "latin_name": "RECUPERATOR MEMORIAE",
+        "module": "nova_ovo/agents/memoria/memoria_recall_bot.py",
+        "group": "memory_agents",
+        "operational_state": "active"
+      },
+      {
+        "entity_id": "native://agent/vision-alpha-orchestrator",
+        "name": "VisionAlphaOrchestrator",
+        "latin_name": "VISIO ALPHA ORCHESTRATOR",
+        "module": "nova_ovo/orchestrators/alpha_profile_pack.py",
+        "group": "bridge_agents",
+        "operational_state": "active"
+      },
+      {
+        "entity_id": "native://agent/security-alpha-orchestrator",
+        "name": "SecurityAlphaOrchestrator",
+        "latin_name": "SECURITAS ALPHA ORCHESTRATOR",
+        "module": "nova_ovo/orchestrators/alpha_profile_pack.py",
+        "group": "governance_agents",
+        "operational_state": "active"
+      },
+      {
+        "entity_id": "native://agent/billing-alpha-orchestrator",
+        "name": "BillingAlphaOrchestrator",
+        "latin_name": "BILLING ALPHA ORCHESTRATOR",
+        "module": "nova_ovo/orchestrators/alpha_profile_pack.py",
+        "group": "governance_agents",
+        "operational_state": "active"
+      },
+      {
+        "entity_id": "native://agent/internal-build-alpha-orchestrator",
+        "name": "InternalBuildAlphaOrchestrator",
+        "latin_name": "AEDIFICIUM ALPHA ORCHESTRATOR",
+        "module": "nova_ovo/orchestrators/alpha_profile_pack.py",
+        "group": "testing_agents",
+        "operational_state": "active"
+      },
+      {
+        "entity_id": "native://agent/governance-alpha-orchestrator",
+        "name": "GovernanceAlphaOrchestrator",
+        "latin_name": "GUBERNATIO ALPHA ORCHESTRATOR",
+        "module": "nova_ovo/orchestrators/alpha_profile_pack.py",
+        "group": "governance_agents",
+        "operational_state": "active"
+      }
+    ],
+    "web_workers": [
+      "agi-knowledge-worker.js",
+      "animus-worker.js",
+      "bill-bot-worker.js",
+      "canister-worker.js",
+      "careers-worker.js",
+      "cloudflare-workers.js",
+      "cognitive-language-worker.js",
+      "communication-worker.js",
+      "context-worker.js",
+      "data-routing-edge-worker.js",
+      "download-worker.js",
+      "edge-gate-worker.js",
+      "engine-worker.js",
+      "evolution-worker.js",
+      "frequency-stack-worker.js",
+      "houses-worker.js",
+      "inference-worker.js",
+      "license-worker.js",
+      "limites-mundi-gateway-worker.js",
+      "lingua-worker.js",
+      "math-worker.js",
+      "memoria-nexus-worker.js",
+      "memoria-sacra-worker.js",
+      "memoria-viva-worker.js",
+      "memory-worker.js",
+      "ml-inference-edge-worker.js",
+      "papers-worker.js",
+      "phantom-field-worker.js",
+      "phantom-sensor-worker.js",
+      "protocol-worker.js",
+      "protocols-worker.js",
+      "security-worker.js",
+      "sovereign-face-worker.js",
+      "sovereign-token-worker.js",
+      "taxonomy-worker.js",
+      "threat-intelligence-edge-worker.js",
+      "veritas-worker.js",
+      "world-integrator-worker.js"
+    ],
+    "model_registry_entries": [
+      "AGENT-WORKSPACE",
+      "AUDIT-REPLAY",
+      "AUTONOMOUS-ANALYST",
+      "CCVE-STATE",
+      "CNCO-STATE",
+      "COMPANION-CONSOLE",
+      "CONSTANT-FEEDBACK",
+      "CONSTANT-FEEDBACK-LAB",
+      "D1",
+      "D10",
+      "D2",
+      "D3",
+      "D4",
+      "D5",
+      "D6",
+      "D7",
+      "D8",
+      "D9",
+      "DRIFT-JASMINE",
+      "DRONE-SIM-WORLD",
+      "EMERGENCE-LAB",
+      "ENTANGLA-SOCIAL-BINDING",
+      "GOVERNANCE-HEARTBEAT",
+      "GRPE-LAB",
+      "GRPE-STATE",
+      "HEARTBEAT-CORE",
+      "INTERNAL-ANALYSIS-LAB",
+      "LIVING-ARCHITECTURE-MACRO",
+      "MATH-PHYSICS-LAB",
+      "MEDINA-COMMAND-CENTER",
+      "MEMORY-NAVIGATION",
+      "MEMORY-TEMPLE-LAB",
+      "MEMORY-TEMPLE-STATE",
+      "N1",
+      "N10",
+      "N11",
+      "N12",
+      "N2",
+      "N3",
+      "N4",
+      "N5",
+      "N6",
+      "N7",
+      "N8",
+      "N9",
+      "NEURAL-CORE-MESH",
+      "NEUROCHEM-CROSSTALK",
+      "NEUROCOG-LAB",
+      "PARALLAX-DECISION",
+      "QUANTUM-CHANNEL-FABRIC",
+      "RISK-MANAGEMENT",
+      "SACRED-MATHEMATICS",
+      "STABILITY-BUDGET",
+      "SWARM-COHERENCE",
+      "UNIFIED-EMOTIONAL-FIELD",
+      "WAR-DEFENSE",
+      "WORLD-ORGANISM-BRIDGE"
+    ],
+    "sdk_packages": [
+      {
+        "name": "@medina/agent-incentive-service",
+        "version": "1.0.0",
+        "path": "packages/agent-incentive-service"
+      },
+      {
+        "name": "@medina/ai-tools-marketplace",
+        "version": "1.0.0",
+        "path": "packages/ai-tools-marketplace"
+      },
+      {
+        "name": "@medina/memory-sdk",
+        "version": "1.0.0",
+        "path": "packages/medina-memory-sdk"
+      },
+      {
+        "name": "@medina/micro-worker-careers",
+        "version": "1.0.0",
+        "path": "packages/micro-worker-careers"
+      }
+    ],
+    "runtime_bridges": [
+      "organism-cli/web/organism-bridge.js",
+      "nova_ovo/bridges/v2_integration_bridge.py"
+    ]
+  },
+  "digest": "4d65e1bc7c442a5720ec4f505e5ee80d5cdac2656448d1dddb2ac5dd991da607",
+  "delta": {
+    "baseline_snapshot_id": "inventory-20260508T003302Z",
+    "is_digest_changed": true,
+    "count_deltas": {
+      "atlas_entities": 0,
+      "internal_native_agents": 5,
+      "model_registry_entries": 0,
+      "runtime_bridges": 0,
+      "sdk_packages": 0,
+      "total_components": 5,
+      "web_workers": 0
+    },
+    "workers": {
+      "added": [],
+      "removed": []
+    },
+    "models": {
+      "added": [],
+      "removed": []
+    }
+  }
+}

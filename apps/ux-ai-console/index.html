@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0a0a0f">
+  <meta name="description" content="MEDINA UX AI Console — Full User Experience Intelligence">
+
+  <!-- PWA Meta -->
+  <link rel="manifest" href="/manifest.json">
+
+  <!-- Frequency Signature -->
+  <meta name="medina:frequency" content="1149851">
+  <meta name="medina:protocol" content="PROT-582-611">
+  <meta name="medina:phi" content="1.6180339887498948482">
+
+  <title>MEDINA UX AI Console</title>
+
+  <style>
+    :root {
+      --phi: 1.6180339887498948482;
+      --frequency: 1149851;
+
+      --color-primary: #c9a55c;
+      --color-secondary: #8b5cf6;
+      --color-accent: #10b981;
+      --color-bg: #0a0a0f;
+      --color-bg-secondary: #12121a;
+      --color-bg-tertiary: #1a1a2e;
+      --color-text: #e5e5e5;
+      --color-text-secondary: #888;
+      --color-success: #10b981;
+      --color-warning: #f59e0b;
+      --color-error: #ef4444;
+      --color-info: #3b82f6;
+
+      --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+      --font-sans: 'Inter', system-ui, sans-serif;
+
+      --spacing-xs: 4px;
+      --spacing-sm: 8px;
+      --spacing-md: 16px;
+      --spacing-lg: 24px;
+      --spacing-xl: 40px;
+
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 16px;
+
+      --elevation-1: 0 1px 3px rgba(0,0,0,0.3);
+      --elevation-2: 0 4px 6px rgba(0,0,0,0.4);
+      --elevation-3: 0 10px 25px rgba(0,0,0,0.5);
+
+      --motion-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+      --motion-normal: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--font-mono);
+      background: var(--color-bg);
+      color: var(--color-text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ─── Header ─── */
+    .header {
+      background: linear-gradient(135deg, var(--color-bg-secondary) 0%, var(--color-bg) 100%);
+      border-bottom: 1px solid rgba(201, 165, 92, 0.2);
+      padding: var(--spacing-md) var(--spacing-lg);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header-title {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+    }
+
+    .header-title h1 {
+      font-size: 1.25rem;
+      color: var(--color-primary);
+      font-weight: 600;
+    }
+
+    .header-title .subtitle {
+      font-size: 0.75rem;
+      color: var(--color-text-secondary);
+    }
+
+    .status-badge {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+      padding: var(--spacing-xs) var(--spacing-sm);
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: var(--radius-sm);
+      font-size: 0.7rem;
+      color: var(--color-success);
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--color-success);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* ─── Main Layout ─── */
+    .main {
+      display: grid;
+      grid-template-columns: 240px 1fr 300px;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* ─── Sidebar ─── */
+    .sidebar {
+      background: var(--color-bg-secondary);
+      border-right: 1px solid rgba(255,255,255,0.05);
+      padding: var(--spacing-md);
+      overflow-y: auto;
+    }
+
+    .sidebar h3 {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-text-secondary);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .engine-list {
+      list-style: none;
+    }
+
+    .engine-item {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      padding: var(--spacing-sm);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: background var(--motion-fast);
+      margin-bottom: 2px;
+    }
+
+    .engine-item:hover {
+      background: rgba(255,255,255,0.05);
+    }
+
+    .engine-item.active {
+      background: rgba(201, 165, 92, 0.1);
+      border-left: 2px solid var(--color-primary);
+    }
+
+    .engine-icon {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--color-success);
+    }
+
+    .engine-name {
+      font-size: 0.75rem;
+      flex: 1;
+    }
+
+    .engine-load {
+      font-size: 0.6rem;
+      color: var(--color-text-secondary);
+    }
+
+    /* ─── Content Area ─── */
+    .content {
+      padding: var(--spacing-lg);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-lg);
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--spacing-md);
+    }
+
+    .widget {
+      background: var(--color-bg-secondary);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-md);
+      transition: border-color var(--motion-fast);
+    }
+
+    .widget:hover {
+      border-color: rgba(201, 165, 92, 0.3);
+    }
+
+    .widget-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-md);
+    }
+
+    .widget-title {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--color-primary);
+    }
+
+    .widget-badge {
+      font-size: 0.6rem;
+      padding: 2px 6px;
+      border-radius: var(--radius-sm);
+      background: rgba(139, 92, 246, 0.15);
+      color: var(--color-secondary);
+    }
+
+    .metric-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--color-text);
+    }
+
+    .metric-label {
+      font-size: 0.7rem;
+      color: var(--color-text-secondary);
+      margin-top: var(--spacing-xs);
+    }
+
+    .progress-bar {
+      height: 4px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 2px;
+      margin-top: var(--spacing-sm);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+      border-radius: 2px;
+      transition: width var(--motion-normal);
+    }
+
+    /* ─── Right Panel ─── */
+    .panel {
+      background: var(--color-bg-secondary);
+      border-left: 1px solid rgba(255,255,255,0.05);
+      padding: var(--spacing-md);
+      overflow-y: auto;
+    }
+
+    .panel h3 {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-primary);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .log-entry {
+      font-size: 0.7rem;
+      padding: var(--spacing-xs) 0;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+      color: var(--color-text-secondary);
+    }
+
+    .log-entry .time {
+      color: var(--color-info);
+    }
+
+    .log-entry .engine {
+      color: var(--color-primary);
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 1024px) {
+      .main { grid-template-columns: 1fr; }
+      .sidebar, .panel { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-title">
+      <h1>⚡ MEDINA UX AI Console</h1>
+      <span class="subtitle">EXPERIENTIA USURA SOVEREIGNA + ORCHESTRATOR MACHINARUM</span>
+    </div>
+    <div class="status-badge">
+      <span class="status-dot"></span>
+      <span id="status-text">SOVEREIGN ACTIVE</span>
+    </div>
+  </header>
+
+  <!-- Main Layout -->
+  <main class="main">
+
+    <!-- Sidebar: Engine List -->
+    <aside class="sidebar">
+      <h3>Multi-Engine Mesh</h3>
+      <ul class="engine-list" id="engine-list"></ul>
+
+      <h3 style="margin-top: var(--spacing-lg);">UX AI Modules</h3>
+      <ul class="engine-list" id="ux-modules"></ul>
+    </aside>
+
+    <!-- Content: Dashboard -->
+    <section class="content">
+      <div class="dashboard-grid" id="dashboard"></div>
+    </section>
+
+    <!-- Right Panel: Activity Log -->
+    <aside class="panel">
+      <h3>Activity Log</h3>
+      <div id="activity-log"></div>
+    </aside>
+
+  </main>
+
+  <script>
+    const PHI = 1.618033988749895;
+
+    // ─── Engine Data ───
+    const engines = [
+      { id: 'inference', name: 'Inference', protocol: 'PROT-597', load: 0.35, gpu: true },
+      { id: 'memory', name: 'Memory', protocol: 'PROT-598', load: 0.22, gpu: false },
+      { id: 'reasoning', name: 'Reasoning', protocol: 'PROT-599', load: 0.45, gpu: true },
+      { id: 'generation', name: 'Generation', protocol: 'PROT-600', load: 0.58, gpu: true },
+      { id: 'search', name: 'Search', protocol: 'PROT-601', load: 0.18, gpu: false },
+      { id: 'analytics', name: 'Analytics', protocol: 'PROT-602', load: 0.12, gpu: false },
+      { id: 'governance', name: 'Governance', protocol: 'PROT-603', load: 0.08, gpu: false },
+      { id: 'routing', name: 'Routing', protocol: 'PROT-604', load: 0.42, gpu: false },
+      { id: 'cache', name: 'Cache', protocol: 'PROT-605', load: 0.65, gpu: false },
+      { id: 'transform', name: 'Transform', protocol: 'PROT-606', load: 0.28, gpu: false },
+      { id: 'embedding', name: 'Embedding', protocol: 'PROT-607', load: 0.38, gpu: true },
+      { id: 'validation', name: 'Validation', protocol: 'PROT-608', load: 0.15, gpu: false },
+      { id: 'notification', name: 'Notification', protocol: 'PROT-609', load: 0.05, gpu: false },
+      { id: 'scheduling', name: 'Scheduling', protocol: 'PROT-610', load: 0.20, gpu: false },
+      { id: 'federation', name: 'Federation', protocol: 'PROT-611', load: 0.10, gpu: false },
+    ];
+
+    const uxModules = [
+      { id: 'layout', name: 'Layout Engine', protocol: 'PROT-583' },
+      { id: 'interaction', name: 'Interaction AI', protocol: 'PROT-584' },
+      { id: 'theme', name: 'Theme Engine', protocol: 'PROT-585' },
+      { id: 'accessibility', name: 'Accessibility AI', protocol: 'PROT-586' },
+      { id: 'animation', name: 'Animation Engine', protocol: 'PROT-587' },
+      { id: 'voice', name: 'Voice UX', protocol: 'PROT-588' },
+      { id: 'spatial', name: 'Spatial UX', protocol: 'PROT-589' },
+      { id: 'emotion', name: 'Emotion UX', protocol: 'PROT-590' },
+      { id: 'personalization', name: 'Personalization', protocol: 'PROT-591' },
+      { id: 'component', name: 'Component AI', protocol: 'PROT-592' },
+      { id: 'design', name: 'Design System', protocol: 'PROT-593' },
+      { id: 'analytics_ux', name: 'UX Analytics', protocol: 'PROT-594' },
+      { id: 'multimodal', name: 'Multimodal UX', protocol: 'PROT-595' },
+      { id: 'ux_governance', name: 'UX Governance', protocol: 'PROT-596' },
+    ];
+
+    // ─── Render Engine List ───
+    function renderEngineList() {
+      const list = document.getElementById('engine-list');
+      list.innerHTML = engines.map(e => `
+        <li class="engine-item" data-id="${e.id}">
+          <span class="engine-icon" style="background: ${e.load > 0.8 ? 'var(--color-error)' : e.load > 0.5 ? 'var(--color-warning)' : 'var(--color-success)'}"></span>
+          <span class="engine-name">${e.name}</span>
+          <span class="engine-load">${Math.round(e.load * 100)}%</span>
+        </li>
+      `).join('');
+
+      const uxList = document.getElementById('ux-modules');
+      uxList.innerHTML = uxModules.map(m => `
+        <li class="engine-item" data-id="${m.id}">
+          <span class="engine-icon"></span>
+          <span class="engine-name">${m.name}</span>
+        </li>
+      `).join('');
+    }
+
+    // ─── Render Dashboard ───
+    function renderDashboard() {
+      const dashboard = document.getElementById('dashboard');
+      const totalRequests = Math.floor(Math.random() * 50000) + 100000;
+      const avgLatency = Math.floor(Math.random() * 50) + 20;
+      const activeEngines = engines.length;
+      const avgLoad = Math.round(engines.reduce((s, e) => s + e.load, 0) / engines.length * 100);
+
+      dashboard.innerHTML = `
+        <div class="widget">
+          <div class="widget-header">
+            <span class="widget-title">Total Requests</span>
+            <span class="widget-badge">LIVE</span>
+          </div>
+          <div class="metric-value">${totalRequests.toLocaleString()}</div>
+          <div class="metric-label">Processed across all engines</div>
+        </div>
+        <div class="widget">
+          <div class="widget-header">
+            <span class="widget-title">Active Engines</span>
+            <span class="widget-badge">${activeEngines}/15</span>
+          </div>
+          <div class="metric-value">${activeEngines}</div>
+          <div class="metric-label">Multi-engine mesh operational</div>
+          <div class="progress-bar"><div class="progress-fill" style="width: 100%"></div></div>
+        </div>
+        <div class="widget">
+          <div class="widget-header">
+            <span class="widget-title">Avg Latency</span>
+            <span class="widget-badge">φ-optimized</span>
+          </div>
+          <div class="metric-value">${avgLatency}ms</div>
+          <div class="metric-label">Across routing mesh</div>
+        </div>
+        <div class="widget">
+          <div class="widget-header">
+            <span class="widget-title">Avg Load</span>
+            <span class="widget-badge">BALANCED</span>
+          </div>
+          <div class="metric-value">${avgLoad}%</div>
+          <div class="metric-label">Phi-harmonic load distribution</div>
+          <div class="progress-bar"><div class="progress-fill" style="width: ${avgLoad}%"></div></div>
+        </div>
+        <div class="widget">
+          <div class="widget-header">
+            <span class="widget-title">UX AI Sessions</span>
+            <span class="widget-badge">ADAPTIVE</span>
+          </div>
+          <div class="metric-value">${Math.floor(Math.random() * 200) + 50}</div>
+          <div class="metric-label">Active UX sessions with emotion detection</div>
+        </div>
+        <div class="widget">
+          <div class="widget-header">
+            <span class="widget-title">Components Generated</span>
+            <span class="widget-badge">AI</span>
+          </div>
+          <div class="metric-value">${Math.floor(Math.random() * 500) + 200}</div>
+          <div class="metric-label">AI-generated UX components</div>
+        </div>
+        <div class="widget">
+          <div class="widget-header">
+            <span class="widget-title">GPU Engines</span>
+            <span class="widget-badge">CUDA</span>
+          </div>
+          <div class="metric-value">${engines.filter(e => e.gpu).length}</div>
+          <div class="metric-label">GPU-accelerated engines active</div>
+        </div>
+        <div class="widget">
+          <div class="widget-header">
+            <span class="widget-title">Protocol Coverage</span>
+            <span class="widget-badge">PROT-582-611</span>
+          </div>
+          <div class="metric-value">30</div>
+          <div class="metric-label">Sovereign protocols implemented</div>
+          <div class="progress-bar"><div class="progress-fill" style="width: 100%"></div></div>
+        </div>
+      `;
+    }
+
+    // ─── Activity Log ───
+    function addLogEntry(message, engine = 'system') {
+      const log = document.getElementById('activity-log');
+      const time = new Date().toLocaleTimeString();
+      const entry = document.createElement('div');
+      entry.className = 'log-entry';
+      entry.innerHTML = `<span class="time">${time}</span> <span class="engine">[${engine}]</span> ${message}`;
+      log.prepend(entry);
+      if (log.children.length > 50) log.removeChild(log.lastChild);
+    }
+
+    // ─── Initialize ───
+    renderEngineList();
+    renderDashboard();
+    addLogEntry('UX AI Console initialized', 'ux-ai');
+    addLogEntry('Multi-Engine mesh connected', 'orchestrator');
+    addLogEntry(`${engines.length} engines online`, 'routing');
+    addLogEntry(`${uxModules.length} UX modules active`, 'ux-ai');
+
+    // Simulate activity
+    setInterval(() => {
+      const e = engines[Math.floor(Math.random() * engines.length)];
+      e.load = Math.max(0, Math.min(1, e.load + (Math.random() - 0.5) * 0.1));
+      renderEngineList();
+      addLogEntry(`Request routed → ${e.name} (${Math.round(e.load * 100)}% load)`, e.id);
+    }, 3000);
+
+    setInterval(renderDashboard, 10000);
+  </script>
+
+</body>
+</html>

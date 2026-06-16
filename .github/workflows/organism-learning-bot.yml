@@ -1,0 +1,192 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# 🎓 ORGANISM LEARNING BOT — MAGISTER EVOLUTIONIS
+# "Protocolum crescit, organismus evolvitur." (The protocol grows, the organism evolves.)
+#
+# Division VI — Learn & Evolve
+# Analyzes protocol growth trends, identifies stagnant domains,
+# proposes new protocol slots, and tracks the organism's evolution.
+#
+# Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+# ═══════════════════════════════════════════════════════════════════════════
+
+name: 🎓 organism-learning-bot
+
+on:
+  schedule:
+    - cron: '0 2 * * *'  # Nightly 2 AM UTC
+  push:
+    paths:
+      - 'organism-cli/web/protocol-papers.js'
+      - 'icp/src/medina_backend/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  protocol-evolution:
+    name: 🎓 Protocol Evolution Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 30
+
+      - name: Measure Current Protocol State
+        id: state
+        run: |
+          PROT=$(grep -c "id:.*'PROT-" organism-cli/web/protocol-papers.js 2>/dev/null || echo "0")
+          DOMAINS=$(grep -oP "domain:\s*'[^']+'" organism-cli/web/protocol-papers.js 2>/dev/null | sort -u | wc -l)
+          LAST_ID=$(grep -oP "PROT-\d+" organism-cli/web/protocol-papers.js 2>/dev/null | sed 's/PROT-//' | sort -n | tail -1 || echo "0")
+          WORKERS=$(ls organism-cli/web/*-worker.js 2>/dev/null | wc -l)
+          MO=$(ls icp/src/medina_backend/*.mo 2>/dev/null | wc -l)
+
+          echo "protocols=$PROT" >> "$GITHUB_OUTPUT"
+          echo "domains=$DOMAINS" >> "$GITHUB_OUTPUT"
+          echo "last_id=$LAST_ID" >> "$GITHUB_OUTPUT"
+          echo "workers=$WORKERS" >> "$GITHUB_OUTPUT"
+          echo "engines=$MO" >> "$GITHUB_OUTPUT"
+
+          echo "🎓 State: $PROT protocols (PROT-001..PROT-$LAST_ID), $DOMAINS domains"
+          echo "🎓 Workers: $WORKERS | Backend Engines: $MO"
+
+      - name: Domain Coverage Analysis
+        run: |
+          echo "🎓 Analyzing domain coverage..."
+          echo ""
+          echo "Protocol density by domain (protocols per domain):"
+          grep -oP "domain:\s*'[^']+'" organism-cli/web/protocol-papers.js 2>/dev/null | \
+            sed "s/domain: '//;s/'//" | sort | uniq -c | sort -rn | head -15 | \
+            while read count domain; do
+              bar=$(python3 -c "print('█' * min($count, 20))")
+              echo "  $domain: $bar ($count)"
+            done
+
+          echo ""
+          echo "🎓 Domains with 1-2 protocols (expansion opportunities):"
+          grep -oP "domain:\s*'[^']+'" organism-cli/web/protocol-papers.js 2>/dev/null | \
+            sed "s/domain: '//;s/'//" | sort | uniq -c | sort -n | \
+            awk '$1 <= 2' | \
+            while read count domain; do
+              echo "  • $domain ($count protocol$([ $count -gt 1 ] && echo s))"
+            done
+
+      - name: Backend vs Protocol Coverage
+        run: |
+          echo "🎓 Backend engine coverage..."
+          MO=$(ls icp/src/medina_backend/*.mo 2>/dev/null | wc -l)
+          PROT=$(grep -c "id:.*'PROT-" organism-cli/web/protocol-papers.js 2>/dev/null || echo "0")
+          RATIO=$(python3 -c "print(f'{$PROT / max($MO, 1):.1f}')" 2>/dev/null)
+          echo "  • $PROT protocols / $MO backend engines = $RATIO protocols per engine"
+
+          echo ""
+          echo "🎓 Worker coverage..."
+          WORKERS=$(ls organism-cli/web/*-worker.js 2>/dev/null | wc -l)
+          echo "  • $WORKERS specialized workers"
+          echo "  • $(python3 -c "print(f'{$PROT / max($WORKERS, 1):.1f}')" 2>/dev/null) protocols per worker"
+
+      - name: Generate Evolution Report
+        run: |
+          mkdir -p build/learning
+
+          NEXT_SLOT=$(( ${{ steps.state.outputs.last_id }} + 1 ))
+
+          cat > build/learning/evolution-report.md << EOF
+          # 🎓 Protocol Evolution Report
+
+          **Generated:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')
+          **Commit:** \`${GITHUB_SHA:0:7}\`
+
+          ## Current State
+
+          | Metric | Value |
+          |--------|-------|
+          | Total Protocols | ${{ steps.state.outputs.protocols }} |
+          | Protocol Domains | ${{ steps.state.outputs.domains }} |
+          | Last Protocol ID | PROT-${{ steps.state.outputs.last_id }} |
+          | Next Available Slot | PROT-$NEXT_SLOT |
+          | Web Workers | ${{ steps.state.outputs.workers }} |
+          | Backend Engines | ${{ steps.state.outputs.engines }} |
+
+          ## Domain Density
+
+          EOF
+
+          grep -oP "domain:\s*'[^']+'" organism-cli/web/protocol-papers.js 2>/dev/null | \
+            sed "s/domain: '//;s/'//" | sort | uniq -c | sort -rn | \
+            while read count domain; do
+              echo "- **$domain**: $count protocols" >> build/learning/evolution-report.md
+            done
+
+          echo "" >> build/learning/evolution-report.md
+          echo "## Expansion Opportunities" >> build/learning/evolution-report.md
+          echo "" >> build/learning/evolution-report.md
+          echo "Domains with ≤2 protocols are candidates for expansion:" >> build/learning/evolution-report.md
+          echo "" >> build/learning/evolution-report.md
+          grep -oP "domain:\s*'[^']+'" organism-cli/web/protocol-papers.js 2>/dev/null | \
+            sed "s/domain: '//;s/'//" | sort | uniq -c | sort -n | \
+            awk '$1 <= 2' | \
+            while read count domain; do
+              echo "- \`$domain\` ($count protocol$([ $count -gt 1 ] && echo s)) → propose PROT-$NEXT_SLOT" >> build/learning/evolution-report.md
+            done
+
+          cat build/learning/evolution-report.md
+
+      - name: Commit Evolution Report
+        run: |
+          git config user.name "organism-learning-bot"
+          git config user.email "organism-learning-bot[bot]@users.noreply.github.com"
+          cp build/learning/evolution-report.md docs/evolution-report.md
+          git add docs/evolution-report.md
+          git diff --cached --quiet || git commit -m "🎓 organism-learning-bot: Updated evolution report [PROT-${{ steps.state.outputs.last_id }} current, ${{ steps.state.outputs.domains }} domains]"
+          git push || echo "Nothing to push"
+
+      - name: Emit Governance Event
+        run: |
+          mkdir -p dist/governance/events dist/learning
+
+          # Build expansion domain list JSON array
+          EXPANSION_DOMAINS=$(grep -oP "domain:\s*'[^']+'" organism-cli/web/protocol-papers.js 2>/dev/null | \
+            sed "s/domain: '//;s/'//" | sort | uniq -c | sort -n | \
+            awk '$1 <= 2 {print "\"" $2 "\""}' | tr '\n' ',' | sed 's/,$//')
+          EXPANSION_DOMAINS="[${EXPANSION_DOMAINS}]"
+
+          EXPANSION_COUNT=$(echo "$EXPANSION_DOMAINS" | python3 -c "import json,sys; print(len(json.load(sys.stdin)))" 2>/dev/null || echo "0")
+
+          # Training signals: unique domain pairs (Hebbian proxy)
+          SIGNALS=${{ steps.state.outputs.domains }}
+          HEBBIAN=$(python3 -c "print($SIGNALS * ($SIGNALS - 1) // 2)" 2>/dev/null || echo "0")
+
+          # Save learning state
+          cat > dist/learning/learning-state.json << EOF
+          {
+            "last_protocol_id": "PROT-${{ steps.state.outputs.last_id }}",
+            "domains": ${{ steps.state.outputs.domains }},
+            "protocols": ${{ steps.state.outputs.protocols }},
+            "workers": ${{ steps.state.outputs.workers }},
+            "engines": ${{ steps.state.outputs.engines }}
+          }
+          EOF
+
+          cat > dist/governance/events/learning_cycle_completed.json << EOF
+          {
+            "entity_id": "atlas://bot/organism-learning-bot",
+            "op": "learning_cycle_completed",
+            "timestamp": "$(date -u '+%Y-%m-%dT%H:%M:%SZ')",
+            "commit": "${GITHUB_SHA:0:7}",
+            "run_id": "${{ github.run_id }}",
+            "context": {
+              "training_signals": $SIGNALS,
+              "hebbian_synapses_trained": $HEBBIAN,
+              "protocols_evolved": ${{ steps.state.outputs.protocols }},
+              "last_protocol_id": "PROT-${{ steps.state.outputs.last_id }}",
+              "expansion_domains": $EXPANSION_DOMAINS,
+              "state_path": "dist/learning/learning-state.json"
+            }
+          }
+          EOF
+
+          echo "🎓 Governance event emitted: learning_cycle_completed"
+          cat dist/governance/events/learning_cycle_completed.json
+

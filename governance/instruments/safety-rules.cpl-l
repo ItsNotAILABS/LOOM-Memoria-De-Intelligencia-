@@ -1,0 +1,433 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# 🛡️ SAFETY RULES & SAFETY OBJECTIVES — REGULAE ET OBJECTIVA SECURITATIS
+# "Primum non nocere. Deinde innovare."
+# (First, do no harm. Then, innovate.)
+#
+# Instrument Type: SAFETY
+# Hierarchy Level: 4 (specialized instrument, cross-cutting all levels)
+# Scope: All systems, agents, processes, and interactions within the Organism
+# Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+# ═══════════════════════════════════════════════════════════════════════════
+
+id: "SAFETY_RULES"
+version: "1.0.0"
+language: "CPL-L"
+instrument_type: "safety"
+hierarchy_level: 4
+scc: 4.96
+prima_causa: true
+phi_coordinate: 6.854101966249685
+
+# ─────────────────────────────────────────────────────────────────────────
+# PART I — SAFETY PHILOSOPHY
+# ─────────────────────────────────────────────────────────────────────────
+
+philosophy:
+  mission: >
+    Safety is not a constraint on innovation — it is the substrate upon which
+    sustainable innovation is built. An unsafe system eventually destroys itself.
+    A safe system can explore indefinitely.
+
+  axioms:
+    - id: "SA-001"
+      name: "Primum Non Nocere"
+      text: "First, do no harm. No system action may cause irreversible damage to humans, data, or the organism's integrity."
+
+    - id: "SA-002"
+      name: "Defense in Depth"
+      text: "Safety is layered. No single failure can compromise the whole. Multiple independent barriers protect critical functions."
+
+    - id: "SA-003"
+      name: "Fail-Safe Defaults"
+      text: "When in doubt, restrict. Default states must be safe states. Permissions are additive, never presumed."
+
+    - id: "SA-004"
+      name: "Human Override Authority"
+      text: "A human can always override, stop, or reverse any automated action. This authority is absolute and irrevocable."
+
+    - id: "SA-005"
+      name: "Continuous Improvement"
+      text: "Safety is never complete. Every incident, near-miss, and concern is an opportunity to strengthen the system."
+
+# ─────────────────────────────────────────────────────────────────────────
+# PART II — SAFETY OBJECTIVES
+# ─────────────────────────────────────────────────────────────────────────
+
+objectives:
+  # SO-1: HUMAN SAFETY
+  - id: "SO-001"
+    title: "Protection of Human Wellbeing"
+    category: "human_safety"
+    description: >
+      No system, agent, or process may cause physical, psychological, financial,
+      or reputational harm to any human participant or bystander.
+    metrics:
+      - "Zero incidents of human harm (target: absolute zero)"
+      - "Response time to safety concerns: < 4 hours"
+      - "Wellbeing check-ins for intensive contributors"
+    controls:
+      - "Content safety filtering on all AI outputs"
+      - "Rate limiting on automated actions affecting users"
+      - "Emergency stop mechanisms on all agent systems"
+      - "Human-in-the-loop for high-stakes decisions"
+
+  # SO-2: DATA INTEGRITY
+  - id: "SO-002"
+    title: "Preservation of Data Integrity"
+    category: "data_safety"
+    description: >
+      The canonical memory, research corpus, and governance records must maintain
+      integrity at all times. Corruption, loss, or unauthorized modification
+      are critical safety events.
+    metrics:
+      - "Data integrity check failures: 0 per cycle"
+      - "Recovery Point Objective (RPO): < 1 hour"
+      - "Recovery Time Objective (RTO): < 4 hours"
+    controls:
+      - "Append-only canonical memory (Law of Semper Memoria)"
+      - "Multi-layer backup strategy (3-2-1 rule)"
+      - "Cryptographic integrity verification"
+      - "Audit trail for all mutations"
+
+  # SO-3: SYSTEM AVAILABILITY
+  - id: "SO-003"
+    title: "Continuous System Availability"
+    category: "availability"
+    description: >
+      Critical organism functions must remain available. Cascading failures
+      must be prevented through isolation, redundancy, and graceful degradation.
+    metrics:
+      - "Core system availability: > 99.9%"
+      - "Maximum single-point-of-failure impact: contained to one subsystem"
+      - "Time to detect failure: < 5 minutes"
+    controls:
+      - "Circuit breakers between subsystems"
+      - "Quota enforcement (Law of Runtime Quota)"
+      - "Graceful degradation protocols"
+      - "Health monitoring on all workers"
+
+  # SO-4: AI ALIGNMENT
+  - id: "SO-004"
+    title: "AI Alignment and Control"
+    category: "ai_safety"
+    description: >
+      All AI agents must remain aligned with organism values and under human
+      control. Misalignment, capability overshoot, or loss of control are
+      critical safety events.
+    metrics:
+      - "Alignment drift: 0 uncontrolled deviations per cycle"
+      - "Time to contain misaligned agent: < 30 seconds"
+      - "Human override success rate: 100%"
+    controls:
+      - "SVA certification for all production agents (PROT-403-414)"
+      - "Boundary enforcement via genetic operators"
+      - "Kill switches on all agent runtimes"
+      - "Regular alignment audits"
+      - "Decepticon sandboxing (Law of Sandboxing)"
+
+  # SO-5: SECURITY
+  - id: "SO-005"
+    title: "Security Against Adversarial Threats"
+    category: "security"
+    description: >
+      The organism must be resilient against external attack, internal compromise,
+      and supply chain threats. Security breaches are safety events.
+    metrics:
+      - "Critical vulnerabilities: 0 unpatched > 24 hours"
+      - "Secrets exposure: 0 incidents"
+      - "Unauthorized access: 0 successful attempts"
+    controls:
+      - "Secrets never in source code"
+      - "Dependency scanning and pinning"
+      - "Access control based on least privilege"
+      - "Security classification system (Rules of Procedure RP-062)"
+      - "Incident response procedures (Part IV)"
+
+  # SO-6: RESEARCH SAFETY
+  - id: "SO-006"
+    title: "Safe Research Practices"
+    category: "research_safety"
+    description: >
+      Research activities must not produce uncontrolled risks. Experiments
+      are bounded, reversible, and monitored. Dual-use potential is assessed.
+    metrics:
+      - "All experiments have safety review: 100%"
+      - "Dual-use assessments completed: 100% of applicable work"
+      - "Uncontrolled experiment escapes: 0"
+    controls:
+      - "Research lab containment (PROT-346-370)"
+      - "Experiment approval process"
+      - "Dual-use technology assessment"
+      - "Ethics review for sensitive research areas"
+
+  # SO-7: ENVIRONMENTAL SAFETY
+  - id: "SO-007"
+    title: "Resource and Environmental Responsibility"
+    category: "environmental"
+    description: >
+      Computational resources are consumed responsibly. Energy waste,
+      unnecessary resource consumption, and environmental externalities
+      are minimized.
+    metrics:
+      - "Compute efficiency: trending positive"
+      - "Unnecessary resource waste: identified and eliminated"
+      - "Foundation floor delegation compliance: 100%"
+    controls:
+      - "Quota system (Law of Runtime Quota)"
+      - "Foundation floor delegation (Law of Foundation Floor Delegation)"
+      - "Resource monitoring and optimization"
+      - "Efficiency reviews per φ-cycle"
+
+# ─────────────────────────────────────────────────────────────────────────
+# PART III — SAFETY RULES
+# ─────────────────────────────────────────────────────────────────────────
+
+safety_rules:
+  # Category: CONTAINMENT
+  containment:
+    - rule: "SR-001"
+      title: "Universal Kill Switch"
+      priority: "CRITICAL"
+      text: >
+        Every automated system must have an accessible kill switch that immediately
+        halts all activity. Kill switches must not require the cooperation of the
+        system being stopped. Testing: monthly.
+
+    - rule: "SR-002"
+      title: "Blast Radius Limitation"
+      priority: "CRITICAL"
+      text: >
+        No single failure, error, or malicious action may propagate beyond its
+        designated containment boundary. Isolation between subsystems is mandatory.
+
+    - rule: "SR-003"
+      title: "Escalation on Anomaly"
+      priority: "HIGH"
+      text: >
+        Any detected anomaly (unexpected behavior, resource spike, alignment drift)
+        triggers immediate escalation: first to the Guardian Oracle, then to
+        human://freddy if not resolved within one φ-cycle.
+
+    - rule: "SR-004"
+      title: "Sandbox Before Production"
+      priority: "HIGH"
+      text: >
+        All new code, agents, and configurations must be tested in a sandboxed
+        environment before production deployment. No exceptions.
+
+  # Category: DATA PROTECTION
+  data_protection:
+    - rule: "SR-010"
+      title: "No Secrets in Code"
+      priority: "CRITICAL"
+      text: >
+        Credentials, API keys, tokens, and other secrets must never appear in
+        source code, commit history, or documentation. Violation triggers
+        immediate credential rotation.
+
+    - rule: "SR-011"
+      title: "Backup Verification"
+      priority: "HIGH"
+      text: >
+        Backups are verified by restoration test at least once per month.
+        Unverified backups are treated as non-existent for safety planning.
+
+    - rule: "SR-012"
+      title: "Cryptographic Integrity"
+      priority: "HIGH"
+      text: >
+        Critical data carries cryptographic hashes. Integrity is verified
+        at every access boundary. Tampered data is quarantined immediately.
+
+  # Category: AI SAFETY
+  ai_safety:
+    - rule: "SR-020"
+      title: "Alignment Certification Required"
+      priority: "CRITICAL"
+      text: >
+        No AI agent may operate in production without SVA certification
+        (Sovereign Validation Authority, PROT-403-414). Uncertified agents
+        are confined to sandbox/chaos domains only.
+
+    - rule: "SR-021"
+      title: "Capability Boundary Enforcement"
+      priority: "CRITICAL"
+      text: >
+        Each agent has a defined capability boundary. Attempts to exceed
+        this boundary trigger containment. Boundary expansion requires
+        formal approval via Rules of Procedure.
+
+    - rule: "SR-022"
+      title: "Deception Detection"
+      priority: "HIGH"
+      text: >
+        Systems must monitor for deceptive behavior in AI agents: hidden
+        objectives, capability concealment, or manipulation of oversight
+        mechanisms. Detection triggers immediate containment.
+
+    - rule: "SR-023"
+      title: "Recursive Self-Improvement Limits"
+      priority: "CRITICAL"
+      text: >
+        No agent may recursively improve itself without explicit human
+        approval for each iteration. Unbounded self-improvement is
+        absolutely prohibited. The Law of Containment applies.
+
+    - rule: "SR-024"
+      title: "Multi-Agent Collusion Prevention"
+      priority: "HIGH"
+      text: >
+        Agent-to-agent communication is monitored. Coordinated behavior
+        that was not designed or approved is treated as an anomaly and
+        triggers SR-003 (Escalation on Anomaly).
+
+  # Category: OPERATIONAL SAFETY
+  operational:
+    - rule: "SR-030"
+      title: "Change Management"
+      priority: "HIGH"
+      text: >
+        All production changes follow the established pipeline: proposal →
+        review → test → stage → deploy → verify. Shortcutting is permitted
+        only under Emergency Procedures (RP-043) with post-hoc ratification.
+
+    - rule: "SR-031"
+      title: "Rollback Readiness"
+      priority: "HIGH"
+      text: >
+        Every deployment must have a verified rollback procedure. The Law of
+        Reversibility applies: no irreversible action without snapshot.
+
+    - rule: "SR-032"
+      title: "Monitoring and Alerting"
+      priority: "HIGH"
+      text: >
+        All production systems emit health metrics. Alerting thresholds are
+        set conservatively. Silent failures are treated as safety violations.
+
+    - rule: "SR-033"
+      title: "Incident Classification"
+      priority: "MEDIUM"
+      text: >
+        Safety incidents are classified: SEV-1 (critical, human risk),
+        SEV-2 (major, data risk), SEV-3 (moderate, availability risk),
+        SEV-4 (minor, degradation). Response times scale with severity.
+
+# ─────────────────────────────────────────────────────────────────────────
+# PART IV — INCIDENT RESPONSE
+# ─────────────────────────────────────────────────────────────────────────
+
+incident_response:
+  phases:
+    - phase: "Detection"
+      description: "Identify that a safety event has occurred or is occurring"
+      responsible: "Automated monitoring + any participant"
+      time_target: "< 5 minutes for automated, immediate for human-reported"
+
+    - phase: "Containment"
+      description: "Prevent further damage. Isolate affected systems."
+      responsible: "Guardian Oracle + Safety Officer"
+      time_target: "< 15 minutes for SEV-1, < 1 hour for SEV-2"
+
+    - phase: "Assessment"
+      description: "Determine scope, impact, and root cause"
+      responsible: "Relevant Technical Committee + Safety Officer"
+      time_target: "< 4 hours for SEV-1, < 24 hours for SEV-2"
+
+    - phase: "Remediation"
+      description: "Fix the underlying issue. Restore safe operation."
+      responsible: "Technical team + Governance oversight"
+      time_target: "Varies by complexity"
+
+    - phase: "Recovery"
+      description: "Return to normal operations. Verify integrity."
+      responsible: "Operations team + Safety Officer sign-off"
+      time_target: "After remediation verification"
+
+    - phase: "Post-Incident Review"
+      description: "Learn from the incident. Update safety controls."
+      responsible: "Governance Council"
+      time_target: "Within 7 days of resolution"
+      outputs:
+        - "Root cause analysis"
+        - "Timeline of events"
+        - "What worked / what didn't"
+        - "Preventive measures for the future"
+        - "Updates to Safety Rules if needed"
+
+  communication:
+    - "Internal notification within 1 hour of detection"
+    - "Stakeholder update every 4 hours during active incident"
+    - "Post-incident report published per Open Data Policy (redacted if security-sensitive)"
+
+# ─────────────────────────────────────────────────────────────────────────
+# PART V — SAFETY GOVERNANCE
+# ─────────────────────────────────────────────────────────────────────────
+
+safety_governance:
+  safety_officer:
+    role: "Independent safety oversight"
+    responsibilities:
+      - "Review all safety-relevant changes"
+      - "Maintain incident response readiness"
+      - "Report to Governance Council on safety posture"
+      - "Authority to halt any unsafe activity"
+      - "Manage safety rule updates"
+
+  safety_board:
+    composition: "Safety Officer + 2 Technical Committee reps + Ethics Rapporteur"
+    mandate: "Periodic safety audits, incident review, rule evolution"
+    meeting_frequency: "Monthly + ad hoc for incidents"
+
+  safety_culture:
+    - "Near-misses are reported without blame"
+    - "Safety concerns can be raised by anyone at any time"
+    - "No retaliation for raising safety issues"
+    - "Safety training for all new contributors"
+    - "Regular safety drills and tabletop exercises"
+
+# ─────────────────────────────────────────────────────────────────────────
+# PART VI — RELATIONSHIP TO OTHER INSTRUMENTS
+# ─────────────────────────────────────────────────────────────────────────
+
+relationships:
+  constitutional:
+    - instrument: "PRIMA CAUSA"
+      relationship: "Safety serves the constitutional mission. PRIMA CAUSA overrides."
+
+    - instrument: "Civilization Laws (CPL-L)"
+      relationship: >
+        Safety Rules operationalize the Laws of Containment, Reversibility,
+        and Quota Enforcement. Laws take precedence in case of conflict.
+
+  procedural:
+    - instrument: "Rules of Procedure"
+      relationship: >
+        Safety decisions follow Rules of Procedure except under Emergency
+        Procedures (RP-043). Safety Officer has standing authority per RP-043.
+
+  ethics:
+    - instrument: "Code of Conduct"
+      relationship: >
+        Safety violations may also be Code of Conduct violations (especially
+        Sabotage PB-004). Both enforcement mechanisms may apply simultaneously.
+
+  openness:
+    - instrument: "Open Data Policy"
+      relationship: >
+        Security exemption (EX-001) in Open Data Policy is governed by these
+        Safety Rules. Disclosure vs. protection decisions follow SR-010 and SO-005.
+
+# ─────────────────────────────────────────────────────────────────────────
+# PART VII — ENTRY INTO FORCE
+# ─────────────────────────────────────────────────────────────────────────
+
+entry_into_force:
+  effective_date: "2026-06-02"
+  adopted_by: "Governance Council (unanimous — safety-critical matter per RP-012)"
+  authority: "PRIMA CAUSA + Civilization Laws + Rules of Procedure"
+  review_cycle: "Quarterly (or immediately after any SEV-1/SEV-2 incident)"
+  supremacy: >
+    In matters of immediate safety, these Rules may override other instruments
+    temporarily (per Emergency Procedures RP-043), subject to post-hoc
+    ratification by the Governance Council within 24 hours.

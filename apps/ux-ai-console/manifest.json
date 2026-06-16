@@ -1,0 +1,22 @@
+{
+  "name": "MEDINA UX AI Console",
+  "short_name": "UX AI",
+  "description": "Full User Experience Intelligence Console with Multi-Engine Mesh",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0f",
+  "theme_color": "#c9a55c",
+  "orientation": "any",
+  "categories": ["productivity", "utilities"],
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ],
+  "medina": {
+    "protocol": "PROT-582-611",
+    "frequency_hz": 1149851,
+    "phi": 1.6180339887498948482,
+    "layer": 19,
+    "workers": ["ux-ai-worker.js", "multi-engine-worker.js"]
+  }
+}

@@ -1,0 +1,284 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# 📂 OPEN DATA POLICY — POLITICA APERTORUM DATORUM
+# "Scientia aperta est scientia vera."
+# (Open science is true science.)
+#
+# Instrument Type: OPENNESS
+# Hierarchy Level: 3 (alongside Code of Conduct, below Rules of Procedure)
+# Scope: All data, research outputs, and knowledge artifacts of the Organism
+# Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+# ═══════════════════════════════════════════════════════════════════════════
+
+id: "OPEN_DATA_POLICY"
+version: "1.0.0"
+language: "CPL-L"
+instrument_type: "openness"
+hierarchy_level: 3
+scc: 4.91
+prima_causa: true
+phi_coordinate: 4.236067977499790
+
+# ─────────────────────────────────────────────────────────────────────────
+# PART I — PRINCIPLES OF OPENNESS
+# ─────────────────────────────────────────────────────────────────────────
+
+principles:
+  - id: "ODP-001"
+    name: "Open by Default"
+    description: >
+      All research data, publications, and knowledge artifacts produced within
+      the Medina Organism are open by default. Closure is the exception and
+      must be justified under one of the recognized exemptions (Part IV).
+
+  - id: "ODP-002"
+    name: "FAIR Principles Compliance"
+    description: >
+      All data must be Findable, Accessible, Interoperable, and Reusable (FAIR).
+      Metadata must accompany all datasets. Persistent identifiers (DOIs) are
+      required for all published research outputs.
+
+  - id: "ODP-003"
+    name: "As Open As Possible, As Closed As Necessary"
+    description: >
+      The default is openness. Restrictions are applied only when required by
+      security, privacy, or legal obligation. Every restriction must be reviewed
+      for potential relaxation on a regular cycle.
+
+  - id: "ODP-004"
+    name: "Machine-Readable Access"
+    description: >
+      All open data must be available in machine-readable formats. APIs, structured
+      data, and programmatic access are preferred over human-only formats.
+
+  - id: "ODP-005"
+    name: "Attribution and Provenance"
+    description: >
+      All data carries provenance information: who created it, when, under what
+      conditions, using what methods. The PRIMA CAUSA geometry stamp serves as
+      the provenance anchor for all organism-internal data.
+
+# ─────────────────────────────────────────────────────────────────────────
+# PART II — SCOPE OF OPEN DATA
+# ─────────────────────────────────────────────────────────────────────────
+
+scope:
+  covered_outputs:
+    - category: "Research Papers"
+      policy: "Immediate open access upon publication"
+      format: "Markdown + PDF + Zenodo deposit"
+      license: "CC-BY-4.0"
+      repository: "research/"
+
+    - category: "Source Code"
+      policy: "Open source from creation"
+      format: "Git repository"
+      license: "As specified in LICENSE file"
+      repository: "All directories"
+
+    - category: "Protocol Specifications"
+      policy: "Open upon registration"
+      format: "YAML/JSON + natural language description"
+      license: "CC-BY-4.0"
+      repository: "governance/protocols/ + organism-cli/web/protocol-papers.js"
+
+    - category: "Governance Instruments"
+      policy: "Open upon adoption"
+      format: "CPL-L + natural language"
+      license: "CC-BY-4.0"
+      repository: "governance/"
+
+    - category: "Entity Registries"
+      policy: "Open, continuously updated"
+      format: "JSON"
+      license: "CC0-1.0 (public domain)"
+      repository: "docs/bot-fleet/entity-counts.json + atlas/registry/"
+
+    - category: "Experimental Data"
+      policy: "Open after validation"
+      format: "JSON/CSV + metadata schema"
+      license: "CC-BY-4.0"
+      repository: "research/data/"
+
+    - category: "Runtime Artifacts"
+      policy: "Open source"
+      format: "JavaScript/Python/Rust"
+      license: "As specified in LICENSE"
+      repository: "nova_ovo/ + organism-cli/ + scripts/"
+
+    - category: "Training Data & Models"
+      policy: "Open when not covered by exemptions"
+      format: "Standard ML formats + model cards"
+      license: "CC-BY-4.0 for data, Apache-2.0 for models"
+      repository: "models/ (when applicable)"
+
+# ─────────────────────────────────────────────────────────────────────────
+# PART III — DATA MANAGEMENT REQUIREMENTS
+# ─────────────────────────────────────────────────────────────────────────
+
+data_management:
+  metadata_requirements:
+    - "Title and description"
+    - "Creator(s) with ORCID where available"
+    - "Creation date and version"
+    - "PRIMA CAUSA geometry stamp"
+    - "Protocol reference (PROT-*)"
+    - "License identifier"
+    - "Keywords and subject classification"
+    - "Related identifiers (DOI, URL, PROT-*)"
+    - "Access conditions (open/restricted/embargo)"
+
+  preservation:
+    - rule: "ODP-010"
+      title: "Long-Term Preservation"
+      text: >
+        All published research outputs must be deposited in at least one
+        persistent repository (Zenodo, institutional repository, or equivalent).
+        Local repository storage is necessary but not sufficient.
+
+    - rule: "ODP-011"
+      title: "Version Control"
+      text: >
+        All data must be version-controlled. Superseded versions remain accessible.
+        The entity-counts registry tracks canonical version numbers.
+
+    - rule: "ODP-012"
+      title: "Backup and Redundancy"
+      text: >
+        Critical data has at minimum 3 copies: (a) working repository,
+        (b) persistent archive (Zenodo), (c) backup storage.
+
+  quality_assurance:
+    - rule: "ODP-020"
+      title: "Validation Before Publication"
+      text: >
+        All data undergoes validation before open publication. The runtime_pack
+        preflight validates JSON registries. Research papers require SCC scoring.
+
+    - rule: "ODP-021"
+      title: "Peer Review"
+      text: >
+        Research papers undergo internal review (SCC scoring) before external
+        publication. Data supporting papers must be independently reproducible.
+
+    - rule: "ODP-022"
+      title: "Error Correction"
+      text: >
+        Errors discovered post-publication must be corrected transparently.
+        Corrections are versioned, dated, and linked to the original.
+        Retractions follow COPE guidelines adapted for our context.
+
+# ─────────────────────────────────────────────────────────────────────────
+# PART IV — EXEMPTIONS FROM OPENNESS
+# ─────────────────────────────────────────────────────────────────────────
+
+exemptions:
+  recognized_exemptions:
+    - id: "EX-001"
+      name: "Security Vulnerability"
+      description: >
+        Active security vulnerabilities are restricted until patched.
+        Maximum embargo: 90 days. After patch, full disclosure required.
+      review_cycle: "30 days"
+
+    - id: "EX-002"
+      name: "Personal Data"
+      description: >
+        Data containing personally identifiable information (PII) is restricted
+        per applicable data protection law. Anonymized versions are published
+        where possible.
+      review_cycle: "Annual"
+
+    - id: "EX-003"
+      name: "Third-Party Obligations"
+      description: >
+        Data subject to third-party license restrictions that prohibit open
+        distribution. Efforts are made to negotiate open terms or find alternatives.
+      review_cycle: "Upon license renewal"
+
+    - id: "EX-004"
+      name: "Credentials and Secrets"
+      description: >
+        API keys, tokens, passwords, and other authentication material are never
+        published. Rotation required if accidental exposure occurs.
+      review_cycle: "Continuous monitoring"
+
+    - id: "EX-005"
+      name: "Pre-Publication Embargo"
+      description: >
+        Research outputs may be embargoed for up to 30 days pending peer review
+        or strategic publication timing. Maximum embargo: 30 days.
+      review_cycle: "At embargo expiry"
+
+  exemption_procedure:
+    - "Request submitted to Open Data Committee with justification"
+    - "Assessment against recognized exemption categories"
+    - "Minimum necessary restriction applied"
+    - "Review date set for potential declassification"
+    - "Record in governance audit trail"
+
+# ─────────────────────────────────────────────────────────────────────────
+# PART V — PUBLICATION AND DISTRIBUTION
+# ─────────────────────────────────────────────────────────────────────────
+
+publication:
+  platforms:
+    primary:
+      - name: "GitHub Repository"
+        url: "https://github.com/FreddyCreates/Medina-Memory-More-AI"
+        role: "Source of truth for all code and governance"
+
+      - name: "Zenodo"
+        url: "https://zenodo.org"
+        role: "Persistent archive for research papers with DOI"
+
+    secondary:
+      - name: "X/Twitter"
+        role: "Public dissemination and engagement"
+
+      - name: "npm Registry"
+        role: "Package distribution"
+
+      - name: "PyPI"
+        role: "Python package distribution"
+
+  embargo_policy:
+    default_embargo: "none"
+    maximum_embargo: "30 days"
+    embargo_justification: "Required in writing per Part IV"
+
+  licensing:
+    default_code: "See LICENSE file"
+    default_data: "CC-BY-4.0"
+    default_docs: "CC-BY-4.0"
+    default_registries: "CC0-1.0"
+
+# ─────────────────────────────────────────────────────────────────────────
+# PART VI — MONITORING AND COMPLIANCE
+# ─────────────────────────────────────────────────────────────────────────
+
+compliance:
+  monitoring:
+    - "Open Data Committee reviews compliance quarterly"
+    - "Automated checks verify metadata completeness"
+    - "runtime_pack preflight validates registry integrity"
+    - "Annual open data audit published"
+
+  metrics:
+    - "Percentage of outputs published open access"
+    - "Time from creation to open publication"
+    - "FAIR compliance score per dataset"
+    - "Number of active exemptions and their justifications"
+    - "Citation and reuse metrics for published outputs"
+
+# ─────────────────────────────────────────────────────────────────────────
+# PART VII — ENTRY INTO FORCE
+# ─────────────────────────────────────────────────────────────────────────
+
+entry_into_force:
+  effective_date: "2026-06-02"
+  adopted_by: "Governance Council"
+  authority: "PRIMA CAUSA + Rules of Procedure"
+  review_cycle: "Annual (or upon significant policy change)"
+  retroactivity: >
+    This policy applies to all new outputs from the effective date.
+    Existing outputs are brought into compliance within 90 days.

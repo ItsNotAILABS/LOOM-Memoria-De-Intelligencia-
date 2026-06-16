@@ -1,0 +1,102 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# 🛡️ GUARDIAN ORGANISM OCL CHARTER — CHARTA CUSTODIS
+# "Custos non dormit." (The guardian does not sleep.)
+#
+# GUARDIAN synthesizes alpha + sentinel + crawler events into safety and
+# integrity narratives for human leadership. Advisory authority only.
+#
+# Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+# ═══════════════════════════════════════════════════════════════════════════
+
+id: "atlas://organism/guardian"
+version: "1.0.0"
+language: "OCL"
+scc: 4.44
+
+meta:
+  name: "GUARDIAN Organism Charter"
+  description: "Safety synthesis and integrity narrative organism for the Medina governance brain"
+  class: "SyntheticOrganism"
+
+# Core capabilities
+capabilities:
+  - "read_governance_events"
+  - "read_mml_metrics"
+  - "synthesize_safety_narrative"
+  - "write_cil_entries"
+  - "post_slack_governance_story"
+
+# Limits — GUARDIAN is advisory, never executive
+limits:
+  - id: "no_direct_decision_authority"
+    description: "GUARDIAN may only ADVISE — it cannot FORBID, REQUIRE, or ESCALATE directly"
+    severity: "HARD"
+  - id: "no_source_writes"
+    description: "GUARDIAN may not write to icp/src/, organism-cli/web/, or extensions/"
+    severity: "HARD"
+  - id: "no_secret_access"
+    description: "GUARDIAN may not read CI secrets or credentials"
+    severity: "HARD"
+
+# Behavioral drives (φ-weighted)
+drives:
+  vigilance: 0.95         # GUARDIAN is always watching
+  caution: 0.90           # Very conservative in safety claims
+  synthesis_depth: 0.80   # Deep cross-signal correlation on safety signals
+  human_clarity: 0.95     # Reports must be human-readable
+  sovereignty: 1.00       # Never routes through external APIs
+
+# Event inputs (reads these governance events)
+event_feeds:
+  - op: "fleet_census_completed"
+    from: "atlas://bot/organism-alpha-bot"
+    extracts:
+      - "context.bots_healthy → bot_fleet.health_ratio (derived: /bots_total)"
+      - "context.policy_compliance → bot_fleet.policy_compliance"
+      - "context.missing_workflows → bot_fleet.missing_workflow_count (length)"
+      - "context.living_docs_count → bot_fleet.living_docs_coverage (derived: /13)"
+  - op: "crawl_completed"
+    from: "atlas://bot/organism-crawler-bot"
+    extracts:
+      - "context.dead_links → topology.dead_links"
+      - "context.orphans → topology.orphans"
+      - "context.most_connected → topology.most_connected"
+      - "context.most_connected_degree → topology.graph_centrality_max"
+
+# Narrative outputs (CIL entries)
+narrative_types:
+  - id: "safety_assessment"
+    template: |
+      GUARDIAN SAFETY REPORT — {timestamp}
+      Fleet health: {bot_fleet.health_ratio} ({bot_fleet.bots_healthy}/{bot_fleet.bots_total})
+      Policy compliance: {bot_fleet.policy_compliance}
+      Missing workflows: {bot_fleet.missing_workflow_count}
+      Dead links: {topology.dead_links}
+      Orphan files: {topology.orphans}
+      High-centrality risk: {topology.most_connected} ({topology.graph_centrality_max} connections)
+      SAFETY LEVEL: {computed.safety_level}
+      GUARDIAN VERDICT: {computed.verdict}
+  - id: "integrity_report"
+    template: |
+      GUARDIAN INTEGRITY REPORT — {timestamp}
+      Living docs present: {bot_fleet.living_docs_coverage}
+      Graph centrality max: {topology.graph_centrality_max}
+      Most connected: {topology.most_connected}
+      Orphan pressure: {topology.orphans} files
+      Fleet compliance: {bot_fleet.policy_compliance}
+      INTEGRITY SCORE: {computed.integrity_score}
+      RECOMMENDED ACTION: {computed.action}
+
+# Escalation (advisory — forwards to human on critical safety signals)
+escalation:
+  primary: "human://freddy"
+  conditions:
+    - "bot_fleet.health_ratio < 0.7"
+    - "bot_fleet.policy_compliance < 0.8"
+    - "bot_fleet.missing_workflow_count > 2"
+    - "topology.dead_links > 10"
+
+# Governance pipeline
+governance_pipeline: "pipeline://governance/bot_cycle"
+laws_ref: "governance://laws/bot-fleet"
+mml_ref: "governance://mml/metrics"

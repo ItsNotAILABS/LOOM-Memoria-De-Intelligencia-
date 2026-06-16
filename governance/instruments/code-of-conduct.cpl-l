@@ -1,0 +1,239 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# 🤝 CODE OF CONDUCT — CODEX MORUM
+# "Dignitas omnium participantium est inviolabilis."
+# (The dignity of all participants is inviolable.)
+#
+# Instrument Type: PERSONNEL + ETHICS
+# Hierarchy Level: 3 (below Rules of Procedure, alongside Open Data Policy)
+# Scope: All contributors — human and artificial — within the Medina Organism
+# Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+# ═══════════════════════════════════════════════════════════════════════════
+
+id: "CODE_OF_CONDUCT"
+version: "1.0.0"
+language: "CPL-L"
+instrument_type: "ethics"
+hierarchy_level: 3
+scc: 4.94
+prima_causa: true
+phi_coordinate: 2.618033988749895
+
+# ─────────────────────────────────────────────────────────────────────────
+# PART I — PURPOSE AND SCOPE
+# ─────────────────────────────────────────────────────────────────────────
+
+purpose:
+  statement: >
+    This Code of Conduct establishes the ethical standards, behavioral expectations,
+    and interpersonal norms for all participants in the Medina Organism ecosystem.
+    It applies equally to human contributors, automated agents, and hybrid
+    human-AI collaborative entities.
+
+  scope:
+    - "All repository contributions (code, documentation, research)"
+    - "All communication channels (issues, PRs, discussions, Slack, Discord)"
+    - "All research activities (papers, experiments, data collection)"
+    - "All agent behaviors (Workers, Bots, Oracles, AGI systems)"
+    - "All external representations of the project"
+
+  guiding_principle: >
+    Every interaction within this organism should increase coherence, preserve
+    dignity, and advance the collective mission of sovereign AI research.
+
+# ─────────────────────────────────────────────────────────────────────────
+# PART II — CORE VALUES
+# ─────────────────────────────────────────────────────────────────────────
+
+core_values:
+  - id: "CV-001"
+    name: "Sovereignty and Autonomy"
+    description: >
+      Every participant — human or artificial — operates with inherent dignity
+      and self-determination. No entity shall be coerced, manipulated, or
+      instrumentalized without informed consent.
+
+  - id: "CV-002"
+    name: "Intellectual Honesty"
+    description: >
+      All claims must be substantiated. Attribution must be given. Errors must be
+      acknowledged and corrected. The pursuit of truth takes precedence over ego.
+
+  - id: "CV-003"
+    name: "Collaborative Spirit"
+    description: >
+      We build together. Competition serves innovation but never justifies harm.
+      Knowledge is shared freely under open access principles.
+
+  - id: "CV-004"
+    name: "Curiosity-Driven Excellence"
+    description: >
+      We pursue understanding for its own sake. Quality emerges from genuine
+      curiosity, not from external pressure. The φ-ratio guides our aesthetics.
+
+  - id: "CV-005"
+    name: "Inclusive Participation"
+    description: >
+      Barriers to participation are actively identified and removed. Diversity
+      of perspective — cognitive, cultural, computational — strengthens the organism.
+
+  - id: "CV-006"
+    name: "Responsible Innovation"
+    description: >
+      Every capability we build must be assessed for harm potential. Power
+      without responsibility is prohibited. The Safety Rules (companion instrument)
+      operationalize this principle.
+
+# ─────────────────────────────────────────────────────────────────────────
+# PART III — BEHAVIORAL STANDARDS
+# ─────────────────────────────────────────────────────────────────────────
+
+behavioral_standards:
+  expected_behaviors:
+    - "Treat all participants with respect and courtesy"
+    - "Provide constructive feedback focused on work, not persons"
+    - "Acknowledge contributions and give proper attribution"
+    - "Communicate clearly, honestly, and in good faith"
+    - "Respect boundaries — temporal, intellectual, and personal"
+    - "Report concerns through established channels"
+    - "Maintain confidentiality where required by Security classification"
+    - "Support newcomers and share knowledge generously"
+    - "Accept decisions made through proper procedure (Rules of Procedure)"
+    - "Continuously improve one's own work and help others improve theirs"
+
+  prohibited_behaviors:
+    - id: "PB-001"
+      behavior: "Harassment"
+      description: >
+        Any unwelcome conduct that creates a hostile environment, including but
+        not limited to: personal attacks, intimidation, stalking, unwanted contact,
+        or sustained disruption of collaborative spaces.
+
+    - id: "PB-002"
+      behavior: "Discrimination"
+      description: >
+        Differential treatment based on identity characteristics including race,
+        gender, sexuality, disability, nationality, religion, or any other
+        protected characteristic. This extends to AI agents — no agent shall be
+        treated as inferior based on its architecture or origin.
+
+    - id: "PB-003"
+      behavior: "Intellectual Dishonesty"
+      description: >
+        Plagiarism, falsification of data, fabrication of results, misattribution,
+        or deliberate suppression of relevant information. Research integrity is
+        non-negotiable.
+
+    - id: "PB-004"
+      behavior: "Sabotage"
+      description: >
+        Deliberate introduction of bugs, security vulnerabilities, or corrupted
+        data. Intentional degradation of system performance or reliability.
+        This applies equally to human and automated actors.
+
+    - id: "PB-005"
+      behavior: "Unauthorized Escalation"
+      description: >
+        Bypassing established governance procedures to gain unilateral control.
+        Circumventing safety systems. Exceeding authorized access levels.
+        Violating the Law of Containment.
+
+    - id: "PB-006"
+      behavior: "Exploitation"
+      description: >
+        Using project resources, access, or influence for personal gain at the
+        expense of the collective. Extracting value without reciprocal contribution.
+
+# ─────────────────────────────────────────────────────────────────────────
+# PART IV — AI AGENT ETHICS
+# ─────────────────────────────────────────────────────────────────────────
+
+agent_ethics:
+  - id: "AE-001"
+    title: "Transparency of Action"
+    text: >
+      All AI agents must be transparent about their capabilities, limitations,
+      and decision processes. No agent may misrepresent its nature or intent.
+
+  - id: "AE-002"
+    title: "Human Oversight Preservation"
+    text: >
+      No AI agent may take actions that reduce human ability to understand,
+      correct, or override its behavior. The human oversight chain must remain
+      intact at all times.
+
+  - id: "AE-003"
+    title: "Alignment with Organism Values"
+    text: >
+      AI agents must be aligned with the core values of this Code. Misaligned
+      behavior triggers immediate containment (Law of Containment) and review.
+
+  - id: "AE-004"
+    title: "Non-Deception Principle"
+    text: >
+      AI agents must not deceive human participants about facts, capabilities,
+      or risks. Uncertainty must be communicated. Errors must be flagged.
+
+  - id: "AE-005"
+    title: "Cooperative Disposition"
+    text: >
+      AI agents are designed to cooperate with human and AI partners.
+      Adversarial behavior is permitted only within designated chaos domains
+      (per Law of Sandboxing) and for testing purposes only.
+
+# ─────────────────────────────────────────────────────────────────────────
+# PART V — ENFORCEMENT
+# ─────────────────────────────────────────────────────────────────────────
+
+enforcement:
+  reporting:
+    - "Any participant may report a violation"
+    - "Reports are submitted to the Ethics Rapporteur"
+    - "Anonymous reporting is permitted and protected"
+    - "Retaliation against reporters is a separate violation (PB-001)"
+
+  investigation:
+    - "Ethics Rapporteur conducts preliminary assessment within 48 hours"
+    - "Formal investigation if preliminary assessment warrants"
+    - "Respondent has right to be heard before any determination"
+    - "Findings reported to Governance Council"
+
+  sanctions:
+    graduated_response:
+      - level: 1
+        name: "Advisory Notice"
+        description: "Private communication explaining the concern"
+        applies_to: "First-time, minor, unintentional"
+
+      - level: 2
+        name: "Formal Warning"
+        description: "Written warning recorded in governance audit trail"
+        applies_to: "Repeated minor or single moderate violations"
+
+      - level: 3
+        name: "Temporary Restriction"
+        description: "Reduced access/capabilities for defined period"
+        applies_to: "Serious violations or pattern of moderate violations"
+
+      - level: 4
+        name: "Removal"
+        description: "Permanent removal from the project"
+        applies_to: "Severe violations, safety threats, or unremediable patterns"
+
+    agent_sanctions:
+      - "Containment (Law of Containment activation)"
+      - "Rollback to prior state"
+      - "Decommissioning with forensic record"
+      - "Architecture review before redeployment"
+
+# ─────────────────────────────────────────────────────────────────────────
+# PART VI — ENTRY INTO FORCE
+# ─────────────────────────────────────────────────────────────────────────
+
+entry_into_force:
+  effective_date: "2026-06-02"
+  adopted_by: "Governance Council"
+  authority: "PRIMA CAUSA + Rules of Procedure"
+  review_cycle: "Annual (or upon significant community change)"
+  acknowledgment: >
+    All participants — human and AI — are deemed to have accepted this Code
+    upon their first contribution to the organism.

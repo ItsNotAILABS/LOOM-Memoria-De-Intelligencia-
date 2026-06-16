@@ -1,0 +1,21 @@
+{
+  "name": "medina-alpha-pwa",
+  "version": "1.0.0",
+  "description": "MEDINA Alpha PWA — Sovereign Enterprise AI Interface",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "npx serve .",
+    "build": "echo 'Static PWA - no build required'",
+    "test": "echo 'PWA tests'"
+  },
+  "keywords": ["medina", "alpha", "pwa", "enterprise", "ai", "sovereign"],
+  "author": "Alfredo 'Freddy' Medina Hernandez <freddy@medinatech.io>",
+  "license": "ISIL-1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FreddyCreates/Medina-Memory-More-AI"
+  },
+  "devDependencies": {
+    "serve": "^14.0.0"
+  }
+}

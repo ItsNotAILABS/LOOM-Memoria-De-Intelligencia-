@@ -1,0 +1,101 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# MEMORIA COMPRESSOR — MEMORIA BOT 2: THE MEMORY CONSOLIDATOR
+# "Compressor Memoriae" — Compresses and consolidates memory fragments
+#
+# Runs weekly + on workflow_dispatch.
+# Scans for duplicate/redundant memory records, compresses them by
+# semantic similarity, and emits a compression report.
+# Never deletes — only archives/summarizes.
+#
+# House: Memory Temple tier  |  Law: L-005 (always-on, not alive)
+# Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+# ═══════════════════════════════════════════════════════════════════════════
+
+name: "[MEMORIA] Compressor — Memory Consolidation Bot"
+
+on:
+  schedule:
+    # Weekly on Sundays at 04:18 UTC (φ-aligned: 4h18m)
+    - cron: "18 4 * * 0"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  compress:
+    name: "🗜️ Compressor — Consolidate Memory"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Configure COMPRESSOR-BOT identity
+        run: |
+          git config user.name  "COMPRESSOR-BOT"
+          git config user.email "compressor-bot@medina.sovereign"
+
+      - name: Run Memoria Compress engine
+        id: compress
+        run: |
+          if [ -f "nova_ovo/agents/memoria/memoria_compress_bot.py" ]; then
+            python3 nova_ovo/agents/memoria/memoria_compress_bot.py \
+              --repo-root="$GITHUB_WORKSPACE" \
+              --output=docs/bot-fleet/memoria-compress-report.json 2>&1 | tee /tmp/compressor-log.txt
+            echo "exit_code=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+          else
+            echo "[COMPRESSOR] memoria_compress_bot.py not found — generating empty report"
+            mkdir -p docs/bot-fleet
+            echo '{"compressed_at": "'$(date -u '+%Y-%m-%dT%H:%M:%SZ')'", "actions": [], "note": "bot script not found on this branch"}' > docs/bot-fleet/memoria-compress-report.json
+            echo "exit_code=0" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit compression report
+        run: |
+          git add docs/bot-fleet/memoria-compress-report.json
+          if git diff --cached --quiet; then
+            echo "[COMPRESSOR] No memory changes — compression report unchanged."
+          else
+            TIMESTAMP=$(date -u '+%Y-%m-%dT%H:%M:%SZ')
+            git commit -m "[COMPRESSOR] Memory consolidation report: $TIMESTAMP
+
+Bot:  COMPRESSOR-BOT (Compressor Memoriae)
+Law:  L-005 — Always-on, not alive
+φ = 1.618033988749895"
+            git push
+          fi
+
+      - name: BotProofRecord
+        if: always()
+        run: |
+          echo "┌─ BotProofRecord ─────────────────────────────────────────────┐"
+          echo "│ id:          COMPRESSOR                                      │"
+          echo "│ latin:       Compressor Memoriae                             │"
+          echo "│ fleet:       Memoria Fleet (Memory Temple)                   │"
+          echo "│ role:        memory-compress                                 │"
+          echo "│ law:         L-005 — Always-on, not alive                   │"
+          echo "│ authority:   OBSERVE + COMPRESS (archive only) + REPORT     │"
+          echo "│ prohibited:  hard-delete memory objects, modify source code │"
+          echo "│ run_id:      ${{ github.run_id }}"
+          echo "│ sha:         ${{ github.sha }}"
+          echo "│ proof_ref:   docs/bot-fleet/proof-index.md                  │"
+          echo "└───────────────────────────────────────────────────────────────┘"
+
+      - name: Summary
+        if: always()
+        run: |
+          echo ""
+          echo "╔═══════════════════════════════════════════════╗"
+          echo "║   [COMPRESSOR] Consolidation Complete         ║"
+          echo "║   φ = 1.618033988749895                       ║"
+          echo "╚═══════════════════════════════════════════════╝"
+          cat /tmp/compressor-log.txt 2>/dev/null || true

@@ -1,0 +1,122 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "solus-ai"
+version = "1.0.0"
+description = "SOLUS AI — Sovereign Local Universal System. Open-source local model SDK for autonomous AI inference, reasoning, and agent orchestration."
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.9"
+authors = [
+    {name = "Alfredo 'Freddy' Medina Hernandez", email = "contact@medinatech.io"}
+]
+maintainers = [
+    {name = "Medina Tech", email = "contact@medinatech.io"}
+]
+keywords = [
+    "solus",
+    "ai",
+    "local-model",
+    "inference",
+    "sovereign",
+    "llm",
+    "agents",
+    "reasoning",
+    "open-source",
+    "sdk",
+    "phi",
+    "golden-ratio"
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed"
+]
+dependencies = [
+    "numpy>=1.24.0",
+    "pydantic>=2.0.0",
+    "aiohttp>=3.8.0",
+    "uvicorn>=0.20.0",
+    "fastapi>=0.100.0",
+    "websockets>=11.0",
+    "httpx>=0.24.0",
+    "tiktoken>=0.5.0",
+    "rich>=13.0.0",
+    "click>=8.0.0",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+gpu = [
+    "torch>=2.0.0",
+    "transformers>=4.30.0",
+    "accelerate>=0.20.0",
+    "bitsandbytes>=0.40.0",
+]
+gguf = [
+    "llama-cpp-python>=0.2.0",
+]
+all = [
+    "solus-ai[gpu,gguf]",
+]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "black>=23.0.0",
+    "mypy>=1.0.0",
+    "ruff>=0.1.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/FreddyCreates/Medina-Memory-More-AI"
+Documentation = "https://solus-ai.readthedocs.io"
+Repository = "https://github.com/FreddyCreates/Medina-Memory-More-AI"
+Issues = "https://github.com/FreddyCreates/Medina-Memory-More-AI/issues"
+
+[project.scripts]
+solus = "solus.cli.main:cli"
+solus-serve = "solus.server.app:run"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["solus*"]
+
+[tool.setuptools.package-data]
+"*" = ["py.typed", "*.json", "*.yaml", "*.md"]
+
+[tool.black]
+line-length = 100
+target-version = ['py39', 'py310', 'py311', 'py312']
+
+[tool.ruff]
+line-length = 100
+select = ["E", "F", "I", "N", "W", "UP"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.solus]
+phi = 1.618033988749895
+schumann = 7.83
+protocol_start = "PROT-662"
+protocol_end = "PROT-681"
+attribution = "Alfredo 'Freddy' Medina Hernandez | Medina Tech | Dallas, TX"

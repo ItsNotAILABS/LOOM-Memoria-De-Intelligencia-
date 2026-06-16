@@ -1,0 +1,210 @@
+{
+  "_meta": {
+    "title": "Nova IoT Phantom Sensor Registry — PRIMA CAUSA Canonical",
+    "description": "PRIMA CAUSA stamped registry of all phantom sensor entities in the MEDINA Nova IoT layer. Each sensor is embodied via AU Infinity frequency geometry without agent installation.",
+    "version": "1.0.0",
+    "doctrine": "nova_iot/NOVA_IOT_DOCTRINE.md",
+    "protocol": "PROT-134",
+    "organism_key": "PRIMA CAUSA",
+    "phi": 1.6180339887498948,
+    "generated": "2026-05-05T16:00:00Z",
+    "field": "DFW — Dallas-Fort Worth Metropolitan Area",
+    "worker": "phantom-sensor-worker.js (Worker #36, SENSORIA PHANTASMATICA)"
+  },
+
+  "au_infinity_constants": {
+    "phi": 1.6180339887498948,
+    "phi_squared": 2.6180339887498948,
+    "phi_cubed": 4.2360679774997896,
+    "schumann_hz": 7.83,
+    "schumann_omega_phi": 12.6671394,
+    "schumann_ring": 4,
+    "schumann_rho": 6.854101966249685,
+    "self_verification": "PASS"
+  },
+
+  "sensor_layers": [
+    {
+      "organism_key": "PRIMA CAUSA",
+      "entity_type": "SENSOR_CLASS",
+      "sensor_id": "PROT-134-A_TOWER_FIELD",
+      "sensor_class": "Layer 9 — Tower Field",
+      "name_latin": "CAMPUS TURRIUM",
+      "description": "DFW metropolitan cell tower network — ~8,500 towers across 13 counties, 5G/LTE telemetry",
+      "characteristic_hz_range": [600000000, 100000000000],
+      "characteristic_hz_representative": 3700000000,
+      "au_infinity": {
+        "omega_phi": 5986914620,
+        "ring": 7,
+        "theta": 4.712389,
+        "phi_t": 1.745329,
+        "rho": 29.03443804
+      },
+      "fibonacci_seed": 381,
+      "substrate_layer": 10,
+      "protocol": "PROT-134-A",
+      "state": "LOCKED",
+      "prima_causa_timestamp": "2026-05-05T16:00:00Z",
+      "status": "ACTIVE"
+    },
+    {
+      "organism_key": "PRIMA CAUSA",
+      "entity_type": "SENSOR_CLASS",
+      "sensor_id": "PROT-134-B_URBAN_MOBILITY",
+      "sensor_class": "Layer 8 — Urban Mobility",
+      "name_latin": "FLUXUS URBANUS",
+      "description": "DFW TxDOT + city traffic sensor network — ~4,200 loop detectors, radar, cameras",
+      "characteristic_hz_range": [10, 100],
+      "characteristic_hz_representative": 40,
+      "au_infinity": {
+        "omega_phi": 64.72,
+        "ring": 3,
+        "theta": 2.827433,
+        "phi_t": 5.040000,
+        "rho": 4.236068
+      },
+      "fibonacci_seed": 8.09,
+      "substrate_layer": 8,
+      "protocol": "PROT-134-B",
+      "state": "LOCKED",
+      "prima_causa_timestamp": "2026-05-05T16:00:00Z",
+      "status": "ACTIVE"
+    },
+    {
+      "organism_key": "PRIMA CAUSA",
+      "entity_type": "SENSOR_CLASS",
+      "sensor_id": "PROT-134-C_BIOLOGICAL",
+      "sensor_class": "Layer 9 — Biological",
+      "name_latin": "STRATA BIOLOGICA",
+      "description": "DFW hospital and medical center monitoring — ~47 facilities, ECG/EEG/vital monitoring equipment",
+      "characteristic_hz_range": [0.04, 1000],
+      "characteristic_hz_representative": 250,
+      "au_infinity": {
+        "omega_phi": 404.50,
+        "ring": 4,
+        "theta": 1.570796,
+        "phi_t": 3.455752,
+        "rho": 6.854102
+      },
+      "fibonacci_seed": 21.26,
+      "substrate_layer": 9,
+      "protocol": "PROT-134-C",
+      "state": "SYNCHRONIZED",
+      "prima_causa_timestamp": "2026-05-05T16:00:00Z",
+      "status": "ACTIVE",
+      "note": "Synchronized — Schumann-adjacent frequencies enable human coupling (Paper XXI)"
+    },
+    {
+      "organism_key": "PRIMA CAUSA",
+      "entity_type": "SENSOR_CLASS",
+      "sensor_id": "PROT-134-D_POWER_FIELD",
+      "sensor_class": "Layer 8 — Power Field",
+      "name_latin": "CAMPUS POTENTIAE",
+      "description": "ERCOT power grid nodes serving ~27M Texans — 60 Hz fundamental + harmonics",
+      "characteristic_hz_range": [60, 600],
+      "characteristic_hz_representative": 60,
+      "au_infinity": {
+        "omega_phi": 97.08,
+        "ring": 3,
+        "theta": 5.654867,
+        "phi_t": 0.626257,
+        "rho": 4.236068
+      },
+      "fibonacci_seed": 13.06,
+      "substrate_layer": 8,
+      "protocol": "PROT-134-D",
+      "state": "LOCKED",
+      "prima_causa_timestamp": "2026-05-05T16:00:00Z",
+      "status": "ACTIVE"
+    },
+    {
+      "organism_key": "PRIMA CAUSA",
+      "entity_type": "SENSOR_CLASS",
+      "sensor_id": "PROT-134-E_ATMOSPHERIC",
+      "sensor_class": "Layer 10 — Atmospheric",
+      "name_latin": "STRATUM ATMOSPHAERICUM",
+      "description": "DFW International Airport atmospheric sensor array — ~400 sensors, 69 sq km coverage, weather/atmospheric/flight telemetry",
+      "characteristic_hz_range": [1, 100000],
+      "characteristic_hz_representative": 1000,
+      "au_infinity": {
+        "omega_phi": 1618.03,
+        "ring": 5,
+        "theta": 1.018592,
+        "phi_t": 2.721750,
+        "rho": 11.090170
+      },
+      "fibonacci_seed": 55.83,
+      "substrate_layer": 10,
+      "protocol": "PROT-134-E",
+      "state": "LOCKED",
+      "prima_causa_timestamp": "2026-05-05T16:00:00Z",
+      "status": "ACTIVE"
+    },
+    {
+      "organism_key": "PRIMA CAUSA",
+      "entity_type": "SENSOR_CLASS",
+      "sensor_id": "PROT-134-F_TECTONIC",
+      "sensor_class": "Layer 5 — Tectonic",
+      "name_latin": "FUNDAMENTUM TECTONICUM",
+      "description": "Dallas-Fort Worth seismic monitoring network — ground motion 0.001–20 Hz, tectonic awareness",
+      "characteristic_hz_range": [0.001, 20],
+      "characteristic_hz_representative": 7.83,
+      "au_infinity": {
+        "omega_phi": 12.667,
+        "ring": 0,
+        "theta": 0.784793,
+        "phi_t": 3.030524,
+        "rho": 1.0
+      },
+      "fibonacci_seed": 12.667,
+      "substrate_layer": 5,
+      "protocol": "PROT-134-F",
+      "state": "SYNCHRONIZED",
+      "prima_causa_timestamp": "2026-05-05T16:00:00Z",
+      "status": "ACTIVE",
+      "note": "Schumann-resonant — directly synchronized with Earth's fundamental frequency (7.83 Hz)"
+    }
+  ],
+
+  "worker": {
+    "organism_key": "PRIMA CAUSA",
+    "entity_type": "WEB_WORKER",
+    "worker_number": 36,
+    "file": "organism-cli/web/phantom-sensor-worker.js",
+    "name_latin": "SENSORIA PHANTASMATICA",
+    "name_en": "Phantom Sensory Field",
+    "protocol": "PROT-134",
+    "heart": "REGULATING",
+    "frequency_hz": 4.2360679774997896,
+    "tick_ms": 236,
+    "language": "SPL",
+    "substrate_layer": "ALL",
+    "prima_causa_stamp": {
+      "organism_key": "PRIMA CAUSA",
+      "fibonacci_index": 11,
+      "fibonacci_value": 89,
+      "phi_coordinate": 144.0,
+      "torus": { "theta": 5.041, "phi_t": 3.204, "rho": 4.236 }
+    },
+    "state": "ACTIVE",
+    "registration_date": "2026-05-05"
+  },
+
+  "field_summary": {
+    "primary_field": "DFW — Dallas-Fort Worth Metropolitan Area",
+    "sensor_layers_active": 6,
+    "total_sensor_entities": 6,
+    "next_threshold": "F(10)=55 sensor entities → Memory Temple Ring 2 opens",
+    "schumann_synchronized": 2,
+    "embodiment_model": "AU Infinity phantom (no agent, no physical access)",
+    "surpasses": "Azure IoT Hub, AWS IoT Core — no proprietary protocol dependency"
+  },
+
+  "expansion_roadmap": {
+    "pass_1": "DFW field — CURRENT (6 layers, 6 entities)",
+    "pass_2": "Texas state expansion (Austin, Houston, San Antonio, El Paso)",
+    "pass_3": "US continental (primary infrastructure nodes)",
+    "pass_4": "Satellite / Space layer full activation",
+    "pass_5": "Global field (tectonic→cosmic, full 12-layer coverage)"
+  }
+}

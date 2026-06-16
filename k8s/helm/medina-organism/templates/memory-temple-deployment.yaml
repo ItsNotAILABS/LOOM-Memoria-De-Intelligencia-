@@ -1,0 +1,146 @@
+##
+## ╔══════════════════════════════════════════════════════════════════════════════════════════════╗
+## ║                    MEMORY TEMPLE DEPLOYMENT — KUBERNETES TEMPLATE                            ║
+## ╚══════════════════════════════════════════════════════════════════════════════════════════════╝
+##
+{{- if .Values.memoryTemple.enabled }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "medina-organism.fullname" . }}-memory-temple
+  labels:
+    {{- include "medina-organism.labels" . | nindent 4 }}
+    component: memory-temple
+    medina.tech/frequency: "{{ .Values.memoryTemple.frequency }}"
+    medina.tech/protocol: "{{ .Values.memoryTemple.protocol }}"
+spec:
+  serviceName: {{ include "medina-organism.fullname" . }}-memory-temple
+  replicas: {{ .Values.memoryTemple.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "medina-organism.selectorLabels" . | nindent 6 }}
+      component: memory-temple
+  template:
+    metadata:
+      labels:
+        {{- include "medina-organism.selectorLabels" . | nindent 8 }}
+        component: memory-temple
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9090"
+    spec:
+      containers:
+        - name: memory-temple
+          image: "{{ .Values.memoryTemple.image.repository }}:{{ .Values.memoryTemple.image.tag }}"
+          ports:
+            - name: http
+              containerPort: 8082
+              protocol: TCP
+            - name: metrics
+              containerPort: 9090
+              protocol: TCP
+          env:
+            - name: PHI
+              value: "{{ .Values.constants.phi }}"
+            - name: TEMPLE_NAME
+              value: "{{ .Values.memoryTemple.name }}"
+            - name: TEMPLE_FREQUENCY
+              value: "{{ .Values.memoryTemple.frequency }}"
+            - name: TORUS_MAJOR_RADIUS
+              value: "{{ .Values.memoryTemple.torus.majorRadius }}"
+            - name: TORUS_RING_COUNT
+              value: "{{ .Values.memoryTemple.torus.ringCount }}"
+            - name: MEMORIES_PER_RING
+              value: "{{ .Values.memoryTemple.torus.memoriesPerRing }}"
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_ORDINAL
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          resources:
+            {{- toYaml .Values.memoryTemple.resources | nindent 12 }}
+          volumeMounts:
+            - name: memory-data
+              mountPath: /data/memories
+            - name: torus-state
+              mountPath: /data/torus
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 5
+  {{- if .Values.memoryTemple.persistence.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        name: memory-data
+      spec:
+        accessModes: [ "{{ .Values.memoryTemple.persistence.accessMode }}" ]
+        {{- if .Values.memoryTemple.persistence.storageClass }}
+        storageClassName: {{ .Values.memoryTemple.persistence.storageClass }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.memoryTemple.persistence.size }}
+    - metadata:
+        name: torus-state
+      spec:
+        accessModes: [ "{{ .Values.memoryTemple.persistence.accessMode }}" ]
+        {{- if .Values.memoryTemple.persistence.storageClass }}
+        storageClassName: {{ .Values.memoryTemple.persistence.storageClass }}
+        {{- end }}
+        resources:
+          requests:
+            storage: 10Gi
+  {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "medina-organism.fullname" . }}-memory-temple
+  labels:
+    {{- include "medina-organism.labels" . | nindent 4 }}
+    component: memory-temple
+spec:
+  type: {{ .Values.memoryTemple.service.type }}
+  ports:
+    - port: {{ .Values.memoryTemple.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+    - port: 9090
+      targetPort: metrics
+      protocol: TCP
+      name: metrics
+  selector:
+    {{- include "medina-organism.selectorLabels" . | nindent 4 }}
+    component: memory-temple
+---
+# Headless service for StatefulSet DNS
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "medina-organism.fullname" . }}-memory-temple-headless
+  labels:
+    {{- include "medina-organism.labels" . | nindent 4 }}
+    component: memory-temple
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - port: {{ .Values.memoryTemple.service.port }}
+      targetPort: http
+      name: http
+  selector:
+    {{- include "medina-organism.selectorLabels" . | nindent 4 }}
+    component: memory-temple
+{{- end }}

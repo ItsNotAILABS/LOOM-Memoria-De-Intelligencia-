@@ -1,0 +1,15 @@
+{
+  "id": "atlas://bot/organism-neural-bot",
+  "name": "organism-neural-bot",
+  "class": "Bot",
+  "division": "II — Validate & Test",
+  "emoji": "🧠",
+  "domain": "Neural architecture validation",
+  "triggers": ["push:icp/src/medina_backend/", "push:organism-cli/web/", "push:organism/"],
+  "workflow": ".github/workflows/organism-neural-bot.yml",
+  "outputs": ["docs/neural-dependency-graph.md"],
+  "languages": ["atlas://language/cpl-l", "atlas://language/ocl"],
+  "governance_pipeline": "pipeline://governance/bot_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "scc": 4.23
+}
