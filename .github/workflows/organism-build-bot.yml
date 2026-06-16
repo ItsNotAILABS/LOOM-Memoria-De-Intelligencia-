@@ -1,0 +1,76 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# 🧬 ORGANISM BUILD BOT — AEDIFICATIO ORGANISMI
+# "Viginti membra, unum corpus." (Twenty limbs, one body.)
+#
+# Packages all 20 browser extensions into installable .zip artifacts.
+# Triggers on any push to extensions/ directory.
+#
+# Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+# ═══════════════════════════════════════════════════════════════════════════
+
+name: 🧬 organism-build-bot
+
+on:
+  push:
+    paths:
+      - 'extensions/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-extensions:
+    name: 🧬 Package Browser Extensions
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Count Extensions
+        id: count
+        run: |
+          EXT_COUNT=$(ls -d extensions/*/ 2>/dev/null | wc -l)
+          echo "count=$EXT_COUNT" >> "$GITHUB_OUTPUT"
+          echo "🧬 Found $EXT_COUNT extensions to package"
+
+      - name: Build Extension Zips
+        run: bash scripts/build-extensions.sh build/extensions
+
+      - name: Generate Extension Manifest
+        run: |
+          echo "# 🧬 Extension Build Manifest" > build/extensions/MANIFEST.md
+          echo "" >> build/extensions/MANIFEST.md
+          echo "**Built:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> build/extensions/MANIFEST.md
+          echo "**Extensions:** ${{ steps.count.outputs.count }}" >> build/extensions/MANIFEST.md
+          echo "**Commit:** ${{ github.sha }}" >> build/extensions/MANIFEST.md
+          echo "" >> build/extensions/MANIFEST.md
+          echo "| Extension | Size |" >> build/extensions/MANIFEST.md
+          echo "|-----------|------|" >> build/extensions/MANIFEST.md
+          for zip in build/extensions/*.zip; do
+            name=$(basename "$zip" .zip)
+            size=$(du -sh "$zip" | cut -f1)
+            echo "| $name | $size |" >> build/extensions/MANIFEST.md
+          done
+          cat build/extensions/MANIFEST.md
+
+      - name: Upload Extension Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: organism-extensions-${{ github.sha }}
+          path: build/extensions/
+          retention-days: 30
+
+      - name: Commit Manifest
+        run: |
+          git config user.name "organism-build-bot"
+          git config user.email "organism-build-bot[bot]@users.noreply.github.com"
+          cp build/extensions/MANIFEST.md docs/extension-manifest.md
+          git add docs/extension-manifest.md
+          git diff --cached --quiet || git commit -m "🧬 organism-build-bot: Updated extension manifest [${{ steps.count.outputs.count }} extensions]"
+          git push || echo "Nothing to push"

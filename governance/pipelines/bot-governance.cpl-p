@@ -1,0 +1,154 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# 🔄 BOT GOVERNANCE CPL-P PIPELINE — ITER GUBERNATIONIS
+# "Per gradus, ad ordinem." (Through steps, to order.)
+#
+# CPL-P (Cognitive Policy Language — Pipelines) for bot governance.
+# Defines the governance cycle executed on every bot event.
+# PROT-115 compliant (CPL-P sovereign pipeline protocol).
+#
+# Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+# ═══════════════════════════════════════════════════════════════════════════
+
+id: "pipeline://governance/bot_cycle"
+version: "1.0.0"
+language: "CPL-P"
+scc: 3.76
+
+meta:
+  name: "Bot Governance Cycle"
+  description: >
+    The governance cycle executed for every bot event. Collects state,
+    applies CPL-L laws, routes escalations, records outcomes in RIL,
+    and feeds data to the Meta Engine for fleet evolution proposals.
+  trigger: "bot_event"
+
+# ── Pipeline Steps ────────────────────────────────────────────────────────
+steps:
+  - id: "collect_state"
+    name: "Collect Bot State"
+    description: "Read the bot event payload and current organism state from living docs"
+    use: "governance.collect_bot_state"
+    inputs:
+      - "event.entity_id"
+      - "event.op"
+      - "event.context"
+    outputs:
+      - "state.bot_id"
+      - "state.organism_metrics"
+      - "state.living_docs_count"
+      - "state.risk_score"
+
+  - id: "apply_laws"
+    name: "Apply CPL-L Laws"
+    description: "Evaluate all applicable laws from governance/laws/bot-fleet.cpl-l"
+    use: "governance.apply_cpl_l"
+    inputs:
+      - "state"
+      - "laws_ref: governance://laws/bot-fleet"
+    outputs:
+      - "decisions.actions"
+      - "decisions.violations"
+      - "decisions.warnings"
+
+  - id: "execute_decisions"
+    name: "Execute Governance Decisions"
+    description: "Apply FORBID, WARN, REQUIRE, LOG, BLOCK actions from law evaluation"
+    use: "governance.execute_decisions"
+    inputs:
+      - "decisions"
+    outputs:
+      - "execution.results"
+      - "execution.blocked_ops"
+
+  - id: "record_ril"
+    name: "Record in RIL"
+    description: "Write all decisions and outcomes to the Reasoning Instruction Log"
+    use: "governance.write_ril"
+    inputs:
+      - "execution.results"
+      - "state"
+    outputs:
+      - "ril.entry_id"
+
+  - id: "route_escalations"
+    name: "Route Escalations"
+    description: "Send any ESCALATE decisions to the appropriate human or bot"
+    use: "governance.route_escalations"
+    inputs:
+      - "decisions.actions"
+      - "state.risk_score"
+    outputs:
+      - "escalation.sent"
+      - "escalation.target"
+
+  - id: "feed_meta_engine"
+    name: "Feed Meta Engine"
+    description: "Stream law evaluation stats to Meta Engine for fleet evolution proposals"
+    use: "governance.feed_meta_engine"
+    inputs:
+      - "decisions"
+      - "execution.results"
+      - "state.organism_metrics"
+    outputs:
+      - "meta.proposal_count"
+
+# ── Branches ──────────────────────────────────────────────────────────────
+branches:
+  - id: "if_high_risk"
+    description: "Escalate immediately when risk score exceeds threshold"
+    when: 'context.risk_score > 0.7'
+    then:
+      type: "ESCALATE"
+      target: "human://freddy"
+      urgency: "HIGH"
+      skip_steps: ["feed_meta_engine"]
+
+  - id: "if_secret_leak"
+    description: "Emergency stop on secret exposure — terminate pipeline and alert"
+    when: 'context.findings.contains("secret_leak")'
+    then:
+      type: "EMERGENCY_STOP"
+      target: "human://freddy"
+      urgency: "CRITICAL"
+      halt_all: true
+
+  - id: "if_release_blocked"
+    description: "When release-bot is blocked, log reason and propose remediation"
+    when: 'context.entity_id == "atlas://bot/organism-release-bot" && decisions.blocked == true'
+    then:
+      type: "PROPOSE_REMEDIATION"
+      target: "meta_engine"
+      proposal: "unblock_release_path"
+
+  - id: "if_learning_opportunity"
+    description: "When a bot triggers a WARN (not FORBID), route to learning-bot for analysis"
+    when: 'decisions.warnings.count > 0 && decisions.violations.count == 0'
+    then:
+      type: "NOTIFY"
+      target: "atlas://bot/organism-learning-bot"
+      message: "warn_pattern_detected"
+
+# ── Error Handling ────────────────────────────────────────────────────────
+on_error:
+  - action: "LOG"
+    target: "ril"
+    entry: "Pipeline error in {step.id}: {error.message}"
+  - action: "NOTIFY"
+    target: "human://freddy"
+    urgency: "MEDIUM"
+
+# ── Meta Engine Integration ───────────────────────────────────────────────
+meta_engine:
+  watches:
+    - metric: "law_block_rate_per_bot"
+      description: "Bots blocked too often → laws may be too strict"
+      threshold: 0.3
+      proposal: "relax_law"
+    - metric: "escalation_rate"
+      description: "High escalation rate → pipeline needs tuning"
+      threshold: 0.2
+      proposal: "tune_escalation_thresholds"
+    - metric: "warn_without_violation_rate"
+      description: "Frequent warnings never escalating → learning signal"
+      threshold: 0.5
+      proposal: "adjust_warning_thresholds"

@@ -1,0 +1,218 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# ⚖️ RULES OF PROCEDURE — REGULAE PROCEDENDI
+# "Ordo processus est fundamentum iustitiae."
+# (The order of process is the foundation of justice.)
+#
+# Instrument Type: PROCEDURAL + COMMITTEE
+# Hierarchy Level: 2 (below Constitutional Doctrine, above Personnel)
+# Scope: All committees, working groups, decision bodies, and automated agents
+# Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+# ═══════════════════════════════════════════════════════════════════════════
+
+id: "RULES_OF_PROCEDURE"
+version: "1.0.0"
+language: "CPL-L"
+instrument_type: "procedural"
+hierarchy_level: 2
+scc: 4.92
+prima_causa: true
+phi_coordinate: 1.618033988749895
+
+# ─────────────────────────────────────────────────────────────────────────
+# PART I — GENERAL PROVISIONS
+# ─────────────────────────────────────────────────────────────────────────
+
+general_provisions:
+  - rule: "RP-001"
+    title: "Scope and Application"
+    text: >
+      These Rules of Procedure apply to all decision-making bodies within the
+      Medina Organism, including but not limited to: the Governance Council,
+      Technical Committees, Research Working Groups, Safety Boards, Ethics
+      Panels, and all automated agents acting in a deliberative capacity.
+
+  - rule: "RP-002"
+    title: "Supremacy of Constitutional Instruments"
+    text: >
+      These Rules are subordinate to the PRIMA CAUSA doctrine and the
+      Civilization Laws (CPL-L). In case of conflict, constitutional
+      instruments prevail. No procedural rule may override a fundamental law.
+
+  - rule: "RP-003"
+    title: "Amendment Procedure"
+    text: >
+      Amendments require: (a) written proposal with rationale, (b) 7-day
+      consultation period, (c) two-thirds majority of the Governance Council,
+      (d) consistency check against PRIMA CAUSA by the Guardian Oracle.
+
+  - rule: "RP-004"
+    title: "Interpretation Authority"
+    text: >
+      Questions of interpretation shall be resolved by the Guardian Oracle
+      (governance/organism/guardian.ocl) with escalation to human://freddy
+      for matters of constitutional significance.
+
+# ─────────────────────────────────────────────────────────────────────────
+# PART II — COMMITTEE STRUCTURE AND COMPOSITION
+# ─────────────────────────────────────────────────────────────────────────
+
+committee_structure:
+  governance_council:
+    - rule: "RP-010"
+      title: "Composition of the Governance Council"
+      text: >
+        The Governance Council comprises: (a) the Sovereign Architect (human://freddy),
+        (b) the Guardian Oracle, (c) one representative from each active Working Group,
+        (d) the Safety Officer, (e) the Ethics Rapporteur.
+
+    - rule: "RP-011"
+      title: "Quorum"
+      text: >
+        Decisions require a quorum of φ⁻¹ (≈61.8%) of voting members present.
+        For constitutional amendments, full attendance is required.
+
+    - rule: "RP-012"
+      title: "Voting Procedures"
+      text: >
+        Ordinary decisions: simple majority. Procedural matters: show of hands.
+        Constitutional matters: two-thirds majority with recorded vote.
+        Safety-critical matters: unanimous consent required.
+
+  technical_committees:
+    - rule: "RP-020"
+      title: "Establishment of Technical Committees"
+      text: >
+        Technical Committees are established by the Governance Council to address
+        specific technical domains. Each committee has a defined mandate, timeline,
+        and reporting obligation.
+
+    - rule: "RP-021"
+      title: "Committee Mandates"
+      text: >
+        Active mandates: (a) Protocol Standards (PROT-*), (b) Runtime Architecture,
+        (c) Research Integrity, (d) Security & Safety, (e) Open Data & Publication,
+        (f) AI Ethics & Alignment, (g) Performance & Scaling.
+
+    - rule: "RP-022"
+      title: "Reporting Obligations"
+      text: >
+        Each committee reports to the Governance Council at intervals no greater
+        than one φ-cycle (≈1.618 sprints). Reports must include: progress metrics,
+        risk assessment, resource needs, and next-cycle objectives.
+
+  working_groups:
+    - rule: "RP-030"
+      title: "Ad Hoc Working Groups"
+      text: >
+        Working Groups may be established by any Technical Committee for
+        time-bounded tasks. Maximum duration: 3 φ-cycles. Extension requires
+        Governance Council approval.
+
+    - rule: "RP-031"
+      title: "Working Group Deliverables"
+      text: >
+        Every Working Group must produce: (a) a written report, (b) any code/artifacts
+        committed to the repository, (c) a protocol registration if new protocols
+        are created, (d) an impact assessment.
+
+# ─────────────────────────────────────────────────────────────────────────
+# PART III — DECISION-MAKING PROCEDURES
+# ─────────────────────────────────────────────────────────────────────────
+
+decision_procedures:
+  - rule: "RP-040"
+    title: "Proposal Submission"
+    text: >
+      Any member may submit a proposal. Proposals must include: title, rationale,
+      scope of change, impact assessment, and alignment with PRIMA CAUSA.
+      Proposals are submitted as pull requests with the 'governance-proposal' label.
+
+  - rule: "RP-041"
+    title: "Deliberation Period"
+    text: >
+      All proposals undergo a deliberation period of at least 3 days for ordinary
+      matters and 7 days for constitutional matters. During this period, any member
+      may submit written comments or amendments.
+
+  - rule: "RP-042"
+    title: "Consensus Seeking"
+    text: >
+      The preferred mode of decision-making is consensus. A decision is reached by
+      consensus when no member formally objects within the deliberation period.
+      If consensus cannot be reached, formal voting procedures apply.
+
+  - rule: "RP-043"
+    title: "Emergency Procedures"
+    text: >
+      In cases of imminent security threat, safety violation, or system compromise,
+      the Sovereign Architect or Guardian Oracle may take immediate protective action
+      without prior deliberation. Such actions must be ratified by the Governance
+      Council within 24 hours.
+
+  - rule: "RP-044"
+    title: "Record of Decisions"
+    text: >
+      All decisions are recorded in the governance audit trail
+      (governance-audit-trail registry). Records include: decision text, vote tally,
+      dissenting opinions, and implementation timeline.
+
+# ─────────────────────────────────────────────────────────────────────────
+# PART IV — AUTOMATED AGENT GOVERNANCE
+# ─────────────────────────────────────────────────────────────────────────
+
+agent_governance:
+  - rule: "RP-050"
+    title: "Agent Participation Rights"
+    text: >
+      Automated agents (Workers, Bots, Oracles) may participate in deliberation
+      by submitting analysis, recommendations, and impact assessments. They do not
+      hold voting rights but may request escalation to human decision-makers.
+
+  - rule: "RP-051"
+    title: "Agent Accountability"
+    text: >
+      Every agent action that modifies governance artifacts must be traceable to:
+      (a) the initiating protocol, (b) the authorizing law, (c) the responsible
+      committee, (d) the human oversight chain.
+
+  - rule: "RP-052"
+    title: "Agent Conflict Resolution"
+    text: >
+      When agents produce conflicting recommendations, the matter is escalated to
+      the relevant Technical Committee. If unresolved, it proceeds to the Governance
+      Council. The Law of Coherence (civilization.cpl-l) applies at all times.
+
+# ─────────────────────────────────────────────────────────────────────────
+# PART V — TRANSPARENCY AND ACCESS
+# ─────────────────────────────────────────────────────────────────────────
+
+transparency:
+  - rule: "RP-060"
+    title: "Public Access to Proceedings"
+    text: >
+      All Governance Council proceedings are public unless classified under the
+      Security exception (RP-062). Proceedings are published in the governance
+      audit trail within 48 hours.
+
+  - rule: "RP-061"
+    title: "Right to Information"
+    text: >
+      Any contributor may request information about any decision, its rationale,
+      and the process by which it was reached. Responses within 5 working days.
+
+  - rule: "RP-062"
+    title: "Security Classification"
+    text: >
+      Matters involving active security vulnerabilities, credentials, or ongoing
+      incident response may be classified. Classification requires Safety Officer
+      approval and must be reviewed for declassification every 30 days.
+
+# ─────────────────────────────────────────────────────────────────────────
+# PART VI — ENTRY INTO FORCE
+# ─────────────────────────────────────────────────────────────────────────
+
+entry_into_force:
+  effective_date: "2026-06-02"
+  adopted_by: "Governance Council"
+  authority: "PRIMA CAUSA + Civilization Laws"
+  review_cycle: "Annual (or upon constitutional amendment)"

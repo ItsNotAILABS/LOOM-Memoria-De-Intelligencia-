@@ -1,0 +1,18 @@
+{
+  "name": "@medina/ux-ai-console",
+  "version": "1.0.0",
+  "private": true,
+  "description": "MEDINA UX AI Console — Full User Experience Intelligence with Multi-Engine Mesh",
+  "author": "Alfredo Medina Hernandez | Medina Tech | Dallas, TX",
+  "license": "ISIL-1.0",
+  "scripts": {
+    "dev": "npx serve .",
+    "build": "echo 'Static PWA — no build required'"
+  },
+  "medina": {
+    "protocol": "PROT-582-611",
+    "frequency_hz": 1149851,
+    "workers": ["ux-ai-worker.js", "multi-engine-worker.js"],
+    "layer": 19
+  }
+}

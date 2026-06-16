@@ -1,0 +1,29 @@
+{
+  "name": "@medina/organism-cli",
+  "version": "1.0.0",
+  "description": "ORGANISMUS TERMINALIS — Sovereign terminal AI that auto-detects Chrome, builds and loads all 20 browser extensions unpacked. No manual steps. No GitHub Actions. The CLI IS the AI.",
+  "main": "src/index.js",
+  "bin": {
+    "organism": "src/index.js",
+    "medina": "src/index.js"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "auto": "node src/index.js auto",
+    "install-extensions": "node src/index.js install",
+    "validate": "node src/index.js validate",
+    "status": "node src/index.js status",
+    "serve": "node src/index.js serve",
+    "workers": "node src/index.js workers"
+  },
+  "keywords": [
+    "medina",
+    "organism",
+    "ai",
+    "terminal",
+    "chrome-extensions",
+    "sovereign"
+  ],
+  "author": "Alfredo Medina Hernandez | Medina Tech | Dallas, TX",
+  "license": "ISIL-1.0"
+}

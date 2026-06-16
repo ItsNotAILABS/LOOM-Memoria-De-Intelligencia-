@@ -1,0 +1,3 @@
+[console_scripts]
+solus = solus.cli.main:cli
+solus-serve = solus.server.app:run

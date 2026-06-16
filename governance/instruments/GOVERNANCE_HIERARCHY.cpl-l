@@ -1,0 +1,205 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# 📜 GOVERNANCE HIERARCHY — ORDO INSTRUMENTORUM
+# "Ex ordine, libertas. Ex libertate, innovatio."
+# (From order, freedom. From freedom, innovation.)
+#
+# This document defines the complete hierarchy of governance instruments
+# within the Medina Organism, their relationships, and precedence rules.
+#
+# Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+# ═══════════════════════════════════════════════════════════════════════════
+
+id: "GOVERNANCE_HIERARCHY"
+version: "1.0.0"
+language: "CPL-L"
+scc: 4.95
+prima_causa: true
+
+# ─────────────────────────────────────────────────────────────────────────
+# HIERARCHY OF INSTRUMENTS (highest authority first)
+# ─────────────────────────────────────────────────────────────────────────
+#
+#  ┌─────────────────────────────────────────────────────────────────┐
+#  │  LEVEL 1 — CONSTITUTIONAL                                       │
+#  │  ┌─────────────────────────────────────────────────────────┐    │
+#  │  │  PRIMA CAUSA (Geometry Key Doctrine)                     │    │
+#  │  │  Civilization Laws (civilization.cpl-l)                   │    │
+#  │  │  Memory Laws (memory.cpl-l)                              │    │
+#  │  │  Bot Fleet Laws (bot-fleet.cpl-l)                        │    │
+#  │  └─────────────────────────────────────────────────────────┘    │
+#  ├─────────────────────────────────────────────────────────────────┤
+#  │  LEVEL 2 — PROCEDURAL                                           │
+#  │  ┌─────────────────────────────────────────────────────────┐    │
+#  │  │  Rules of Procedure (rules-of-procedure.cpl-l)           │    │
+#  │  └─────────────────────────────────────────────────────────┘    │
+#  ├─────────────────────────────────────────────────────────────────┤
+#  │  LEVEL 3 — PERSONNEL / ETHICS / OPENNESS                       │
+#  │  ┌─────────────────────────────────────────────────────────┐    │
+#  │  │  Code of Conduct (code-of-conduct.cpl-l)                 │    │
+#  │  │  Open Data Policy (open-data-policy.cpl-l)               │    │
+#  │  └─────────────────────────────────────────────────────────┘    │
+#  ├─────────────────────────────────────────────────────────────────┤
+#  │  LEVEL 4 — SAFETY (cross-cutting, special authority)            │
+#  │  ┌─────────────────────────────────────────────────────────┐    │
+#  │  │  Safety Rules & Safety Objectives (safety-rules.cpl-l)   │    │
+#  │  └─────────────────────────────────────────────────────────┘    │
+#  ├─────────────────────────────────────────────────────────────────┤
+#  │  LEVEL 5 — OPERATIONAL                                          │
+#  │  ┌─────────────────────────────────────────────────────────┐    │
+#  │  │  Protocols (PROT-001 to PROT-641+)                       │    │
+#  │  │  Organism Control Language (*.ocl)                        │    │
+#  │  │  Pipelines (*.cpl-p)                                     │    │
+#  │  │  Worker Specifications                                    │    │
+#  │  └─────────────────────────────────────────────────────────┘    │
+#  └─────────────────────────────────────────────────────────────────┘
+#
+
+hierarchy:
+  - level: 1
+    name: "Constitutional"
+    description: "Foundational instruments that define the organism's identity, purpose, and inviolable principles"
+    instruments:
+      - id: "PRIMA_CAUSA"
+        file: "doctrine/PRIMA_CAUSA.md"
+        description: "Geometry Key Doctrine — the encoding that identifies all entities"
+        authority: "Supreme — no instrument may contradict"
+
+      - id: "CIVILIZATION_LAWS"
+        file: "governance/laws/civilization.cpl-l"
+        description: "Laws governing all runtime behavior: coherence, reversibility, explainability, containment"
+        authority: "Fundamental — applies to all subjects"
+
+      - id: "MEMORY_LAWS"
+        file: "governance/laws/memory.cpl-l"
+        description: "Laws governing canonical memory: append-only, integrity, access"
+        authority: "Fundamental — applies to all memory operations"
+
+      - id: "BOT_FLEET_LAWS"
+        file: "governance/laws/bot-fleet.cpl-l"
+        description: "Laws governing the bot fleet: registration, behavior, lifecycle"
+        authority: "Fundamental — applies to all automated agents"
+
+  - level: 2
+    name: "Procedural"
+    description: "Instruments defining how decisions are made, by whom, and through what process"
+    instruments:
+      - id: "RULES_OF_PROCEDURE"
+        file: "governance/instruments/rules-of-procedure.cpl-l"
+        description: "Committee structure, voting, deliberation, amendment, agent governance"
+        authority: "Governs all decision-making processes"
+
+  - level: 3
+    name: "Personnel / Ethics / Openness"
+    description: "Instruments defining behavioral standards, ethical obligations, and transparency requirements"
+    instruments:
+      - id: "CODE_OF_CONDUCT"
+        file: "governance/instruments/code-of-conduct.cpl-l"
+        description: "Values, behavioral standards, AI ethics, enforcement"
+        authority: "Governs all participant behavior (human and AI)"
+
+      - id: "OPEN_DATA_POLICY"
+        file: "governance/instruments/open-data-policy.cpl-l"
+        description: "FAIR principles, open access, exemptions, publication, compliance"
+        authority: "Governs all data and knowledge outputs"
+
+  - level: 4
+    name: "Safety"
+    description: "Cross-cutting safety instrument with special emergency authority"
+    instruments:
+      - id: "SAFETY_RULES"
+        file: "governance/instruments/safety-rules.cpl-l"
+        description: "Safety objectives, safety rules, incident response, safety governance"
+        authority: "Cross-cutting — may temporarily override Level 2-3 in emergencies"
+    special_provisions:
+      - "Safety Rules may invoke Emergency Procedures (RP-043) to act before deliberation"
+      - "Post-hoc ratification by Governance Council required within 24 hours"
+      - "Cannot override Level 1 constitutional instruments"
+
+  - level: 5
+    name: "Operational"
+    description: "Day-to-day operational instruments implementing higher-level requirements"
+    instruments:
+      - id: "PROTOCOLS"
+        file: "organism-cli/web/protocol-papers.js + governance/protocols/"
+        description: "Individual protocol specifications (PROT-001 to PROT-641+)"
+        authority: "Operational — must comply with all higher instruments"
+
+      - id: "ORGANISM_CONTROL"
+        file: "governance/organism/*.ocl"
+        description: "Runtime control definitions for bots, oracles, guardians"
+        authority: "Operational — implements Laws and Rules"
+
+      - id: "PIPELINES"
+        file: "governance/pipelines/*.cpl-p"
+        description: "Automated pipeline definitions"
+        authority: "Operational — governed by Safety Rules"
+
+      - id: "WORKER_SPECIFICATIONS"
+        file: "organism-cli/web/*-worker.js"
+        description: "Individual worker behavior specifications"
+        authority: "Operational — must hold SVA certification"
+
+# ─────────────────────────────────────────────────────────────────────────
+# PRECEDENCE RULES
+# ─────────────────────────────────────────────────────────────────────────
+
+precedence_rules:
+  - rule: "PR-001"
+    title: "Hierarchy Supremacy"
+    text: "Higher-level instruments always prevail over lower-level instruments in case of conflict."
+
+  - rule: "PR-002"
+    title: "Specific Over General"
+    text: "Within the same level, a specific provision prevails over a general one."
+
+  - rule: "PR-003"
+    title: "Later Over Earlier"
+    text: "Within the same level and specificity, a later-adopted provision prevails over an earlier one."
+
+  - rule: "PR-004"
+    title: "Safety Emergency Exception"
+    text: "Safety Rules may temporarily override Level 2-3 instruments under Emergency Procedures."
+
+  - rule: "PR-005"
+    title: "Human Override"
+    text: "human://freddy retains ultimate authority over all instruments and may override any provision."
+
+# ─────────────────────────────────────────────────────────────────────────
+# INSTRUMENT RELATIONSHIPS MAP
+# ─────────────────────────────────────────────────────────────────────────
+
+relationships:
+  constitutional_to_procedural:
+    - "PRIMA CAUSA → defines identity constraints for Rules of Procedure"
+    - "Civilization Laws → provide the legal foundation that Rules operationalize"
+
+  procedural_to_ethics:
+    - "Rules of Procedure → define how Code of Conduct is enforced"
+    - "Rules of Procedure → define how Open Data Policy is administered"
+
+  safety_cross_cutting:
+    - "Safety Rules → operationalize Law of Containment"
+    - "Safety Rules → operationalize Law of Reversibility"
+    - "Safety Rules → interact with Code of Conduct (Sabotage prohibition)"
+    - "Safety Rules → interact with Open Data Policy (Security exemption)"
+    - "Safety Rules → govern all Operational instruments"
+
+  ethics_to_openness:
+    - "Code of Conduct → Intellectual Honesty supports Open Data principles"
+    - "Open Data Policy → Privacy exemption protects Code of Conduct rights"
+
+# ─────────────────────────────────────────────────────────────────────────
+# COMPLETENESS DECLARATION
+# ─────────────────────────────────────────────────────────────────────────
+
+completeness:
+  date: "2026-06-02"
+  coverage:
+    constitutional: "PRIMA CAUSA + 3 Law sets"
+    procedural: "Rules of Procedure (62 rules)"
+    personnel_ethics: "Code of Conduct (6 values, 6 prohibitions, 5 AI ethics, graduated sanctions)"
+    openness: "Open Data Policy (5 principles, 8 output categories, 5 exemptions)"
+    safety: "Safety Rules (7 objectives, 16 rules, incident response, safety governance)"
+  total_governance_instruments: 8
+  total_rules: "120+"
+  phi_coherence: "All instruments use φ-based timing, quorum (φ⁻¹ = 61.8%), and coordinates"

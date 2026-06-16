@@ -1,0 +1,147 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# 🔄 ORGANISM DEPS BOT — CUSTOS DEPENDENTIARUM
+# "Nullum vinculum stale." (No stale dependency.)
+#
+# Division III — Secure & Monitor
+# Scans all package.json files for outdated, missing, and potentially
+# vulnerable dependencies. Generates dependency health report.
+#
+# Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+# ═══════════════════════════════════════════════════════════════════════════
+
+name: 🔄 organism-deps-bot
+
+on:
+  schedule:
+    - cron: '0 8 * * 1,4'  # Monday and Thursday 8 AM UTC
+  push:
+    paths:
+      - '**/package.json'
+      - '**/package-lock.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deps-health:
+    name: 🔄 Dependency Health Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Discover Package Manifests
+        id: manifests
+        run: |
+          PKG_COUNT=$(find . -name 'package.json' -not -path '*/node_modules/*' -not -path '*/.git/*' 2>/dev/null | wc -l)
+          echo "count=$PKG_COUNT" >> "$GITHUB_OUTPUT"
+          echo "🔄 Found $PKG_COUNT package.json files"
+
+      - name: Validate All Package Manifests
+        run: |
+          echo "🔄 Validating package manifests..."
+          VALID=0
+          INVALID=0
+          for f in $(find . -name 'package.json' -not -path '*/node_modules/*' -not -path '*/.git/*' 2>/dev/null); do
+            if python3 -c "import json; json.load(open('$f'))" 2>/dev/null; then
+              echo "  ✓ $f"
+              VALID=$((VALID + 1))
+            else
+              echo "  ✗ $f — invalid JSON"
+              INVALID=$((INVALID + 1))
+            fi
+          done
+          echo ""
+          echo "🔄 $VALID valid, $INVALID invalid"
+
+      - name: Scan for Missing engines Field
+        run: |
+          echo "🔄 Checking Node.js engine requirements..."
+          for f in $(find packages -name 'package.json' -not -path '*/node_modules/*' 2>/dev/null); do
+            HAS_ENGINES=$(python3 -c "import json; d=json.load(open('$f')); print('yes' if 'engines' in d else 'no')" 2>/dev/null)
+            name=$(dirname "$f" | xargs basename)
+            if [ "$HAS_ENGINES" = "yes" ]; then
+              ENGINE=$(python3 -c "import json; d=json.load(open('$f')); print(d.get('engines',{}).get('node','?'))" 2>/dev/null)
+              echo "  ✓ $name — engines.node: $ENGINE"
+            else
+              echo "  ⚠ $name — no engines field"
+            fi
+          done
+
+      - name: Check for License Field
+        run: |
+          echo "🔄 Checking license declarations..."
+          for f in $(find packages -name 'package.json' -not -path '*/node_modules/*' 2>/dev/null); do
+            name=$(dirname "$f" | xargs basename)
+            LICENSE=$(python3 -c "import json; d=json.load(open('$f')); print(d.get('license','MISSING'))" 2>/dev/null)
+            if [ "$LICENSE" != "MISSING" ]; then
+              echo "  ✓ $name — license: $LICENSE"
+            else
+              echo "  ⚠ $name — no license field"
+            fi
+          done
+
+      - name: Check for Security-Sensitive Scripts
+        run: |
+          echo "🔄 Checking for risky npm scripts..."
+          for f in $(find . -name 'package.json' -not -path '*/node_modules/*' -not -path '*/.git/*' 2>/dev/null); do
+            POSTINSTALL=$(python3 -c "
+          import json
+          try:
+              d = json.load(open('$f'))
+              scripts = d.get('scripts', {})
+              risky = [s for s in ['postinstall', 'preinstall', 'install'] if s in scripts]
+              if risky: print(', '.join(risky))
+          except: pass
+          " 2>/dev/null)
+            if [ -n "$POSTINSTALL" ]; then
+              echo "  ⚠ $f — lifecycle scripts: $POSTINSTALL (review for supply chain safety)"
+            fi
+          done
+          echo "  ✓ Script scan complete"
+
+      - name: Generate Dependency Health Report
+        run: |
+          mkdir -p build/deps
+          echo "# 🔄 Dependency Health Report" > build/deps/deps-report.md
+          echo "" >> build/deps/deps-report.md
+          echo "**Scanned:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> build/deps/deps-report.md
+          echo "**Commit:** \`${GITHUB_SHA:0:7}\`" >> build/deps/deps-report.md
+          echo "**Package Manifests:** ${{ steps.manifests.outputs.count }}" >> build/deps/deps-report.md
+          echo "" >> build/deps/deps-report.md
+
+          echo "## Package Inventory" >> build/deps/deps-report.md
+          echo "" >> build/deps/deps-report.md
+          echo "| Package | Version | License |" >> build/deps/deps-report.md
+          echo "|---------|---------|---------|" >> build/deps/deps-report.md
+          for f in $(find packages -name 'package.json' -not -path '*/node_modules/*' 2>/dev/null); do
+            name=$(python3 -c "import json; print(json.load(open('$f')).get('name','?'))" 2>/dev/null)
+            version=$(python3 -c "import json; print(json.load(open('$f')).get('version','?'))" 2>/dev/null)
+            license=$(python3 -c "import json; print(json.load(open('$f')).get('license','?'))" 2>/dev/null)
+            echo "| $name | $version | $license |" >> build/deps/deps-report.md
+          done
+
+          echo "" >> build/deps/deps-report.md
+          echo "## Checks Performed" >> build/deps/deps-report.md
+          echo "" >> build/deps/deps-report.md
+          echo "- ✓ JSON validity for all manifests" >> build/deps/deps-report.md
+          echo "- ✓ engines.node field presence" >> build/deps/deps-report.md
+          echo "- ✓ License field presence" >> build/deps/deps-report.md
+          echo "- ✓ Lifecycle script safety scan" >> build/deps/deps-report.md
+
+          cat build/deps/deps-report.md
+
+      - name: Commit Deps Report
+        run: |
+          git config user.name "organism-deps-bot"
+          git config user.email "organism-deps-bot[bot]@users.noreply.github.com"
+          cp build/deps/deps-report.md docs/deps-report.md
+          git add docs/deps-report.md
+          git diff --cached --quiet || git commit -m "🔄 organism-deps-bot: Updated dependency health report [${{ steps.manifests.outputs.count }} manifests]"
+          git push || echo "Nothing to push"

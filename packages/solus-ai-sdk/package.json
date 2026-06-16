@@ -1,0 +1,21 @@
+{
+  "name": "@solus/ai-sdk-pages",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SOLUS AI — Sovereign Open Local Universal System — Dynamic documentation pages (Node 20)",
+  "author": "Alfredo 'Freddy' Medina Hernandez | Medina Tech | Dallas, TX",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "serve": "node server.mjs",
+    "clean": "rm -rf _site"
+  },
+  "devDependencies": {
+    "marked": "^12.0.0",
+    "highlight.js": "^11.9.0"
+  }
+}
