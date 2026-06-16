@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEDINA Platform — Sovereign Memory Intelligence</title>
+    <style>
+        :root {
+            --primary: #7c3aed;
+            --secondary: #ec4899;
+            --dark: #1f2937;
+            --light: #f3f4f6;
+            --success: #10b981;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        header {
+            text-align: center;
+            padding: 3rem 0;
+        }
+        
+        .logo {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+        
+        .tagline {
+            font-size: 1.25rem;
+            color: #94a3b8;
+            margin-bottom: 2rem;
+        }
+        
+        .status-bar {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+        }
+        
+        .status-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .status-item .label {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        
+        .status-item .value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--success);
+        }
+        
+        .command-section {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .command-section h2 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        .command-input {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .command-input input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            font-size: 1rem;
+            font-family: 'Monaco', 'Courier New', monospace;
+        }
+        
+        .command-input input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .command-input button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .command-input button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(124, 58, 237, 0.3);
+        }
+        
+        .output {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Monaco', 'Courier New', monospace;
+            min-height: 150px;
+            color: #a5f3fc;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary);
+        }
+        
+        .feature-card h3 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .feature-card p {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        
+        .quick-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+        
+        .quick-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: transparent;
+            color: #fff;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+        
+        .quick-btn:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+        
+        footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .live-indicator {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 0.5rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="logo">MEDINA</h1>
+            <p class="tagline">Sovereign Memory-Operating Intelligence on ICP</p>
+            
+            <div class="status-bar">
+                <div class="status-item">
+                    <div class="label">Status</div>
+                    <div class="value"><span class="live-indicator"></span>Online</div>
+                </div>
+                <div class="status-item">
+                    <div class="label">Current Beat</div>
+                    <div class="value" id="currentBeat">0</div>
+                </div>
+                <div class="status-item">
+                    <div class="label">Memories</div>
+                    <div class="value" id="memoryCount">0</div>
+                </div>
+                <div class="status-item">
+                    <div class="label">Proposals</div>
+                    <div class="value" id="proposalCount">0</div>
+                </div>
+            </div>
+        </header>
+        
+        <section class="command-section">
+            <h2>Universal Chat Control</h2>
+            <div class="command-input">
+                <input type="text" id="commandInput" placeholder="/memory find important notes" autocomplete="off">
+                <button id="executeBtn">Execute</button>
+            </div>
+            <div class="quick-actions">
+                <button class="quick-btn" data-cmd="/status">Status</button>
+                <button class="quick-btn" data-cmd="/tick">Tick</button>
+                <button class="quick-btn" data-cmd="/memory map">Memory Map</button>
+                <button class="quick-btn" data-cmd="/govern status">Governance</button>
+                <button class="quick-btn" data-cmd="/help">Help</button>
+            </div>
+            <div class="output" id="output">MEDINA Platform Ready.
+Type a command or click a quick action to begin.
+
+Available Commands:
+  /memory find &lt;query&gt;     — Search memories
+  /memory pin &lt;id&gt;         — Pin a memory
+  /memory map              — View memory topology
+  /govern status           — Governance status
+  /govern propose &lt;title&gt;  — Create proposal
+  /status                  — Platform status
+  /tick                    — Execute platform tick
+  /help                    — Show help</div>
+        </section>
+        
+        <div class="features">
+            <div class="feature-card">
+                <h3>🏛️ Memory Temple</h3>
+                <p>Toroidal geometry memory workspace with lineage tracking, salience-based retrieval, and beat-synchronized operations.</p>
+            </div>
+            <div class="feature-card">
+                <h3>📜 Constitution</h3>
+                <p>Non-collapsible doctrine hierarchy from Absolute to Product. RECITAL_PLUS_ONE governs all state evolution.</p>
+            </div>
+            <div class="feature-card">
+                <h3>💓 Heartbeat</h3>
+                <p>Beat-driven orchestration with cadence classes, instruction budgets, and event-driven task execution.</p>
+            </div>
+            <div class="feature-card">
+                <h3>⚖️ Governance</h3>
+                <p>Proposal-based governance with voting, approval workflows, and Gate A/B/C enforcement.</p>
+            </div>
+            <div class="feature-card">
+                <h3>🔐 Sovereign Security</h3>
+                <p>ICP canister security with stable storage, principal-based access control, and projection safety.</p>
+            </div>
+            <div class="feature-card">
+                <h3>🌐 Decentralized</h3>
+                <p>Running on the Internet Computer Protocol with perpetual operation and no central point of failure.</p>
+            </div>
+        </div>
+        
+        <footer>
+            <p>MEDINA V1 — Sovereign Memory-Operating Intelligence</p>
+            <p>Running on <a href="https://internetcomputer.org" target="_blank">Internet Computer</a></p>
+        </footer>
+    </div>
+    
+    <script type="module">
+        // This will be replaced with actual canister interaction when deployed
+        // For now, provides a demo interface
+        
+        const commandInput = document.getElementById('commandInput');
+        const executeBtn = document.getElementById('executeBtn');
+        const output = document.getElementById('output');
+        const quickBtns = document.querySelectorAll('.quick-btn');
+        
+        let beat = 0;
+        let memories = 0;
+        let proposals = 0;
+        
+        function updateStats() {
+            document.getElementById('currentBeat').textContent = beat;
+            document.getElementById('memoryCount').textContent = memories;
+            document.getElementById('proposalCount').textContent = proposals;
+        }
+        
+        async function executeCommand(cmd) {
+            const timestamp = new Date().toISOString();
+            output.textContent += `\n\n> ${cmd}\n`;
+            
+            // Simulate command processing
+            // In production, this calls the actual canister
+            try {
+                // Try to import and use the canister
+                const { medina_backend } = await import('../declarations/medina_backend/index.js');
+                const result = await medina_backend.execute(cmd);
+                
+                if (result.success) {
+                    output.textContent += `✓ ${result.output}`;
+                } else {
+                    output.textContent += `✗ Error: ${result.error || 'Unknown error'}`;
+                }
+                
+                // Update stats
+                const status = await medina_backend.status();
+                beat = Number(status.current_beat);
+                memories = Number(status.total_memories);
+                proposals = Number(status.total_proposals);
+                updateStats();
+                
+            } catch (e) {
+                // Fallback demo mode
+                if (cmd === '/status') {
+                    output.textContent += `✓ Platform: MEDINA V1 ICP (Demo Mode)`;
+                } else if (cmd === '/tick') {
+                    beat++;
+                    output.textContent += `✓ Tick executed. Beat: ${beat}`;
+                } else if (cmd === '/memory map') {
+                    output.textContent += `✓ Memory Temple: ${memories} memories, 0 rings, 0 pinned`;
+                } else if (cmd === '/govern status') {
+                    output.textContent += `✓ Governance: ${proposals} proposals, 0 pending, 0 approved`;
+                } else if (cmd === '/help') {
+                    output.textContent += `✓ Commands: /memory find|pin|map, /govern status|propose, /status, /tick, /help`;
+                } else if (cmd.startsWith('/memory find')) {
+                    output.textContent += `✓ Found 0 memories (deploy canister to enable full functionality)`;
+                } else if (cmd.startsWith('/govern propose')) {
+                    proposals++;
+                    output.textContent += `✓ Proposal created (Demo Mode)`;
+                } else {
+                    output.textContent += `Demo mode: Canister not deployed. Run 'dfx deploy' to enable full functionality.`;
+                }
+                updateStats();
+            }
+            
+            // Auto-scroll to bottom
+            output.scrollTop = output.scrollHeight;
+        }
+        
+        executeBtn.addEventListener('click', () => {
+            const cmd = commandInput.value.trim();
+            if (cmd) {
+                executeCommand(cmd);
+                commandInput.value = '';
+            }
+        });
+        
+        commandInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                executeBtn.click();
+            }
+        });
+        
+        quickBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const cmd = btn.dataset.cmd;
+                commandInput.value = cmd;
+                executeBtn.click();
+            });
+        });
+        
+        // Initial status update
+        updateStats();
+    </script>
+</body>
+</html>
