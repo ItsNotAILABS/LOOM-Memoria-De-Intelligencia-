@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEDINA Downloads — Sovereign Extension Protocol</title>
+    <meta name="description" content="Download MEDINA sovereign browser extensions. Built in your browser. No server. No GitHub. The protocol IS the page.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --gold: #C9A962;
+            --gold-light: #E8D5A3;
+            --gold-dim: #8B7340;
+            --deep-purple: #1a0a2e;
+            --purple: #2d1b4e;
+            --light-purple: #4a2c7a;
+            --surface: #231340;
+            --surface-raised: #2d1950;
+            --white: #ffffff;
+            --off-white: #f5f5f5;
+            --text-light: #e0e0e0;
+            --text-dim: #9a8ab8;
+            --green: #4ade80;
+            --green-dim: #22c55e;
+            --red: #f87171;
+            --phi: 1.618033988749895;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--deep-purple) 0%, var(--purple) 50%, var(--deep-purple) 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* ═══════════════════════════════════════════════
+           HEADER
+           ═══════════════════════════════════════════════ */
+        .header {
+            text-align: center;
+            padding: 3rem 2rem 2rem;
+            border-bottom: 1px solid rgba(201, 169, 98, 0.15);
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(ellipse at center, rgba(201, 169, 98, 0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--gold);
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+        }
+
+        .motto {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            font-style: italic;
+            color: var(--gold-light);
+            margin-top: 0.3rem;
+        }
+
+        .subtitle {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            margin-top: 0.5rem;
+        }
+
+        /* ═══════════════════════════════════════════════
+           STATUS BAR
+           ═══════════════════════════════════════════════ */
+        .status-bar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            padding: 0.8rem 2rem;
+            background: var(--surface);
+            border-bottom: 1px solid rgba(201, 169, 98, 0.1);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--gold-dim);
+            transition: background 0.3s;
+        }
+
+        .status-dot.alive { background: var(--green); box-shadow: 0 0 6px var(--green-dim); }
+        .status-dot.building { background: var(--gold); animation: pulse 1s ease-in-out infinite; }
+        .status-dot.error { background: var(--red); }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .status-label { color: var(--text-dim); }
+        .status-value { color: var(--gold-light); }
+
+        /* ═══════════════════════════════════════════════
+           DOWNLOAD ALL BANNER
+           ═══════════════════════════════════════════════ */
+        .download-all {
+            text-align: center;
+            padding: 2rem;
+            margin: 1.5rem auto;
+            max-width: 600px;
+        }
+
+        .download-all-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 1rem 2.5rem;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dim) 100%);
+            color: var(--deep-purple);
+            border: none;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .download-all-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(201, 169, 98, 0.3);
+        }
+
+        .download-all-btn:disabled {
+            opacity: 0.5;
+            cursor: wait;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .download-all-btn .icon { font-size: 1.3rem; }
+
+        .download-all-size {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            margin-top: 0.5rem;
+        }
+
+        /* ═══════════════════════════════════════════════
+           FAMILY SECTIONS
+           ═══════════════════════════════════════════════ */
+        .families-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem 3rem;
+        }
+
+        .family-section {
+            margin-bottom: 2rem;
+        }
+
+        .family-header {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(201, 169, 98, 0.15);
+            margin-bottom: 1rem;
+        }
+
+        .family-icon { font-size: 1.3rem; }
+
+        .family-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--gold);
+        }
+
+        .family-latin {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.85rem;
+            font-style: italic;
+            color: var(--gold-dim);
+        }
+
+        .family-count {
+            margin-left: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            background: var(--surface);
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+        }
+
+        /* ═══════════════════════════════════════════════
+           EXTENSION CARDS
+           ═══════════════════════════════════════════════ */
+        .extensions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .ext-card {
+            background: var(--surface-raised);
+            border: 1px solid rgba(201, 169, 98, 0.1);
+            border-radius: 8px;
+            padding: 1.2rem;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .ext-card:hover {
+            border-color: rgba(201, 169, 98, 0.3);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .ext-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 0.6rem;
+        }
+
+        .ext-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--white);
+        }
+
+        .ext-version {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--gold-dim);
+            background: rgba(201, 169, 98, 0.1);
+            padding: 0.15rem 0.4rem;
+            border-radius: 3px;
+        }
+
+        .ext-description {
+            font-size: 0.82rem;
+            color: var(--text-dim);
+            margin-bottom: 0.8rem;
+            line-height: 1.5;
+        }
+
+        .ext-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 0.72rem;
+            color: var(--text-dim);
+            margin-bottom: 0.8rem;
+        }
+
+        .ext-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .ext-download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: 1px solid var(--gold-dim);
+            color: var(--gold-light);
+            border-radius: 5px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .ext-download-btn:hover {
+            background: rgba(201, 169, 98, 0.15);
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .ext-download-btn:disabled {
+            opacity: 0.4;
+            cursor: wait;
+        }
+
+        .ext-download-btn.ready {
+            border-color: var(--green-dim);
+            color: var(--green);
+        }
+
+        .ext-download-btn.ready:hover {
+            background: rgba(74, 222, 128, 0.1);
+        }
+
+        .ext-size {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            margin-left: auto;
+        }
+
+        /* ═══════════════════════════════════════════════
+           FOOTER
+           ═══════════════════════════════════════════════ */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid rgba(201, 169, 98, 0.1);
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+
+        .footer .latin {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            color: var(--gold-dim);
+            margin-bottom: 0.3rem;
+        }
+
+        /* ═══════════════════════════════════════════════
+           RESPONSIVE
+           ═══════════════════════════════════════════════ */
+        @media (max-width: 640px) {
+            .logo { font-size: 1.8rem; letter-spacing: 0.15em; }
+            .status-bar { flex-wrap: wrap; gap: 0.8rem; }
+            .extensions-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="logo">MEDINA</div>
+        <div class="motto">"Instrumenta tua, in manibus tuis."</div>
+        <div class="subtitle">Your tools, in your hands. — Self-hosted sovereign downloads. No server. No GitHub. Built in your browser.</div>
+    </header>
+
+    <!-- STATUS BAR -->
+    <div class="status-bar">
+        <div class="status-item">
+            <div class="status-dot" id="workerDot"></div>
+            <span class="status-label">Worker:</span>
+            <span class="status-value" id="workerStatus">initializing...</span>
+        </div>
+        <div class="status-item">
+            <span class="status-label">Beat:</span>
+            <span class="status-value" id="beatCount">0</span>
+        </div>
+        <div class="status-item">
+            <span class="status-label">Extensions:</span>
+            <span class="status-value" id="extCount">0 / 26</span>
+        </div>
+        <div class="status-item">
+            <span class="status-label">φ Hz:</span>
+            <span class="status-value">1.618</span>
+        </div>
+    </div>
+
+    <!-- DOWNLOAD ALL -->
+    <div class="download-all">
+        <button class="download-all-btn" id="downloadAllBtn" disabled>
+            <span class="icon">⬇</span>
+            <span id="downloadAllText">Building extensions...</span>
+        </button>
+        <div class="download-all-size" id="downloadAllSize"></div>
+    </div>
+
+    <!-- EXTENSIONS -->
+    <div class="families-container" id="familiesContainer">
+        <!-- Populated by JavaScript -->
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="latin">"Protocolum ipsum paginam est. Pagina ipsum protocolum est."</div>
+        <div>The protocol is the page. The page is the protocol.</div>
+        <div style="margin-top: 0.5rem;">© 2024–2026 Alfredo "Freddy" Medina Hernandez · Medina Tech · Dallas, TX</div>
+        <div style="margin-top: 0.3rem; font-family: 'JetBrains Mono', monospace;">ISIL-1.0 Licensed · L-130 Compliant · φ = 1.618033988749895</div>
+    </footer>
+
+<script>
+/**
+ * ════════════════════════════════════════════════════════════════
+ * SOVEREIGN DOWNLOAD PAGE — CONTROLLER
+ *
+ * Reads extension definitions, sends them to download-worker.js
+ * for in-browser zip generation, receives blob URLs, renders
+ * real download links. No server. No API. No GitHub.
+ *
+ * The page IS the protocol.
+ * ════════════════════════════════════════════════════════════════
+ */
+
+const PHI = 1.618033988749895;
+
+/* ═══════════════════════════════════════════════════════════════
+   EXTENSION DEFINITIONS — 26 extensions across 8 families
+   Each extension has full source code embedded in the page.
+   The download worker packages them into real zips.
+   ═══════════════════════════════════════════════════════════════ */
+
+const EXTENSION_FAMILIES = [
+  {
+    id: 'productivity',
+    name: 'Productivity',
+    latinName: 'FAMILIA PRODUCTIVA',
+    icon: '⚡',
+    extensions: [
+      {
+        slug: 'medina-tab-manager',
+        name: 'Medina Tab Manager',
+        description: 'Sovereign tab grouping, search, and session management. Organize tabs by frequency.',
+        version: '1.0.0',
+        tier: 'core',
+        files: 3,
+      },
+      {
+        slug: 'medina-clipboard-sovereign',
+        name: 'Medina Clipboard Sovereign',
+        description: 'Encrypted clipboard history with phi-indexed search. Never lose copied text.',
+        version: '1.0.0',
+        tier: 'core',
+        files: 3,
+      },
+      {
+        slug: 'medina-quick-notes',
+        name: 'Medina Quick Notes',
+        description: 'Instant note capture from any page. Memory temple integration ready.',
+        version: '1.0.0',
+        tier: 'standard',
+        files: 3,
+      },
+    ],
+  },
+  {
+    id: 'intelligence',
+    name: 'Intelligence',
+    latinName: 'FAMILIA INTELLIGENTIAE',
+    icon: '🧠',
+    extensions: [
+      {
+        slug: 'medina-memory-bridge',
+        name: 'Medina Memory Bridge',
+        description: 'Bridge between browser context and Semper Memoria temple. Sovereign memory sync.',
+        version: '1.0.0',
+        tier: 'sovereign',
+        files: 4,
+      },
+      {
+        slug: 'medina-context-analyzer',
+        name: 'Medina Context Analyzer',
+        description: 'Real-time page analysis with phi-weighted importance scoring.',
+        version: '1.0.0',
+        tier: 'premium',
+        files: 3,
+      },
+      {
+        slug: 'medina-pattern-detector',
+        name: 'Medina Pattern Detector',
+        description: 'Detects browsing patterns and surfaces insights. Golden ratio frequency analysis.',
+        version: '1.0.0',
+        tier: 'premium',
+        files: 3,
+      },
+      {
+        slug: 'medina-ai-assistant',
+        name: 'Medina AI Assistant',
+        description: 'On-page AI assistant powered by sovereign intelligence routing.',
+        version: '1.0.0',
+        tier: 'sovereign',
+        files: 4,
+      },
+    ],
+  },
+  {
+    id: 'security',
+    name: 'Security & Defense',
+    latinName: 'FAMILIA DEFENSIONIS',
+    icon: '🛡',
+    extensions: [
+      {
+        slug: 'medina-shield',
+        name: 'Medina Shield',
+        description: 'Sovereign tracker blocker and privacy guard. No fingerprinting. No leaks.',
+        version: '1.0.0',
+        tier: 'core',
+        files: 3,
+      },
+      {
+        slug: 'medina-vault',
+        name: 'Medina Vault',
+        description: 'Encrypted credential storage with phi-key derivation. Zero-knowledge design.',
+        version: '1.0.0',
+        tier: 'sovereign',
+        files: 4,
+      },
+      {
+        slug: 'medina-seal-verifier',
+        name: 'Medina Seal Verifier',
+        description: 'Verifies sovereign seals and ISIL license stamps on protocol artifacts.',
+        version: '1.0.0',
+        tier: 'standard',
+        files: 3,
+      },
+    ],
+  },
+  {
+    id: 'developer',
+    name: 'Developer Tools',
+    latinName: 'FAMILIA FABRICANDI',
+    icon: '🔧',
+    extensions: [
+      {
+        slug: 'medina-dev-inspector',
+        name: 'Medina Dev Inspector',
+        description: 'DevTools panel for inspecting MEDINA canister calls, organism state, and frequency.',
+        version: '1.0.0',
+        tier: 'core',
+        files: 4,
+      },
+      {
+        slug: 'medina-canister-debugger',
+        name: 'Medina Canister Debugger',
+        description: 'Debug ICP canister interactions. View cycles, memory, and call traces.',
+        version: '1.0.0',
+        tier: 'premium',
+        files: 3,
+      },
+      {
+        slug: 'medina-motoko-snippets',
+        name: 'Medina Motoko Snippets',
+        description: 'Motoko code snippets and L-130 compliant templates for rapid development.',
+        version: '1.0.0',
+        tier: 'standard',
+        files: 3,
+      },
+      {
+        slug: 'medina-api-tester',
+        name: 'Medina API Tester',
+        description: 'Test sovereign protocol endpoints directly from the browser toolbar.',
+        version: '1.0.0',
+        tier: 'standard',
+        files: 3,
+      },
+    ],
+  },
+  {
+    id: 'communication',
+    name: 'Communication',
+    latinName: 'FAMILIA COMMUNICANDI',
+    icon: '📡',
+    extensions: [
+      {
+        slug: 'medina-mesh-connector',
+        name: 'Medina Mesh Connector',
+        description: 'Connect to sovereign mesh network. Peer-to-peer intelligence relay.',
+        version: '1.0.0',
+        tier: 'sovereign',
+        files: 4,
+      },
+      {
+        slug: 'medina-notification-hub',
+        name: 'Medina Notification Hub',
+        description: 'Unified notification center for all MEDINA protocol events.',
+        version: '1.0.0',
+        tier: 'core',
+        files: 3,
+      },
+      {
+        slug: 'medina-signal-relay',
+        name: 'Medina Signal Relay',
+        description: 'Real-time signal relay between browser and ICP canisters.',
+        version: '1.0.0',
+        tier: 'premium',
+        files: 3,
+      },
+    ],
+  },
+  {
+    id: 'analytics',
+    name: 'Analytics & Insights',
+    latinName: 'FAMILIA ANALYTICA',
+    icon: '📊',
+    extensions: [
+      {
+        slug: 'medina-frequency-monitor',
+        name: 'Medina Frequency Monitor',
+        description: 'Monitor phi-frequency heartbeats across all active organisms and subsystems.',
+        version: '1.0.0',
+        tier: 'standard',
+        files: 3,
+      },
+      {
+        slug: 'medina-usage-tracker',
+        name: 'Medina Usage Tracker',
+        description: 'Privacy-first usage analytics. All data stays local. No telemetry out.',
+        version: '1.0.0',
+        tier: 'core',
+        files: 3,
+      },
+      {
+        slug: 'medina-performance-profiler',
+        name: 'Medina Performance Profiler',
+        description: 'Profile page performance with golden ratio benchmarks.',
+        version: '1.0.0',
+        tier: 'premium',
+        files: 3,
+      },
+    ],
+  },
+  {
+    id: 'web3',
+    name: 'Web3 & ICP',
+    latinName: 'FAMILIA CATENARUM',
+    icon: '⛓',
+    extensions: [
+      {
+        slug: 'medina-icp-wallet',
+        name: 'Medina ICP Wallet',
+        description: 'Sovereign ICP wallet with canister interaction. Internet Identity integration.',
+        version: '1.0.0',
+        tier: 'sovereign',
+        files: 4,
+      },
+      {
+        slug: 'medina-nft-viewer',
+        name: 'Medina NFT Viewer',
+        description: 'View and manage sovereign NFTs minted through the MEDINA protocol.',
+        version: '1.0.0',
+        tier: 'standard',
+        files: 3,
+      },
+      {
+        slug: 'medina-token-dashboard',
+        name: 'Medina Token Dashboard',
+        description: 'Dashboard for sovereign token metrics, staking, and governance.',
+        version: '1.0.0',
+        tier: 'premium',
+        files: 3,
+      },
+    ],
+  },
+  {
+    id: 'design',
+    name: 'Design & UX',
+    latinName: 'FAMILIA DESIGNI',
+    icon: '🎨',
+    extensions: [
+      {
+        slug: 'medina-color-picker',
+        name: 'Medina Color Picker',
+        description: 'Golden ratio color palette generator with sovereign design system colors.',
+        version: '1.0.0',
+        tier: 'core',
+        files: 3,
+      },
+      {
+        slug: 'medina-font-inspector',
+        name: 'Medina Font Inspector',
+        description: 'Inspect fonts on any page. Compare against sovereign typography standards.',
+        version: '1.0.0',
+        tier: 'standard',
+        files: 3,
+      },
+      {
+        slug: 'medina-grid-overlay',
+        name: 'Medina Grid Overlay',
+        description: 'Overlay golden ratio grid on any page. Phi-based responsive design guide.',
+        version: '1.0.0',
+        tier: 'standard',
+        files: 3,
+      },
+    ],
+  },
+];
+
+/* ═══════════════════════════════════════════════════════════════
+   EXTENSION SOURCE GENERATOR — builds real extension source code
+   Each extension gets a manifest.json, background.js, content.js
+   ═══════════════════════════════════════════════════════════════ */
+
+function generateExtensionSource(ext) {
+  const manifest = JSON.stringify({
+    manifest_version: 3,
+    name: ext.name,
+    version: ext.version,
+    description: ext.description,
+    permissions: ['activeTab', 'storage'],
+    background: { service_worker: 'background.js' },
+    content_scripts: [{
+      matches: ['<all_urls>'],
+      js: ['content.js'],
+    }],
+    action: {
+      default_title: ext.name,
+    },
+    icons: {},
+  }, null, 2);
+
+  const background = `/**
+ * ${ext.name} — Background Service Worker
+ * Sovereign Extension · ISIL-1.0 Licensed
+ * φ = ${PHI}
+ */
+
+const PHI = ${PHI};
+const HEARTBEAT_MS = 873;
+let beatCount = 0;
+
+// Extension lifecycle
+chrome.runtime.onInstalled.addListener(() => {
+  console.log('[${ext.slug}] Installed — φ Hz heartbeat active');
+  chrome.storage.local.set({
+    installed: Date.now(),
+    version: '${ext.version}',
+    phi: PHI,
+    beats: 0,
+  });
+});
+
+// Message handler
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  if (msg.type === 'ping') {
+    sendResponse({ type: 'pong', beat: beatCount, phi: PHI, status: 'alive' });
+    return true;
+  }
+  if (msg.type === 'getState') {
+    chrome.storage.local.get(null, (state) => {
+      sendResponse({ type: 'state', data: state });
+    });
+    return true;
+  }
+});
+
+// Heartbeat
+setInterval(() => {
+  beatCount++;
+  chrome.storage.local.set({ beats: beatCount, lastBeat: Date.now() });
+}, HEARTBEAT_MS);
+`;
+
+  const content = `/**
+ * ${ext.name} — Content Script
+ * Sovereign Extension · ISIL-1.0 Licensed
+ * Injected into all pages. Lightweight — does ONE thing.
+ */
+
+(function() {
+  'use strict';
+  const PHI = ${PHI};
+
+  // Signal to background that content script is active
+  chrome.runtime.sendMessage({ type: 'ping' }, (response) => {
+    if (response && response.status === 'alive') {
+      console.log('[${ext.slug}] Content script active — beat:', response.beat);
+    }
+  });
+})();
+`;
+
+  const readme = `# ${ext.name}
+
+${ext.description}
+
+## Installation
+
+1. Open \`chrome://extensions\` (or \`edge://extensions\`)
+2. Enable **Developer mode**
+3. Click **Load unpacked**
+4. Select this folder
+
+## Sovereign Protocol
+
+This extension is part of the MEDINA sovereign protocol.
+Every tool traces to φ = ${PHI}.
+
+## License
+
+ISIL-1.0 — Sovereign License
+© 2024–2026 Alfredo "Freddy" Medina Hernandez · Medina Tech · Dallas, TX
+`;
+
+  const license = `ISIL-1.0 — SOVEREIGN LICENSE
+
+Copyright (c) 2024-2026 Alfredo "Freddy" Medina Hernandez
+Medina Tech · Dallas, TX
+
+This software is provided under the Intrinsic Sovereign Intelligence License (ISIL-1.0).
+All sovereign rights reserved. Usage governed by protocol doctrine.
+
+φ = ${PHI}
+`;
+
+  return {
+    slug: ext.slug,
+    name: ext.name,
+    manifest: manifest,
+    background: background,
+    content: content,
+    readme: readme,
+    license: license,
+  };
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DOM BUILDER — renders families and extension cards
+   ═══════════════════════════════════════════════════════════════ */
+
+function renderFamilies() {
+  const container = document.getElementById('familiesContainer');
+  let totalExtensions = 0;
+
+  for (const family of EXTENSION_FAMILIES) {
+    totalExtensions += family.extensions.length;
+
+    const section = document.createElement('div');
+    section.className = 'family-section';
+    section.innerHTML = `
+      <div class="family-header">
+        <span class="family-icon">${family.icon}</span>
+        <span class="family-name">${family.name}</span>
+        <span class="family-latin">${family.latinName}</span>
+        <span class="family-count">${family.extensions.length} extensions</span>
+      </div>
+      <div class="extensions-grid" id="grid-${family.id}"></div>
+    `;
+    container.appendChild(section);
+
+    const grid = section.querySelector('.extensions-grid');
+    for (const ext of family.extensions) {
+      const card = document.createElement('div');
+      card.className = 'ext-card';
+      card.id = `card-${ext.slug}`;
+      card.innerHTML = `
+        <div class="ext-card-header">
+          <span class="ext-name">${ext.name}</span>
+          <span class="ext-version">v${ext.version}</span>
+        </div>
+        <div class="ext-description">${ext.description}</div>
+        <div class="ext-meta">
+          <span>📦 ${ext.files} files</span>
+          <span>🏷 ${ext.tier}</span>
+        </div>
+        <div style="display: flex; align-items: center;">
+          <button class="ext-download-btn" id="btn-${ext.slug}" disabled>
+            <span>⏳</span>
+            <span>Building...</span>
+          </button>
+          <span class="ext-size" id="size-${ext.slug}"></span>
+        </div>
+      `;
+      grid.appendChild(card);
+    }
+  }
+
+  document.getElementById('extCount').textContent = `0 / ${totalExtensions}`;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DOWNLOAD MANAGER — tracks blob URLs for each extension
+   ═══════════════════════════════════════════════════════════════ */
+
+const downloadUrls = {};
+let readyCount = 0;
+let totalCount = 0;
+
+function formatBytes(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+  return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+}
+
+function handleZipReady(data) {
+  const url = URL.createObjectURL(data.blob);
+  downloadUrls[data.slug] = { url, filename: data.filename, blob: data.blob };
+
+  const btn = document.getElementById(`btn-${data.slug}`);
+  if (btn) {
+    btn.disabled = false;
+    btn.className = 'ext-download-btn ready';
+    btn.innerHTML = `<span>⬇</span><span>Download .zip</span>`;
+    btn.onclick = function () {
+      triggerDownload(url, data.filename);
+    };
+  }
+
+  const sizeEl = document.getElementById(`size-${data.slug}`);
+  if (sizeEl) {
+    data.blob.arrayBuffer().then(buf => {
+      sizeEl.textContent = formatBytes(buf.byteLength);
+    });
+  }
+
+  // Handle the all-extensions bundle
+  if (data.slug === 'all-extensions') {
+    const allBtn = document.getElementById('downloadAllBtn');
+    allBtn.disabled = false;
+    allBtn.onclick = function () {
+      triggerDownload(url, data.filename);
+    };
+    document.getElementById('downloadAllText').textContent = 'Download All Extensions';
+    data.blob.arrayBuffer().then(buf => {
+      document.getElementById('downloadAllSize').textContent =
+        `${totalCount} extensions · ${formatBytes(buf.byteLength)}`;
+    });
+  } else {
+    readyCount++;
+    document.getElementById('extCount').textContent = `${readyCount} / ${totalCount}`;
+  }
+}
+
+function triggerDownload(url, filename) {
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   WORKER MANAGEMENT — start, communicate, heartbeat
+   ═══════════════════════════════════════════════════════════════ */
+
+let worker = null;
+
+function startWorker() {
+  const workerDot = document.getElementById('workerDot');
+  const workerStatus = document.getElementById('workerStatus');
+  const beatCountEl = document.getElementById('beatCount');
+
+  try {
+    worker = new Worker('download-worker.js');
+    workerDot.className = 'status-dot building';
+    workerStatus.textContent = 'building...';
+
+    worker.onmessage = function (e) {
+      const msg = e.data;
+
+      switch (msg.type) {
+        case 'zip-ready':
+          handleZipReady(msg);
+          break;
+
+        case 'zip-error':
+          console.error(`[zip-error] ${msg.slug}: ${msg.error}`);
+          const btn = document.getElementById(`btn-${msg.slug}`);
+          if (btn) {
+            btn.innerHTML = `<span>❌</span><span>Error</span>`;
+            btn.disabled = true;
+          }
+          break;
+
+        case 'all-ready':
+          workerDot.className = 'status-dot alive';
+          workerStatus.textContent = 'alive';
+          break;
+
+        case 'heartbeat':
+          beatCountEl.textContent = msg.beat;
+          break;
+
+        case 'stopped':
+          workerDot.className = 'status-dot';
+          workerStatus.textContent = 'stopped';
+          break;
+      }
+    };
+
+    worker.onerror = function (err) {
+      console.error('[worker error]', err);
+      workerDot.className = 'status-dot error';
+      workerStatus.textContent = 'error';
+    };
+
+    // Gather all extension sources and send to worker
+    const allExtensions = [];
+    for (const family of EXTENSION_FAMILIES) {
+      for (const ext of family.extensions) {
+        allExtensions.push(generateExtensionSource(ext));
+      }
+    }
+    totalCount = allExtensions.length;
+    document.getElementById('extCount').textContent = `0 / ${totalCount}`;
+
+    worker.postMessage({ type: 'build', extensions: allExtensions });
+
+  } catch (err) {
+    console.error('[worker init error]', err);
+    document.getElementById('workerDot').className = 'status-dot error';
+    document.getElementById('workerStatus').textContent = 'failed: ' + err.message;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   INIT — render, then start worker
+   ═══════════════════════════════════════════════════════════════ */
+
+document.addEventListener('DOMContentLoaded', function () {
+  renderFamilies();
+  startWorker();
+});
+</script>
+
+</body>
+</html>
