@@ -1,0 +1,189 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# 💰 ORGANISM ECONOMY BOT — OECONOMUS ORGANISMI
+# "Valor ex ordine nascitur." (Value is born from order.)
+#
+# Division VI — Learn & Evolve
+# Tracks SDK marketplace health: package sizes, growth trends,
+# license compliance, and value metrics.
+#
+# Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+# ═══════════════════════════════════════════════════════════════════════════
+
+name: 💰 organism-economy-bot
+
+on:
+  schedule:
+    - cron: '0 10 * * 0'  # Weekly Sunday 10 AM UTC
+  push:
+    paths:
+      - 'packages/**'
+      - 'extensions/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  economy-analysis:
+    name: 💰 Marketplace & Value Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: SDK Value Metrics
+        id: sdks
+        run: |
+          PKG_COUNT=$(ls -d packages/*/ 2>/dev/null | wc -l)
+          PKG_SIZE=$(du -sh packages/ 2>/dev/null | cut -f1)
+          echo "count=$PKG_COUNT" >> "$GITHUB_OUTPUT"
+          echo "size=$PKG_SIZE" >> "$GITHUB_OUTPUT"
+          echo "💰 SDK packages: $PKG_COUNT ($PKG_SIZE total)"
+
+      - name: Extension Value Metrics
+        id: extensions
+        run: |
+          EXT_COUNT=$(ls -d extensions/*/ 2>/dev/null | wc -l)
+          EXT_SIZE=$(du -sh extensions/ 2>/dev/null | cut -f1)
+          echo "count=$EXT_COUNT" >> "$GITHUB_OUTPUT"
+          echo "size=$EXT_SIZE" >> "$GITHUB_OUTPUT"
+          echo "💰 Extensions: $EXT_COUNT ($EXT_SIZE total)"
+
+      - name: License Compliance Audit
+        run: |
+          echo "💰 License compliance..."
+          ISIL=0
+          MIT=0
+          OTHER=0
+          MISSING=0
+          for f in $(find packages -name 'package.json' -not -path '*/node_modules/*' 2>/dev/null); do
+            LICENSE=$(python3 -c "import json; print(json.load(open('$f')).get('license','MISSING'))" 2>/dev/null)
+            case "$LICENSE" in
+              ISIL*) ISIL=$((ISIL + 1)) ;;
+              MIT) MIT=$((MIT + 1)) ;;
+              MISSING) MISSING=$((MISSING + 1)) ;;
+              *) OTHER=$((OTHER + 1)) ;;
+            esac
+          done
+          echo "  • ISIL (Sovereign): $ISIL"
+          echo "  • MIT: $MIT"
+          echo "  • Other: $OTHER"
+          echo "  • Missing: $MISSING"
+
+      - name: SDK Description Quality
+        run: |
+          echo "💰 SDK description quality..."
+          for f in $(find packages -name 'package.json' -not -path '*/node_modules/*' 2>/dev/null); do
+            name=$(python3 -c "import json; print(json.load(open('$f')).get('name','?'))" 2>/dev/null)
+            desc=$(python3 -c "import json; print(json.load(open('$f')).get('description',''))" 2>/dev/null)
+            desc_len=${#desc}
+            if [ $desc_len -gt 30 ]; then
+              echo "  ✓ $name — description: $desc_len chars"
+            else
+              echo "  ⚠ $name — short/missing description ($desc_len chars)"
+            fi
+          done
+
+      - name: Compute Economy Score
+        id: score
+        run: |
+          PKG=${{ steps.sdks.outputs.count }}
+          EXT=${{ steps.extensions.outputs.count }}
+
+          # Simple economy score: total deployable units
+          TOTAL=$((PKG + EXT))
+          echo "total=$TOTAL" >> "$GITHUB_OUTPUT"
+          echo "💰 Total deployable units: $TOTAL"
+
+      - name: Generate Economy Report
+        run: |
+          mkdir -p build/economy
+
+          cat > build/economy/economy-report.md << EOF
+          # 💰 Organism Economy Report
+
+          **Generated:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')
+          **Commit:** \`${GITHUB_SHA:0:7}\`
+
+          ## Value Census
+
+          | Asset Class | Count | Size |
+          |-------------|-------|------|
+          | SDK Packages | ${{ steps.sdks.outputs.count }} | ${{ steps.sdks.outputs.size }} |
+          | Browser Extensions | ${{ steps.extensions.outputs.count }} | ${{ steps.extensions.outputs.size }} |
+          | **Total Deployable** | **${{ steps.score.outputs.total }}** | — |
+
+          ## SDK Catalog
+
+          | Package | Version | Description |
+          |---------|---------|-------------|
+          EOF
+
+          for f in $(find packages -name 'package.json' -not -path '*/node_modules/*' 2>/dev/null); do
+            name=$(python3 -c "import json; print(json.load(open('$f')).get('name','?'))" 2>/dev/null)
+            version=$(python3 -c "import json; print(json.load(open('$f')).get('version','?'))" 2>/dev/null)
+            desc=$(python3 -c "import json; print(json.load(open('$f')).get('description','—')[:50])" 2>/dev/null)
+            echo "| $name | $version | $desc |" >> build/economy/economy-report.md
+          done
+
+          echo "" >> build/economy/economy-report.md
+          echo "## Extension Catalog" >> build/economy/economy-report.md
+          echo "" >> build/economy/economy-report.md
+          for ext in extensions/*/; do
+            echo "- \`$(basename $ext)\`" >> build/economy/economy-report.md
+          done
+
+          cat build/economy/economy-report.md
+
+      - name: Commit Economy Report
+        run: |
+          git config user.name "organism-economy-bot"
+          git config user.email "organism-economy-bot[bot]@users.noreply.github.com"
+          cp build/economy/economy-report.md docs/economy-report.md
+          git add docs/economy-report.md
+          git diff --cached --quiet || git commit -m "💰 organism-economy-bot: Updated economy report [${{ steps.score.outputs.total }} deployable units]"
+          git push || echo "Nothing to push"
+
+      - name: Emit Governance Event
+        run: |
+          mkdir -p dist/governance/events
+
+          PKG=${{ steps.sdks.outputs.count }}
+          EXT=${{ steps.extensions.outputs.count }}
+          TOTAL=${{ steps.score.outputs.total }}
+          PROT=$(grep -c "id:.*'PROT-" organism-cli/web/protocol-papers.js 2>/dev/null || echo "0")
+
+          # Coverage: fraction of packages with both name and description > 30 chars
+          VALID=0
+          CHECKED=0
+          for f in $(find packages -name 'package.json' -not -path '*/node_modules/*' 2>/dev/null); do
+            CHECKED=$((CHECKED + 1))
+            desc=$(python3 -c "import json; print(json.load(open('$f')).get('description',''))" 2>/dev/null)
+            if [ ${#desc} -gt 30 ]; then VALID=$((VALID + 1)); fi
+          done
+          COVERAGE=$(python3 -c "print(f'{$VALID/max($CHECKED,1):.2f}')" 2>/dev/null || echo "0.00")
+
+          # Complexity: assets_total / sdk_count × normalization factor
+          COMPLEXITY=$(python3 -c "print(int($TOTAL / max($PKG, 1) * 10))" 2>/dev/null || echo "0")
+
+          cat > dist/governance/events/economy_scan_completed.json << EOF
+          {
+            "entity_id": "atlas://bot/organism-economy-bot",
+            "op": "economy_scan_completed",
+            "timestamp": "$(date -u '+%Y-%m-%dT%H:%M:%SZ')",
+            "commit": "${GITHUB_SHA:0:7}",
+            "run_id": "${{ github.run_id }}",
+            "context": {
+              "assets_total": $TOTAL,
+              "sdk_count": $PKG,
+              "extension_count": $EXT,
+              "protocol_count": $PROT,
+              "complexity_score": $COMPLEXITY,
+              "coverage": $COVERAGE
+            }
+          }
+          EOF
+
+          echo "💰 Governance event emitted: economy_scan_completed"
+          cat dist/governance/events/economy_scan_completed.json
+

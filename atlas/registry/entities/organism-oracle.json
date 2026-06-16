@@ -1,0 +1,44 @@
+{
+  "id": "atlas://organism/oracle",
+  "name": "ORACLE",
+  "class": "SyntheticOrganism",
+  "division": "VI — Learn & Evolve",
+  "emoji": "🔮",
+  "domain": "Risk synthesis & opportunity narrative",
+  "description": "ORACLE reads economy + learning + crawler governance events and synthesizes risk narratives and opportunity reports for human leadership",
+  "feeds_from": [
+    "atlas://bot/organism-economy-bot",
+    "atlas://bot/organism-learning-bot",
+    "atlas://bot/organism-crawler-bot"
+  ],
+  "event_ops_consumed": [
+    "economy_scan_completed",
+    "learning_cycle_completed",
+    "crawl_completed"
+  ],
+  "mml_metrics_watched": [
+    "economy.coverage",
+    "economy.complexity_score",
+    "learning.signals_per_cycle",
+    "learning.expansion_pressure",
+    "topology.orphans",
+    "topology.dead_links",
+    "topology.graph_centrality_max"
+  ],
+  "outputs": [
+    "CIL narrative: risk_assessment",
+    "CIL narrative: opportunity_report",
+    "Slack message: governance_story (via Slack Division)"
+  ],
+  "ocl_ref": "governance://organism/oracle",
+  "governance_pipeline": "pipeline://governance/bot_cycle",
+  "languages": [
+    "atlas://language/cil",
+    "atlas://language/ocl",
+    "atlas://language/rsl",
+    "atlas://language/acl"
+  ],
+  "authority": "advisory",
+  "escalation_target": "human://freddy",
+  "scc": 4.23
+}

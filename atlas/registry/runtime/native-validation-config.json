@@ -1,0 +1,22 @@
+{
+  "id": "atlas://registry/runtime/native-validation-config",
+  "version": "1.0.0",
+  "flows": [
+    "vision",
+    "security",
+    "billing",
+    "internal-build",
+    "governance"
+  ],
+  "tokenization": {
+    "ledger": "atlas/registry/runtime/validation-token-ledger.json",
+    "artifact_dir": "atlas/registry/runtime/validation-artifacts"
+  },
+  "math_surface": {
+    "phi": 1.618033988749895,
+    "phi_sq": 2.618033988749895,
+    "inv_phi": 0.6180339887498948,
+    "schumann_hz": 7.83,
+    "fibonacci_seed": [1, 1, 2, 3, 5, 8, 13, 21]
+  }
+}

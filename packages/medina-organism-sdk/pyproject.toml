@@ -1,0 +1,105 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "medina-organism-sdk"
+version = "1.0.0"
+description = "Medina Sovereign Organism SDK — Intelligence From The Primitive"
+readme = "README.md"
+license = {text = "ISIL-1.0"}
+requires-python = ">=3.9"
+authors = [
+    {name = "Alfredo 'Freddy' Medina Hernandez", email = "contact@medinatech.io"}
+]
+maintainers = [
+    {name = "Medina Tech", email = "contact@medinatech.io"}
+]
+keywords = [
+    "medina",
+    "organism",
+    "ai",
+    "intelligence",
+    "phi",
+    "golden-ratio",
+    "phantom",
+    "memory",
+    "research-lab",
+    "sovereign"
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: Other/Proprietary License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed"
+]
+dependencies = [
+    "aiohttp>=3.8.0",
+    "pydantic>=2.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "black>=23.0.0",
+    "mypy>=1.0.0",
+    "ruff>=0.1.0",
+]
+docs = [
+    "sphinx>=6.0.0",
+    "sphinx-rtd-theme>=1.0.0",
+    "myst-parser>=1.0.0",
+]
+all = [
+    "medina-organism-sdk[dev,docs]",
+]
+
+[project.urls]
+Homepage = "https://github.com/FreddyCreates/Medina-Memory-More-AI"
+Documentation = "https://medina-organism.readthedocs.io"
+Repository = "https://github.com/FreddyCreates/Medina-Memory-More-AI"
+Issues = "https://github.com/FreddyCreates/Medina-Memory-More-AI/issues"
+
+[project.scripts]
+medina-lab = "medina.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["medina*"]
+
+[tool.setuptools.package-data]
+"*" = ["py.typed", "*.json", "*.md"]
+
+[tool.black]
+line-length = 100
+target-version = ['py39', 'py310', 'py311', 'py312']
+
+[tool.ruff]
+line-length = 100
+select = ["E", "F", "I", "N", "W", "UP"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.medina]
+phi = 1.618033988749895
+schumann = 7.83
+protocol = "SDK-PROT-400"
+attribution = "Alfredo 'Freddy' Medina Hernandez | Medina Tech | Dallas, TX"

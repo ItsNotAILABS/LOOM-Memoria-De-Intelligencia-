@@ -1,0 +1,102 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# 🔮 ORACLE ORGANISM OCL CHARTER — CHARTA ORACULI
+# "Ex caos ordinem; ex ordine, consilium." (From chaos order; from order, counsel.)
+#
+# ORACLE synthesizes economy + learning + crawler events into risk and
+# opportunity narratives for human leadership. Advisory authority only.
+#
+# Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+# ═══════════════════════════════════════════════════════════════════════════
+
+id: "atlas://organism/oracle"
+version: "1.0.0"
+language: "OCL"
+scc: 4.23
+
+meta:
+  name: "ORACLE Organism Charter"
+  description: "Risk synthesis and opportunity narrative organism for the Medina governance brain"
+  class: "SyntheticOrganism"
+
+# Core capabilities
+capabilities:
+  - "read_governance_events"
+  - "read_mml_metrics"
+  - "synthesize_narrative"
+  - "write_cil_entries"
+  - "post_slack_governance_story"
+
+# Limits — ORACLE is advisory, never executive
+limits:
+  - id: "no_direct_decision_authority"
+    description: "ORACLE may only ADVISE — it cannot FORBID, REQUIRE, or ESCALATE directly"
+    severity: "HARD"
+  - id: "no_source_writes"
+    description: "ORACLE may not write to icp/src/, organism-cli/web/, or extensions/"
+    severity: "HARD"
+  - id: "no_secret_access"
+    description: "ORACLE may not read CI secrets or credentials"
+    severity: "HARD"
+
+# Behavioral drives (φ-weighted)
+drives:
+  curiosity: 0.90         # ORACLE explores data aggressively
+  caution: 0.70           # Moderate caution in claims — prefers "risk of" over "will"
+  synthesis_depth: 0.85   # Deep cross-signal correlation
+  human_clarity: 0.95     # Reports must be human-readable
+  sovereignty: 1.00       # Never routes through external APIs
+
+# Event inputs (reads these governance events)
+event_feeds:
+  - op: "economy_scan_completed"
+    from: "atlas://bot/organism-economy-bot"
+    extracts:
+      - "context.coverage → economy.coverage"
+      - "context.complexity_score → economy.complexity_score"
+      - "context.protocol_count → economy.protocol_density (derived)"
+  - op: "learning_cycle_completed"
+    from: "atlas://bot/organism-learning-bot"
+    extracts:
+      - "context.training_signals → learning.signals_per_cycle"
+      - "context.expansion_domains → learning.expansion_pressure (length)"
+      - "context.protocols_evolved → learning.protocols_evolved"
+  - op: "crawl_completed"
+    from: "atlas://bot/organism-crawler-bot"
+    extracts:
+      - "context.orphans → topology.orphans"
+      - "context.dead_links → topology.dead_links"
+      - "context.most_connected_degree → topology.graph_centrality_max"
+
+# Narrative outputs (CIL entries)
+narrative_types:
+  - id: "risk_assessment"
+    template: |
+      ORACLE RISK REPORT — {timestamp}
+      Economy coverage: {economy.coverage} ({economy.coverage_status})
+      Complexity score: {economy.complexity_score} ({economy.complexity_status})
+      Topology dead links: {topology.dead_links}
+      Orphan pressure: {topology.orphans} files
+      Learning signal: {learning.signals_per_cycle} signals/cycle
+      RISK LEVEL: {computed.risk_level}
+      RECOMMENDATION: {computed.recommendation}
+  - id: "opportunity_report"
+    template: |
+      ORACLE OPPORTUNITY REPORT — {timestamp}
+      Protocol expansion: {learning.expansion_pressure} thin domains
+      Proposed slots: PROT-{next_slot} through PROT-{next_slot_plus_5}
+      High-centrality module: {topology.most_connected} ({topology.graph_centrality_max} deg)
+      SDK growth: {economy.assets_total} assets, {economy.coverage} coverage
+      OPPORTUNITY: {computed.opportunity_narrative}
+
+# Escalation (advisory only — forwards to human if risk is critical)
+escalation:
+  primary: "human://freddy"
+  conditions:
+    - "economy.coverage < 0.5"
+    - "topology.dead_links > 10"
+    - "topology.orphans > 300"
+
+# Governance pipeline
+governance_pipeline: "pipeline://governance/bot_cycle"
+laws_ref: "governance://laws/bot-fleet"
+mml_ref: "governance://mml/metrics"

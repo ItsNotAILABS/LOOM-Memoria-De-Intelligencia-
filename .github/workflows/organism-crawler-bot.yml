@@ -1,0 +1,223 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# 🕷️ ORGANISM CRAWLER BOT — EXPLORATOR ORGANISMI
+# "Mappa sine exploratione vacua est." (A map without exploration is empty.)
+#
+# Division III — Secure & Monitor
+# Discovers and maps the full organism: counts all entities by type,
+# builds a living atlas of the repository topology.
+#
+# Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+# ═══════════════════════════════════════════════════════════════════════════
+
+name: 🕷️ organism-crawler-bot
+
+on:
+  schedule:
+    - cron: '0 4 * * 2,5'  # Tuesday and Friday 4 AM UTC
+  push:
+    paths:
+      - 'icp/**'
+      - 'organism-cli/**'
+      - 'extensions/**'
+      - 'packages/**'
+      - 'protocols/**'
+      - 'cloudflare-workers/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  crawl-organism:
+    name: 🕷️ Crawl & Map Organism
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Census — Backend Layer
+        id: backend
+        run: |
+          MO=$(find icp/src/medina_backend -name '*.mo' 2>/dev/null | wc -l)
+          MO_LINES=$(cat icp/src/medina_backend/*.mo 2>/dev/null | wc -l)
+          TS=$(find icp/src/medina_frontend -name '*.ts' 2>/dev/null | wc -l)
+          echo "mo=$MO" >> "$GITHUB_OUTPUT"
+          echo "mo_lines=$MO_LINES" >> "$GITHUB_OUTPUT"
+          echo "ts=$TS" >> "$GITHUB_OUTPUT"
+          echo "🕷️ Backend: $MO Motoko ($MO_LINES lines) + $TS TypeScript"
+
+      - name: Census — Worker Layer
+        id: workers
+        run: |
+          JS_WORKERS=$(ls organism-cli/web/*-worker.js 2>/dev/null | wc -l)
+          JS_TOTAL=$(ls organism-cli/web/*.js 2>/dev/null | wc -l)
+          JS_LINES=$(cat organism-cli/web/*.js 2>/dev/null | wc -l)
+          echo "workers=$JS_WORKERS" >> "$GITHUB_OUTPUT"
+          echo "total=$JS_TOTAL" >> "$GITHUB_OUTPUT"
+          echo "lines=$JS_LINES" >> "$GITHUB_OUTPUT"
+          echo "🕷️ Workers: $JS_WORKERS specialized + $JS_TOTAL total ($JS_LINES lines)"
+
+      - name: Census — Extension Layer
+        id: extensions
+        run: |
+          EXT=$(ls -d extensions/*/ 2>/dev/null | wc -l)
+          echo "count=$EXT" >> "$GITHUB_OUTPUT"
+          echo "🕷️ Extensions: $EXT browser extensions"
+
+      - name: Census — Package Layer
+        id: packages
+        run: |
+          PKG=$(ls -d packages/*/ 2>/dev/null | wc -l)
+          echo "count=$PKG" >> "$GITHUB_OUTPUT"
+          echo "🕷️ Packages: $PKG SDK packages"
+
+      - name: Census — Protocol Layer
+        id: protocols
+        run: |
+          PROT=$(grep -c "id:.*'PROT-" organism-cli/web/protocol-papers.js 2>/dev/null || echo "0")
+          DOMAINS=$(grep -oP "domain:\s*'[^']+'" organism-cli/web/protocol-papers.js 2>/dev/null | sort -u | wc -l)
+          echo "count=$PROT" >> "$GITHUB_OUTPUT"
+          echo "domains=$DOMAINS" >> "$GITHUB_OUTPUT"
+          echo "🕷️ Protocols: $PROT protocols across $DOMAINS domains"
+
+      - name: Census — Doctrine Layer
+        id: doctrine
+        run: |
+          DOCS=$(find doctrine -type f 2>/dev/null | wc -l)
+          echo "count=$DOCS" >> "$GITHUB_OUTPUT"
+          echo "🕷️ Doctrine: $DOCS files"
+
+      - name: Census — Edge Layer
+        id: edge
+        run: |
+          CF=$(ls cloudflare-workers/*.js 2>/dev/null | wc -l)
+          echo "count=$CF" >> "$GITHUB_OUTPUT"
+          echo "🕷️ Edge: $CF Cloudflare workers"
+
+      - name: Build Organism Atlas
+        run: |
+          mkdir -p build/atlas
+
+          TOTAL=$(( ${{ steps.backend.outputs.mo }} + ${{ steps.backend.outputs.ts }} + \
+                    ${{ steps.workers.outputs.total }} + ${{ steps.extensions.outputs.count }} + \
+                    ${{ steps.packages.outputs.count }} + ${{ steps.edge.outputs.count }} ))
+
+          cat > build/atlas/organism-atlas.md << EOF
+          # 🕷️ Organism Atlas
+
+          **Crawled:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')
+          **Commit:** \`${GITHUB_SHA:0:7}\`
+
+          ## Complete Census
+
+          | Layer | Entity Type | Count | Lines |
+          |-------|-------------|-------|-------|
+          | 🧠 Backend | Motoko Engines | ${{ steps.backend.outputs.mo }} | ${{ steps.backend.outputs.mo_lines }} |
+          | 🖥️ Frontend | TypeScript Engines | ${{ steps.backend.outputs.ts }} | — |
+          | ⚙️ Workers | Web Workers (specialized) | ${{ steps.workers.outputs.workers }} | ${{ steps.workers.outputs.lines }} |
+          | 🧩 Extensions | Browser Extensions | ${{ steps.extensions.outputs.count }} | — |
+          | 📦 SDK | NPM Packages | ${{ steps.packages.outputs.count }} | — |
+          | 🔬 Protocols | Protocol Papers | ${{ steps.protocols.outputs.count }} | — |
+          | 📜 Doctrine | Doctrine Documents | ${{ steps.doctrine.outputs.count }} | — |
+          | ☁️ Edge | Cloudflare Workers | ${{ steps.edge.outputs.count }} | — |
+
+          **Total Components: $TOTAL**
+
+          ## Protocol Domain Map
+
+          EOF
+
+          grep -oP "domain:\s*'[^']+'" organism-cli/web/protocol-papers.js 2>/dev/null | \
+            sed "s/domain: '//;s/'//" | sort | uniq -c | sort -rn | \
+            while read count domain; do
+              echo "- **$domain**: $count protocols" >> build/atlas/organism-atlas.md
+            done
+
+          echo "" >> build/atlas/organism-atlas.md
+          echo "## Worker Registry" >> build/atlas/organism-atlas.md
+          echo "" >> build/atlas/organism-atlas.md
+          for f in organism-cli/web/*-worker.js; do
+            name=$(basename "$f")
+            lines=$(wc -l < "$f")
+            echo "- \`$name\` ($lines lines)" >> build/atlas/organism-atlas.md
+          done
+
+          cat build/atlas/organism-atlas.md
+
+      - name: Commit Atlas
+        run: |
+          git config user.name "organism-crawler-bot"
+          git config user.email "organism-crawler-bot[bot]@users.noreply.github.com"
+          cp build/atlas/organism-atlas.md docs/organism-atlas.md
+          git add docs/organism-atlas.md
+          git diff --cached --quiet || git commit -m "🕷️ organism-crawler-bot: Updated organism atlas [$(date -u '+%Y-%m-%d')]"
+          git push || echo "Nothing to push"
+
+      - name: Emit Governance Event
+        run: |
+          mkdir -p dist/governance/events
+
+          # Full file + dir census
+          FILES=$(find . -type f -not -path '*/.git/*' 2>/dev/null | wc -l)
+          DIRS=$(find . -type d -not -path '*/.git/*' 2>/dev/null | wc -l)
+
+          # Orphan detection: JS files in organism-cli/web/ not referenced in organism-bridge.js
+          ORPHANS=0
+          if [ -f organism-cli/web/organism-bridge.js ]; then
+            for f in organism-cli/web/*.js; do
+              name=$(basename "$f")
+              if ! grep -q "$name" organism-cli/web/organism-bridge.js 2>/dev/null; then
+                ORPHANS=$((ORPHANS + 1))
+              fi
+            done
+          fi
+
+          # Dead links: broken asset references in HTML
+          DEAD=0
+          for f in $(find docs -name '*.html' 2>/dev/null); do
+            dir=$(dirname "$f")
+            while IFS= read -r ref; do
+              target="$dir/$ref"
+              [ ! -f "$target" ] && DEAD=$((DEAD + 1))
+            done < <(grep -oP '(?:src|href)="([^"#]+)"' "$f" 2>/dev/null | sed 's/.*="//;s/"//' | grep -v '^http\|^//\|^mailto\|^#\|^data:' 2>/dev/null)
+          done
+
+          # Graph: count unique import/require references as edges
+          NODES=$(ls organism-cli/web/*.js 2>/dev/null | wc -l)
+          EDGES=$(grep -rh "import\|require" organism-cli/web/*.js 2>/dev/null | wc -l)
+
+          # Most connected: find JS file most referenced across all HTML
+          MOST_CONNECTED="organism-cli/web/protocol-papers.js"
+          MOST_DEGREE=$(grep -r "protocol-papers" docs/ 2>/dev/null | wc -l)
+          for f in organism-cli/web/*.js; do
+            name=$(basename "$f")
+            deg=$(grep -rl "$name" docs/ 2>/dev/null | wc -l)
+            if [ "$deg" -gt "$MOST_DEGREE" ]; then
+              MOST_CONNECTED="$f"
+              MOST_DEGREE="$deg"
+            fi
+          done
+
+          cat > dist/governance/events/crawl_completed.json << EOF
+          {
+            "entity_id": "atlas://bot/organism-crawler-bot",
+            "op": "crawl_completed",
+            "timestamp": "$(date -u '+%Y-%m-%dT%H:%M:%SZ')",
+            "commit": "${GITHUB_SHA:0:7}",
+            "run_id": "${{ github.run_id }}",
+            "context": {
+              "files": $FILES,
+              "dirs": $DIRS,
+              "orphans": $ORPHANS,
+              "dead_links": $DEAD,
+              "graph_nodes": $NODES,
+              "graph_edges": $EDGES,
+              "most_connected": "$MOST_CONNECTED",
+              "most_connected_degree": $MOST_DEGREE
+            }
+          }
+          EOF
+
+          echo "🕷️ Governance event emitted: crawl_completed"
+          cat dist/governance/events/crawl_completed.json
+

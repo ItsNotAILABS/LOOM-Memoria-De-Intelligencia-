@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MEDINA Command Center</title>
+  <style>
+    :root {
+      --bg: #070707;
+      --card: #111;
+      --line: #222;
+      --gold: #d4af37;
+      --text: #c8c8c8;
+      --green: #00d084;
+      --red: #ff5f5f;
+      --amber: #f6b73c;
+      --phi: 1.618033988749895;
+    }
+    body { margin: 0; background: var(--bg); color: var(--text); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    .wrap { max-width: 1280px; margin: 0 auto; padding: 16px; }
+    .head { border: 1px solid var(--line); background: linear-gradient(180deg, #111 0%, #090909 100%); padding: 14px; margin-bottom: 12px; }
+    .title { color: var(--gold); font-size: 20px; letter-spacing: 1px; }
+    .sub { color: #8d8d8d; font-size: 12px; margin-top: 4px; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .card { border: 1px solid var(--line); background: var(--card); padding: 12px; min-height: 180px; }
+    .card h2 { margin: 0 0 10px; color: var(--gold); font-size: 14px; }
+    .kv { display: grid; grid-template-columns: 180px 1fr; font-size: 12px; gap: 4px; }
+    .kv div:nth-child(odd) { color: #909090; }
+    .ok { color: var(--green); }
+    .warn { color: var(--amber); }
+    .bad { color: var(--red); }
+    .list { max-height: 240px; overflow: auto; border-top: 1px solid #1a1a1a; margin-top: 8px; padding-top: 8px; }
+    .item { font-size: 12px; padding: 6px 0; border-bottom: 1px dashed #1a1a1a; }
+    .item small { color: #7d7d7d; display: block; margin-top: 2px; }
+    .toolbar { display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+    button, select { background: #181818; color: var(--text); border: 1px solid #2b2b2b; padding: 6px 10px; font-family: inherit; font-size: 12px; }
+    button:hover { border-color: var(--gold); cursor: pointer; }
+    .foot { margin-top: 12px; font-size: 11px; color: #757575; text-align: center; }
+    @media (max-width: 960px) { .grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="head">
+      <div class="title">MEDINA COMMAND CENTER — TABULA PERPETUA</div>
+      <div class="sub">Always-open runtime telemetry • profile orchestration • pack-run analysis • φ = 1.618033988749895</div>
+    </div>
+
+    <div class="toolbar">
+      <select id="profileSelect">
+        <option value="full">full</option>
+        <option value="ops">ops</option>
+        <option value="minimal">minimal</option>
+        <option value="rebuild">rebuild</option>
+      </select>
+      <button id="applyProfileBtn">Apply Profile</button>
+      <button id="refreshRegistryBtn">Reload Atlas Registry</button>
+      <button id="refreshPackBtn">Refresh Pack State</button>
+    </div>
+
+    <div class="grid">
+      <section class="card">
+        <h2>Live Status</h2>
+        <div class="kv" id="liveStatus"></div>
+      </section>
+
+      <section class="card">
+        <h2>Pack-Run Status</h2>
+        <div class="kv" id="packStatus"></div>
+      </section>
+
+      <section class="card">
+        <h2>Daily Analysis Digest</h2>
+        <div class="kv" id="digestStatus"></div>
+      </section>
+
+      <section class="card">
+        <h2>Registry Drift Alerts</h2>
+        <div class="list" id="driftAlerts"></div>
+      </section>
+
+      <section class="card">
+        <h2>Incident Stream</h2>
+        <div class="list" id="incidents"></div>
+      </section>
+
+      <section class="card">
+        <h2>Worker Control Surface</h2>
+        <div class="list" id="workerControl"></div>
+      </section>
+    </div>
+
+    <div class="foot">
+      MEDINA Sovereign Runtime • Internal command center is intended to remain open continuously.
+    </div>
+  </div>
+
+  <script src="organism-bridge.js"></script>
+  <script>
+    const INV_PHI = 0.6180339887498948;
+    const state = {
+      profile: 'full',
+      heartbeat: 0,
+      lastSnapshot: null,
+      packRuns: null,
+      incidents: [],
+      registryDrift: [],
+      digest: {
+        beats: 0,
+        workerHeartbeats: 0,
+        incidents: 0,
+        errors: 0,
+      },
+    };
+
+    const liveStatusEl = document.getElementById('liveStatus');
+    const packStatusEl = document.getElementById('packStatus');
+    const digestStatusEl = document.getElementById('digestStatus');
+    const driftAlertsEl = document.getElementById('driftAlerts');
+    const incidentsEl = document.getElementById('incidents');
+    const workerControlEl = document.getElementById('workerControl');
+
+    function kv(el, rows) {
+      el.innerHTML = rows.map(([k, v]) => `<div>${k}</div><div>${v}</div>`).join('');
+    }
+
+    function normalizeWorkerName(name) {
+      if (typeof name !== 'string') return '';
+      return name.endsWith('-worker.js') ? name.slice(0, -10) : name;
+    }
+
+    function renderIncidents() {
+      const items = state.incidents.slice(-80).reverse();
+      incidentsEl.innerHTML = items.length ? items.map(i => `
+        <div class="item ${i.level === 'error' ? 'bad' : i.level === 'warning' ? 'warn' : 'ok'}">
+          ${i.level.toUpperCase()} — ${i.message}
+          <small>${i.timestamp}</small>
+        </div>
+      `).join('') : '<div class="item">No incidents.</div>';
+    }
+
+    function renderDrift() {
+      const items = state.registryDrift;
+      driftAlertsEl.innerHTML = items.length ? items.map(i => `
+        <div class="item ${i.level || 'warn'}">
+          ${i.message}
+          <small>${i.timestamp || new Date().toISOString()}</small>
+        </div>
+      `).join('') : '<div class="item ok">No drift detected.</div>';
+    }
+
+    function renderWorkerControl() {
+      const cp = organism.controlPlaneStatus();
+      const workers = Object.values(cp.workers || {});
+      workerControlEl.innerHTML = workers.length ? workers.map(w => `
+        <div class="item">
+          <strong>${w.name}</strong> desired=${w.desired} running=${w.running ? 'yes' : 'no'} failures=${w.failures}
+          <small>lastAction=${w.lastAction || 'none'} @ ${w.lastActionAt || '—'}</small>
+          <div style="margin-top:4px; display:flex; gap:6px;">
+            <button onclick="organism.controlWorker('${w.name}', 'on')">on</button>
+            <button onclick="organism.controlWorker('${w.name}', 'off')">off</button>
+            <button onclick="organism.controlWorker('${w.name}', 'pause')">pause</button>
+            <button onclick="organism.controlWorker('${w.name}', 'resume')">resume</button>
+          </div>
+        </div>
+      `).join('') : '<div class="item">No worker telemetry yet.</div>';
+    }
+
+    function renderStatus() {
+      const bridgeState = organism.state;
+      kv(liveStatusEl, [
+        ['Profile', state.profile],
+        ['Registry-first', bridgeState.registryFirst ? '<span class="ok">enabled</span>' : '<span class="warn">disabled</span>'],
+        ['Booted', bridgeState.booted ? '<span class="ok">yes</span>' : '<span class="warn">no</span>'],
+        ['Engine beat', String(state.heartbeat)],
+        ['Workers active', String(organism.getWorkers().length)],
+        ['Dispatches', String(bridgeState.dispatches || 0)],
+        ['Uptime', String(bridgeState.uptime || 0)],
+      ]);
+
+      const lastRun = state.packRuns?.runs?.[state.packRuns.runs.length - 1];
+      kv(packStatusEl, [
+        ['Last run id', lastRun?.run_id || '—'],
+        ['Mode', lastRun?.mode || '—'],
+        ['Profile', lastRun?.profile || '—'],
+        ['Snapshot', lastRun?.lineage?.active_snapshot || state.lastSnapshot?.snapshot_id || '—'],
+        ['Status', lastRun?.status === 'passed' ? '<span class="ok">passed</span>' : (lastRun?.status ? '<span class="warn">' + lastRun.status + '</span>' : '—')],
+      ]);
+
+      kv(digestStatusEl, [
+        ['Date (UTC)', new Date().toISOString().slice(0, 10)],
+        ['Engine beats observed', String(state.digest.beats)],
+        ['Worker heartbeats', String(state.digest.workerHeartbeats)],
+        ['Incidents', String(state.digest.incidents)],
+        ['Errors', String(state.digest.errors)],
+      ]);
+
+      renderIncidents();
+      renderDrift();
+      renderWorkerControl();
+    }
+
+    async function loadPackState() {
+      const [latestRes, runsRes, profileRes] = await Promise.allSettled([
+        fetch('../../atlas/registry/runtime/inventory-snapshots/latest.json'),
+        fetch('../../atlas/registry/runtime/pack-runs.json'),
+        fetch('../../atlas/registry/runtime/pack-profiles.json'),
+      ]);
+
+      if (latestRes.status === 'fulfilled' && latestRes.value.ok) {
+        state.lastSnapshot = await latestRes.value.json();
+      }
+      if (runsRes.status === 'fulfilled' && runsRes.value.ok) {
+        state.packRuns = await runsRes.value.json();
+      }
+
+      if (profileRes.status === 'fulfilled' && profileRes.value.ok && state.lastSnapshot) {
+        const profileCfg = await profileRes.value.json();
+        const allowed = new Set(profileCfg.worker_catalog || []);
+        const listed = new Set((state.lastSnapshot.inventory?.web_workers || []).map(normalizeWorkerName));
+        const missingFromRegistry = [...listed].filter(x => !allowed.has(x));
+        const missingFromInventory = [...allowed].filter(x => !listed.has(x));
+        const drift = [];
+        if (missingFromRegistry.length) {
+          drift.push({ level: 'warn', message: 'Workers in inventory but not in registry catalog: ' + missingFromRegistry.join(', ') });
+        }
+        if (missingFromInventory.length) {
+          drift.push({ level: 'warn', message: 'Workers in registry catalog but absent in inventory: ' + missingFromInventory.join(', ') });
+        }
+        state.registryDrift = drift;
+      }
+
+      renderStatus();
+    }
+
+    function wireBridge() {
+      organism.onHeartbeat((msg) => {
+        state.heartbeat = msg.beat || 0;
+        state.digest.beats += 1;
+        renderStatus();
+      });
+
+      organism.onWorkerHeartbeat(() => {
+        state.digest.workerHeartbeats += 1;
+      });
+
+      organism.onIncident((incident) => {
+        state.incidents.push(incident);
+        if (state.incidents.length > 500) state.incidents = state.incidents.slice(-500);
+        state.digest.incidents += 1;
+        if (incident.level === 'error') state.digest.errors += 1;
+        renderStatus();
+      });
+
+      organism.onControlPlane(() => renderStatus());
+    }
+
+    async function boot() {
+      wireBridge();
+      await organism.loadAtlasRuntimeConfig('../../atlas/registry/runtime/pack-profiles.json');
+      organism.boot('engine-worker.js');
+      organism.applyPackProfile('ops');
+      state.profile = 'ops';
+      document.getElementById('profileSelect').value = 'ops';
+      await loadPackState();
+      renderStatus();
+    }
+
+    document.getElementById('applyProfileBtn').addEventListener('click', () => {
+      const p = document.getElementById('profileSelect').value;
+      organism.applyPackProfile(p);
+      state.profile = p;
+      renderStatus();
+    });
+
+    document.getElementById('refreshRegistryBtn').addEventListener('click', async () => {
+      await organism.loadAtlasRuntimeConfig('../../atlas/registry/runtime/pack-profiles.json');
+      renderStatus();
+    });
+
+    document.getElementById('refreshPackBtn').addEventListener('click', async () => {
+      await loadPackState();
+    });
+
+    setInterval(() => {
+      loadPackState().catch(() => {});
+    }, 15000);
+
+    // Inverse golden ratio cadence for smooth continuous rendering.
+    setInterval(() => {
+      renderStatus();
+    }, 1000 / INV_PHI);
+
+    boot().catch((e) => {
+      state.incidents.push({ level: 'error', message: e.message || String(e), timestamp: new Date().toISOString() });
+      renderStatus();
+    });
+  </script>
+</body>
+</html>

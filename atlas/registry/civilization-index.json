@@ -1,0 +1,35 @@
+{
+  "id": "atlas://registry/civilization/vita-aeterna",
+  "version": "1.0.0",
+  "description": "Civilization package registry: Autobot + Decepticon codices, Semper Memoria API contract, Vita Aeterna runtime charter",
+  "charter": "doctrine/organism/VITA_AETERNA_CIVILIZATION_CHARTER.md",
+  "ip_portfolio_manifest": "atlas/registry/ip-portfolio-manifest.json",
+  "governance": {
+    "laws": "governance/laws/civilization.cpl-l",
+    "pipeline": "governance/pipelines/civilization-runtime.cpl-p",
+    "organism": "governance/organism/vita-aeterna.ocl",
+    "protocol_layout": "governance/protocols/vita-aeterna-protocol-layout.yml"
+  },
+  "codices": {
+    "autobot_classes": [
+      "protocol-scribes",
+      "law-custodians",
+      "pipeline-mechanics",
+      "organism-gardeners",
+      "memory-archivists"
+    ],
+    "decepticon_classes": [
+      "law-breakers",
+      "pipeline-corruptors",
+      "organism-parasites",
+      "shadow-bots"
+    ]
+  },
+  "notes": [
+    "Canonical memory is append-only.",
+    "Decepticons are sandbox-bound adversarial optimizers.",
+    "Runtime enforces counterpart mapping and reversibility.",
+    "Runtime hierarchy is Nova > Memory > Active State Runtime Memory Execution.",
+    "Heavy computation is delegated to Foundation Floor Runtime lanes."
+  ]
+}

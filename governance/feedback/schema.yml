@@ -1,0 +1,95 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# 📋 HUMAN FEEDBACK SCHEMA — SCHEMA RESPONSORUM
+# "Memoria humana corrigit machinas." (Human memory corrects machines.)
+#
+# When a human overrides a bot governance decision, they record feedback
+# here. The governance cycle ingests this and the Meta Engine learns.
+# PROT-116 compliant (human feedback integration protocol).
+#
+# Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+# ═══════════════════════════════════════════════════════════════════════════
+
+schema_version: "1.0.0"
+language: "FEEDBACK"
+scc: 2.71
+
+fields:
+  id:
+    type: string
+    format: "fb-YYYY-MM-DD-NNN"
+    required: true
+    description: "Unique feedback ID. Increment NNN per day."
+    example: "fb-2026-05-03-001"
+
+  timestamp:
+    type: datetime
+    format: "ISO 8601"
+    required: true
+    example: "2026-05-03T04:00:00Z"
+
+  actor:
+    type: string
+    format: "human://name or bot://name"
+    required: true
+    description: "Who is providing the feedback"
+    example: "human://freddy"
+
+  target:
+    type: object
+    required: true
+    fields:
+      type:
+        type: string
+        enum: ["decision", "law", "pipeline_step", "bot_behavior"]
+        required: true
+      entity:
+        type: string
+        format: "atlas://bot/NAME"
+        required: true
+      law_id:
+        type: string
+        required: false
+        description: "The CPL-L law set that made the decision"
+      rule_name:
+        type: string
+        required: false
+        description: "The specific rule that triggered"
+
+  decision:
+    type: object
+    required: true
+    fields:
+      system:
+        type: string
+        enum: ["FORBID", "WARN", "REQUIRE", "ESCALATE", "BLOCK", "ALLOW"]
+        required: true
+        description: "What the system decided"
+      human:
+        type: string
+        enum: ["ALLOW", "FORBID", "ESCALATE", "DEFER"]
+        required: true
+        description: "What the human decided instead"
+
+  rationale:
+    type: string
+    required: true
+    description: "Why the human overrode the system decision"
+    min_length: 20
+
+  outcome:
+    type: string
+    enum: ["safe", "unsafe_in_retrospect", "pending"]
+    required: false
+    description: "Filled in later — was the override a good decision?"
+
+  meta_engine_signal:
+    type: object
+    required: false
+    description: "Optional signal to Meta Engine for learning"
+    fields:
+      update_law:
+        type: boolean
+        default: false
+      proposed_change:
+        type: string
+        description: "If true, what should change in the law"

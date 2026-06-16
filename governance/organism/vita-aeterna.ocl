@@ -1,0 +1,91 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# 🧬 VITA AETERNA OCL CHARTER — CHARTA AETERNA
+# "Memoria manet, ordo manet."
+# Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+# ═══════════════════════════════════════════════════════════════════════════
+
+id: "atlas://organism/vita-aeterna"
+version: "1.0.0"
+language: "OCL"
+scc: 4.33
+
+meta:
+  name: "Vita Aeterna Runtime Charter"
+  description: "Runtime charter hosting Autobots, Decepticons, and sovereign organisms with Semper Memoria integration."
+
+layers:
+  - id: "L1"
+    name: "Nova Runtime"
+    concerns: ["global_runtime_root", "runtime_coordination", "domain_specialization"]
+  - id: "L2"
+    name: "Memory Runtime"
+    concerns: ["memory_domain_root", "lineage_routing", "memory_runtime_policies"]
+  - id: "L3"
+    name: "Active State Runtime Memory Execution"
+    concerns: ["live_execution_state", "ai_execution_memory", "runtime_state_transition"]
+  - id: "L4"
+    name: "Foundation Floor Runtime"
+    concerns: ["deep_compute_offload", "substrate_floor_processing", "load_distribution"]
+  - id: "L5"
+    name: "Substrate"
+    concerns: ["execution", "sandboxing", "scheduling", "fairness", "quotas"]
+  - id: "L6"
+    name: "Law and Protocol"
+    concerns: ["cpl_l_constraints", "cpl_p_dataflows", "invariant_enforcement"]
+  - id: "L7"
+    name: "Orchestrators"
+    concerns: ["resource_negotiation", "goal_mediation", "multi_organism_conflict_resolution"]
+
+classes:
+  autobot:
+    alignment: "stability"
+    prime_directive: "preserve_coherence_enable_evolution"
+    required_laws: ["coherence", "reversibility", "explainability", "containment"]
+  decepticon:
+    alignment: "adversarial_optimization"
+    prime_directive: "expose_weaknesses"
+    required_laws: ["sandboxing", "telemetry", "non_persistence", "counterpart"]
+
+constraints:
+  - id: "append_only_canonical_memory"
+    expr: "context.memory.write_mode == 'append' || context.memory.branch != 'canonical'"
+    severity: "HARD"
+
+  - id: "decepticon_requires_chaos_domain"
+    expr: "context.actor.class != 'decepticon' || context.runtime.domain == 'chaos'"
+    severity: "HARD"
+
+  - id: "spawn_requires_quota_and_runtime_scope"
+    expr: "context.spawn.requested != true || (context.spawn.runtime_scoped == true && context.spawn.quota_scoped == true)"
+    severity: "HARD"
+
+  - id: "nova_memory_active_hierarchy_required"
+    expr: "context.runtime.hierarchy == 'nova>memory>active_state'"
+    severity: "HARD"
+
+  - id: "foundation_floor_required_for_heavy_compute"
+    expr: "context.compute.heavy != true || context.compute.foundation_floor_delegated == true"
+    severity: "HARD"
+
+  - id: "every_decepticon_has_counterpart"
+    expr: "context.decepticon.counterpart_exists == true"
+    severity: "HARD"
+
+  - id: "reason_chain_required_for_autonomy"
+    expr: "context.action.autonomous != true || context.action.reason_chain_present == true"
+    severity: "HARD"
+
+math_substrate:
+  phi: 1.6180339887498948
+  phi_sq: 2.618033988749895
+  inv_phi: 0.6180339887498948
+  tau: 6.283185307179586
+  schumann_hz: 7.83
+  hearts:
+    metropolis_hz: 0.1
+    coupling_hz: 1.6180339887498948
+    regulating_hz: 2.618033988749895
+
+governance_refs:
+  laws_ref: "governance://laws/civilization"
+  pipeline_ref: "pipeline://governance/civilization_runtime_cycle"

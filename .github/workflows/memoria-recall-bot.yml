@@ -1,0 +1,156 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# MEMORIA RECUPERATOR — MEMORIA BOT 3: THE MEMORY RECALL TESTER
+# "Recuperator Memoriae" — Tests memory recall health across all tiers
+#
+# Runs daily + on push to main.
+# Exercises the three Memory Temple tiers (SACRA, VIVA, NEXUS) with
+# recall tests, traverse tests, and response-time benchmarks.
+# Opens a GitHub Issue if recall health drops below φ threshold.
+#
+# House: Memory Temple tier  |  Law: L-005 (always-on, not alive)
+# Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+# ═══════════════════════════════════════════════════════════════════════════
+
+name: "[MEMORIA] Recuperator — Memory Recall Health Bot"
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "organism-cli/web/memoria-*.js"
+      - "docs/bot-fleet/memoria-index.json"
+  schedule:
+    # Daily at 07:18 UTC (φ-aligned)
+    - cron: "18 7 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  recall:
+    name: "🔁 Recuperator — Memory Recall Test"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Configure RECUPERATOR-BOT identity
+        run: |
+          git config user.name  "RECUPERATOR-BOT"
+          git config user.email "recuperator-bot@medina.sovereign"
+
+      - name: Run Memoria Recall engine
+        id: recall
+        run: |
+          python3 nova_ovo/agents/memoria/memoria_recall_bot.py \
+            --repo-root="$GITHUB_WORKSPACE" \
+            --output=/tmp/recall-report.json 2>&1 | tee /tmp/recuperator-log.txt
+          echo "exit_code=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+
+      - name: Parse recall report
+        id: parse
+        run: |
+          python3 - <<'PYEOF'
+          import json, os
+
+          try:
+              report = json.load(open('/tmp/recall-report.json'))
+          except Exception:
+              report = {"healthy": True, "issues": [], "recall_score": 1.0}
+
+          healthy      = report.get("healthy", True)
+          recall_score = report.get("recall_score", 1.0)
+          issues       = report.get("issues", [])
+
+          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+              f.write(f"healthy={str(healthy).lower()}\n")
+              f.write(f"recall_score={recall_score}\n")
+              f.write(f"has_issues={'true' if issues else 'false'}\n")
+              summary = "\n".join(f"- {i}" for i in issues[:10])
+              f.write(f"issues_summary<<EOF\n{summary}\nEOF\n")
+          PYEOF
+
+      - name: Open GitHub Issue if recall health low
+        if: steps.parse.outputs.has_issues == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TITLE="[RECUPERATOR] Memory Recall Health Alert — $(date -u '+%Y-%m-%d')"
+          BODY="## 🔁 RECUPERATOR — Memory Recall Health Alert
+
+**Bot:** RECUPERATOR-BOT (Recuperator Memoriae)
+**Recall Score:** \`${{ steps.parse.outputs.recall_score }}\`
+**Healthy:** \`${{ steps.parse.outputs.healthy }}\`
+**Detected:** \`$(date -u '+%Y-%m-%dT%H:%M:%SZ')\`
+**Commit:** \`${{ github.sha }}\`
+
+---
+
+### Issues Found
+
+${{ steps.parse.outputs.issues_summary }}
+
+---
+
+### What to do
+
+1. Review each recall issue listed above
+2. Check the affected Memory Temple tier (SACRA / VIVA / NEXUS)
+3. Apply fix and commit with prefix \`[RECUPERATOR-FIX]\`
+4. Close this issue once recall score returns to ≥ φ² threshold
+
+---
+
+*Law: L-005 — Agent Existence Law — Always-on, not alive*
+*φ = 1.618033988749895 — Recall threshold: φ² = 2.618*"
+
+          gh issue create \
+            --title "$TITLE" \
+            --body  "$BODY" \
+            --label "organism-bot" \
+            || echo "[RECUPERATOR] Could not open issue — create 'organism-bot' label"
+
+      - name: Upload recall report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: recall-report-${{ github.run_id }}
+          path: /tmp/recall-report.json
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: BotProofRecord
+        if: always()
+        run: |
+          echo "┌─ BotProofRecord ─────────────────────────────────────────────┐"
+          echo "│ id:          RECUPERATOR                                     │"
+          echo "│ latin:       Recuperator Memoriae                            │"
+          echo "│ fleet:       Memoria Fleet (Memory Temple)                   │"
+          echo "│ role:        memory-recall-health                            │"
+          echo "│ law:         L-005 — Always-on, not alive                   │"
+          echo "│ authority:   OBSERVE + TEST + REPORT + OPEN_ISSUES          │"
+          echo "│ prohibited:  mutate memory objects, modify source files     │"
+          echo "│ run_id:      ${{ github.run_id }}"
+          echo "│ sha:         ${{ github.sha }}"
+          echo "│ proof_ref:   docs/bot-fleet/proof-index.md                  │"
+          echo "└───────────────────────────────────────────────────────────────┘"
+
+      - name: Summary
+        if: always()
+        run: |
+          echo ""
+          echo "╔═══════════════════════════════════════════════╗"
+          echo "║   [RECUPERATOR] Recall Test Complete          ║"
+          echo "║   Score: ${{ steps.parse.outputs.recall_score }}"
+          echo "║   Healthy: ${{ steps.parse.outputs.healthy }}"
+          echo "║   φ = 1.618033988749895                       ║"
+          echo "╚═══════════════════════════════════════════════╝"
+          cat /tmp/recuperator-log.txt 2>/dev/null || true

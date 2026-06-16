@@ -1,0 +1,143 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# 🌐 ORGANISM DEPLOY BOT — PRAEFECTUS COLLOCANDI
+# "Ante collocas, proba." (Before you deploy, prove.)
+#
+# Validates dfx.json, checks ICP canister configuration, validates
+# Cloudflare worker config, and generates deployment manifest.
+#
+# Attribution: Alfredo Medina Hernandez | Medina Tech | Dallas, TX
+# ═══════════════════════════════════════════════════════════════════════════
+
+name: 🌐 organism-deploy-bot
+
+on:
+  push:
+    paths:
+      - 'icp/dfx.json'
+      - 'cloudflare-workers/**'
+      - 'organism/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deploy-validation:
+    name: 🌐 Deployment Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Validate dfx.json
+        run: |
+          echo "🌐 Validating ICP canister configuration..."
+          if [ -f icp/dfx.json ]; then
+            python3 -c "import json; json.load(open('icp/dfx.json'))" 2>/dev/null \
+              && echo "  ✓ dfx.json — valid JSON" \
+              || echo "  ✗ dfx.json — invalid JSON"
+
+            # Count canisters
+            CANISTERS=$(python3 -c "import json; d=json.load(open('icp/dfx.json')); print(len(d.get('canisters',{})))" 2>/dev/null)
+            echo "  ℹ Canisters defined: $CANISTERS"
+
+            # List canister names
+            python3 -c "
+          import json
+          d = json.load(open('icp/dfx.json'))
+          for name, config in d.get('canisters', {}).items():
+              ctype = config.get('type', 'unknown')
+              print(f'    • {name} ({ctype})')
+          " 2>/dev/null
+          else
+            echo "  ✗ icp/dfx.json not found"
+          fi
+
+      - name: Validate Cloudflare Workers
+        run: |
+          echo "🌐 Validating Cloudflare workers..."
+          for f in cloudflare-workers/*.js; do
+            name=$(basename "$f")
+            if node -c "$f" 2>/dev/null; then
+              echo "  ✓ $name — valid JavaScript"
+            else
+              echo "  ✗ $name — syntax error"
+            fi
+          done
+
+          if [ -f cloudflare-workers/wrangler.toml ]; then
+            echo "  ✓ wrangler.toml exists"
+          else
+            echo "  ⚠ wrangler.toml not found"
+          fi
+
+      - name: Validate organism-bridge.js Worker List
+        run: |
+          echo "🌐 Checking organism-bridge.js worker registry..."
+          if [ -f organism-cli/web/organism-bridge.js ]; then
+            REGISTERED=$(grep -oP "'[a-z-]+'" organism-cli/web/organism-bridge.js | sort -u | wc -l)
+            ACTUAL=$(ls organism-cli/web/*-worker.js 2>/dev/null | wc -l)
+            echo "  ℹ Workers registered in bridge: $REGISTERED"
+            echo "  ℹ Worker files found: $ACTUAL"
+
+            # Check for unregistered workers
+            for f in organism-cli/web/*-worker.js; do
+              name=$(basename "$f" -worker.js)
+              if grep -q "'$name'" organism-cli/web/organism-bridge.js 2>/dev/null; then
+                echo "  ✓ $name — registered"
+              else
+                echo "  ⚠ $name — NOT registered in bridge"
+              fi
+            done
+          fi
+
+      - name: Generate Deployment Manifest
+        run: |
+          mkdir -p build/deploy
+          echo "# 🌐 Deployment Manifest" > build/deploy/deployment-manifest.md
+          echo "" >> build/deploy/deployment-manifest.md
+          echo "**Generated:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> build/deploy/deployment-manifest.md
+          echo "**Commit:** \`${{ github.sha }}\`" >> build/deploy/deployment-manifest.md
+          echo "" >> build/deploy/deployment-manifest.md
+
+          echo "## ICP Canisters" >> build/deploy/deployment-manifest.md
+          echo "" >> build/deploy/deployment-manifest.md
+          python3 -c "
+          import json
+          d = json.load(open('icp/dfx.json'))
+          for name, config in d.get('canisters', {}).items():
+              ctype = config.get('type', 'unknown')
+              main = config.get('main', '—')
+              print(f'- **{name}** ({ctype}): \`{main}\`')
+          " 2>/dev/null >> build/deploy/deployment-manifest.md
+
+          echo "" >> build/deploy/deployment-manifest.md
+          echo "## Cloudflare Workers" >> build/deploy/deployment-manifest.md
+          echo "" >> build/deploy/deployment-manifest.md
+          for f in cloudflare-workers/*.js; do
+            name=$(basename "$f")
+            lines=$(wc -l < "$f")
+            echo "- \`$name\` ($lines lines)" >> build/deploy/deployment-manifest.md
+          done
+
+          echo "" >> build/deploy/deployment-manifest.md
+          echo "## Web Workers" >> build/deploy/deployment-manifest.md
+          echo "" >> build/deploy/deployment-manifest.md
+          WORKER_COUNT=$(ls organism-cli/web/*-worker.js 2>/dev/null | wc -l)
+          echo "**$WORKER_COUNT workers** registered in organism-bridge.js" >> build/deploy/deployment-manifest.md
+
+          cat build/deploy/deployment-manifest.md
+
+      - name: Commit Manifest
+        run: |
+          git config user.name "organism-deploy-bot"
+          git config user.email "organism-deploy-bot[bot]@users.noreply.github.com"
+          cp build/deploy/deployment-manifest.md docs/deployment-manifest.md
+          git add docs/deployment-manifest.md
+          git diff --cached --quiet || git commit -m "🌐 organism-deploy-bot: Updated deployment manifest"
+          git push || echo "Nothing to push"

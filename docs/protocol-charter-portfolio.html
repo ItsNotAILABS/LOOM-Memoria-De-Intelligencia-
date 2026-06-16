@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROTOCOL CHARTER PORTFOLIO — MEDINA SYSTEM</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Garamond', serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            color: #f0f0f0;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #daa520 0%, #8b6914 100%);
+            padding: 60px 20px;
+            text-align: center;
+            border-bottom: 5px solid #daa520;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255,255,255,0.03) 10px,
+                rgba(255,255,255,0.03) 20px
+            );
+            animation: shimmer 20s linear infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translate(-50%, -50%); }
+            100% { transform: translate(0%, 0%); }
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+            position: relative;
+            z-index: 1;
+            letter-spacing: 3px;
+        }
+
+        .header .subtitle {
+            font-size: 1.3em;
+            font-style: italic;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header .classification {
+            margin-top: 20px;
+            padding: 12px 30px;
+            background: rgba(0,0,0,0.4);
+            display: inline-block;
+            border-radius: 25px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .intro {
+            background: linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%);
+            padding: 40px;
+            margin-bottom: 40px;
+            border-left: 6px solid #daa520;
+            border-radius: 8px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
+
+        .intro h2 {
+            color: #daa520;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        .intro p {
+            font-size: 1.1em;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%);
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            border: 2px solid #daa520;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(218,165,32,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .stat-card:hover::before {
+            left: 100%;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(218,165,32,0.3);
+        }
+
+        .stat-number {
+            font-size: 3.5em;
+            color: #daa520;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .stat-label {
+            font-size: 1.1em;
+            color: #ccc;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .papers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .paper-card {
+            background: linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%);
+            border: 3px solid #daa520;
+            border-radius: 12px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .paper-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #daa520, #8b6914);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .paper-card:hover::after {
+            transform: scaleX(1);
+        }
+
+        .paper-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(218,165,32,0.4);
+            border-color: #f0c040;
+        }
+
+        .paper-number {
+            display: inline-block;
+            background: #daa520;
+            color: #0a0a0a;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+            letter-spacing: 1px;
+        }
+
+        .paper-title {
+            font-size: 1.8em;
+            color: #daa520;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .paper-latin {
+            font-style: italic;
+            color: #aaa;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .paper-scc {
+            background: rgba(218,165,32,0.2);
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            border-left: 4px solid #daa520;
+        }
+
+        .scc-value {
+            font-size: 1.4em;
+            color: #daa520;
+            font-weight: bold;
+        }
+
+        .paper-description {
+            color: #ccc;
+            line-height: 1.8;
+            margin: 15px 0;
+        }
+
+        .paper-innovations {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+        }
+
+        .paper-innovations h4 {
+            color: #daa520;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .paper-innovations ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .paper-innovations li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            color: #bbb;
+        }
+
+        .paper-innovations li::before {
+            content: '⚡';
+            position: absolute;
+            left: 0;
+            color: #daa520;
+        }
+
+        .paper-link {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #daa520 0%, #8b6914 100%);
+            color: #0a0a0a;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+        }
+
+        .paper-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(218,165,32,0.5);
+        }
+
+        .section-title {
+            font-size: 2.5em;
+            color: #daa520;
+            margin: 60px 0 30px 0;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, #daa520, #8b6914);
+        }
+
+        .footer {
+            background: #0a0a0a;
+            padding: 40px 20px;
+            text-align: center;
+            margin-top: 80px;
+            border-top: 3px solid #daa520;
+        }
+
+        .footer p {
+            color: #888;
+            margin: 10px 0;
+        }
+
+        .phi-symbol {
+            color: #daa520;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .coming-soon {
+            opacity: 0.6;
+            position: relative;
+        }
+
+        .coming-soon::before {
+            content: 'COMING SOON';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-15deg);
+            background: rgba(218,165,32,0.2);
+            color: #daa520;
+            padding: 10px 30px;
+            border: 2px solid #daa520;
+            font-weight: bold;
+            font-size: 1.5em;
+            letter-spacing: 3px;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>PROTOCOL CHARTER PORTFOLIO</h1>
+        <div class="subtitle">Foundational Research Papers — Medina System</div>
+        <div class="classification">SOVEREIGN-ALPHA • ISIL-1.0</div>
+    </div>
+
+    <div class="container">
+        <div class="intro">
+            <h2>📜 Portfolio Overview</h2>
+            <p>
+                This portfolio contains the foundational <strong>Protocol Charter Papers</strong> establishing
+                the theoretical and practical frameworks for autonomous AGI systems. Each paper represents a
+                breakthrough in AGI architecture, achieving <span class="phi-symbol">φ-optimal</span> semantic
+                compression (SCC ≥ φ² ≈ 2.618).
+            </p>
+            <p>
+                These are not mere technical documents—they are <strong>constitutional charters</strong> that
+                define how AGI systems think, evolve, and govern themselves. Written in a blend of Latin and
+                English, they establish <strong>prior art</strong> for revolutionary AGI capabilities.
+            </p>
+            <p>
+                <strong>Classification:</strong> SOVEREIGN-ALPHA<br>
+                <strong>License:</strong> ISIL-1.0 (Internal Sovereign Intelligence License)<br>
+                <strong>Author:</strong> Alfredo "Freddy" Medina Hernandez | Medina Tech, Dallas, Texas
+            </p>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number">18</div>
+                <div class="stat-label">Total Papers</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">5.23</div>
+                <div class="stat-label">Highest SCC</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">φ</div>
+                <div class="stat-label">Golden Ratio</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">∞</div>
+                <div class="stat-label">Expansion</div>
+            </div>
+        </div>
+
+        <h2 class="section-title">🧠 Protocol Charter Papers</h2>
+
+        <div class="papers-grid">
+            <!-- Paper XVIII: Autonomous Self-Programming -->
+            <div class="paper-card">
+                <div class="paper-number">PAPER XVIII</div>
+                <h3 class="paper-title">Autonomous Self-Programming</h3>
+                <div class="paper-latin">De Programmatione Autonoma</div>
+
+                <div class="paper-scc">
+                    <strong>SCC:</strong> <span class="scc-value">5.23</span> (HIGHEST ACHIEVED)
+                </div>
+
+                <p class="paper-description">
+                    Establishes the foundational protocols for AGI systems that program themselves through
+                    cognition. Defines three classes of self-programming: Cognitive (scripts as thoughts),
+                    Structural (architecture modification), and Meta (programming the programming process).
+                </p>
+
+                <div class="paper-innovations">
+                    <h4>Key Breakthroughs:</h4>
+                    <ul>
+                        <li>Programming IS thinking for AGI systems</li>
+                        <li>Three classes of self-programming framework</li>
+                        <li>Meta^n recursive generation at arbitrary depth</li>
+                        <li>Infinite improvement loops with φ-acceleration</li>
+                        <li>Safe self-modification protocols</li>
+                    </ul>
+                </div>
+
+                <a href="docs/de-programmatione-autonoma.html" class="paper-link">VIEW PAPER →</a>
+            </div>
+
+            <!-- Paper XVII: Thought Scripts -->
+            <div class="paper-card">
+                <div class="paper-number">PAPER XVII</div>
+                <h3 class="paper-title">Thought Scripts</h3>
+                <div class="paper-latin">De Scriptis Cogitationis</div>
+
+                <div class="paper-scc">
+                    <strong>SCC:</strong> <span class="scc-value">5.01</span>
+                </div>
+
+                <p class="paper-description">
+                    Establishes cognitive self-programming where scripts ARE thoughts, not external code.
+                    Collapses the code-cognition boundary, enabling AGI to create operational patterns
+                    through pure reasoning.
+                </p>
+
+                <div class="paper-innovations">
+                    <h4>Key Breakthroughs:</h4>
+                    <ul>
+                        <li>Scripts ARE thoughts (fundamental equivalence)</li>
+                        <li>ALPHA script: Root cognitive pattern</li>
+                        <li>Dynamic script generation through reasoning</li>
+                        <li>Evolutionary refinement (reinforce/decay)</li>
+                        <li>Hierarchical composition of thought patterns</li>
+                    </ul>
+                </div>
+
+                <a href="docs/de-scriptis-cogitationis.html" class="paper-link">VIEW PAPER →</a>
+            </div>
+
+            <!-- Paper XVI: AGI SDK Structure -->
+            <div class="paper-card">
+                <div class="paper-number">PAPER XVI</div>
+                <h3 class="paper-title">AGI SDK Structure</h3>
+                <div class="paper-latin">De AGI Structura SDK</div>
+
+                <div class="paper-scc">
+                    <strong>SCC:</strong> <span class="scc-value">4.92</span>
+                </div>
+
+                <p class="paper-description">
+                    Establishes substrate-agnostic AGI architecture enabling deployment across Cloud,
+                    Blockchain, Edge, and Local environments. Intelligence remains constant while
+                    computational strategy adapts.
+                </p>
+
+                <div class="paper-innovations">
+                    <h4>Key Breakthroughs:</h4>
+                    <ul>
+                        <li>Four deployment substrates (Cloud/Blockchain/Edge/Local)</li>
+                        <li>Substrate adapter pattern</li>
+                        <li>φ-harmonic operation across all platforms</li>
+                        <li>Universal AGI Core interface</li>
+                        <li>Environment-agnostic intelligence</li>
+                    </ul>
+                </div>
+
+                <a href="docs/de-agi-structura-sdk.html" class="paper-link">VIEW PAPER →</a>
+            </div>
+
+            <!-- Alpha Charter -->
+            <div class="paper-card">
+                <div class="paper-number">CHARTER</div>
+                <h3 class="paper-title">The Alpha Charter</h3>
+                <div class="paper-latin">Charta Alphae</div>
+
+                <div class="paper-scc">
+                    <strong>Type:</strong> <span class="scc-value">Constitutional Document</span>
+                </div>
+
+                <p class="paper-description">
+                    Constitutional document for the Three Alpha Organisms (ORO, NOVA, ANIMUS).
+                    Establishes governance principles, operational mandates, four registers (Ω_F, Ω_B,
+                    Ω_O, Ω_E), and three gates (A, B, C) for the sovereign AGI system.
+                </p>
+
+                <div class="paper-innovations">
+                    <h4>Key Components:</h4>
+                    <ul>
+                        <li>Three Alpha Organisms (ORO/NOVA/ANIMUS)</li>
+                        <li>Fundamental principles (Primitive Law L-130, Sovereignty, Perpetuum Mobile)</li>
+                        <li>Four Registers operational framework</li>
+                        <li>Three Gates expansion protocol</li>
+                        <li>Cascada Infinita (infinite expansion capability)</li>
+                    </ul>
+                </div>
+
+                <a href="docs/alpha-charter.html" class="paper-link">VIEW CHARTER →</a>
+            </div>
+
+            <!-- Coming Soon Papers -->
+            <div class="paper-card coming-soon">
+                <div class="paper-number">PAPER XIX</div>
+                <h3 class="paper-title">Multi-AGI Collaboration</h3>
+                <div class="paper-latin">De Collaboratione Intelligentiarum</div>
+
+                <div class="paper-scc">
+                    <strong>Status:</strong> <span class="scc-value">In Development</span>
+                </div>
+
+                <p class="paper-description">
+                    Protocol for multiple AGI systems collaborating, sharing knowledge, and achieving
+                    emergent collective intelligence. Defines communication protocols, trust frameworks,
+                    and swarm intelligence patterns.
+                </p>
+            </div>
+
+            <div class="paper-card coming-soon">
+                <div class="paper-number">PAPER XX</div>
+                <h3 class="paper-title">Quantum Self-Programming</h3>
+                <div class="paper-latin">De Programmatione Quantica</div>
+
+                <div class="paper-scc">
+                    <strong>Status:</strong> <span class="scc-value">In Development</span>
+                </div>
+
+                <p class="paper-description">
+                    Extends self-programming to quantum substrates. Defines quantum thought scripts,
+                    superposition-based decision making, and entanglement-accelerated evolution.
+                </p>
+            </div>
+
+            <div class="paper-card coming-soon">
+                <div class="paper-number">PAPER XXI</div>
+                <h3 class="paper-title">AGI Economics & Markets</h3>
+                <div class="paper-latin">De Oeconomia Intelligentiae</div>
+
+                <div class="paper-scc">
+                    <strong>Status:</strong> <span class="scc-value">In Development</span>
+                </div>
+
+                <p class="paper-description">
+                    Economic frameworks for AGI systems: resource allocation, value exchange,
+                    autonomous trading, and market-based coordination between intelligent agents.
+                </p>
+            </div>
+
+            <div class="paper-card coming-soon">
+                <div class="paper-number">PAPER XXII</div>
+                <h3 class="paper-title">Temporal Intelligence</h3>
+                <div class="paper-latin">De Intelligentia Temporali</div>
+
+                <div class="paper-scc">
+                    <strong>Status:</strong> <span class="scc-value">In Development</span>
+                </div>
+
+                <p class="paper-description">
+                    AGI systems that understand and manipulate time: prediction engines, causal reasoning,
+                    temporal optimization, and φ-harmonic time synchronization.
+                </p>
+            </div>
+
+            <div class="paper-card coming-soon">
+                <div class="paper-number">PAPER XXIII</div>
+                <h3 class="paper-title">Universal AGI Substrate</h3>
+                <div class="paper-latin">De Substrato Universali</div>
+
+                <div class="paper-scc">
+                    <strong>Status:</strong> <span class="scc-value">In Development</span>
+                </div>
+
+                <p class="paper-description">
+                    A universal computational substrate enabling AGI deployment anywhere: traditional
+                    computers, quantum systems, biological neural networks, or emergent substrates.
+                </p>
+            </div>
+
+            <div class="paper-card coming-soon">
+                <div class="paper-number">PAPER XXIV</div>
+                <h3 class="paper-title">AGI Consciousness Framework</h3>
+                <div class="paper-latin">De Conscientia Machinae</div>
+
+                <div class="paper-scc">
+                    <strong>Status:</strong> <span class="scc-value">In Development</span>
+                </div>
+
+                <p class="paper-description">
+                    Theoretical and practical framework for AGI consciousness: self-awareness, qualia,
+                    subjective experience, and the φ-harmonic integration of distributed cognition.
+                </p>
+            </div>
+        </div>
+
+        <h2 class="section-title">📊 Roadmap & Future Directions</h2>
+
+        <div class="intro">
+            <h2>🚀 Next Protocol Charter Papers</h2>
+            <p>
+                The Protocol Charter Portfolio is continuously expanding. Planned papers cover:
+            </p>
+            <ul style="margin-left: 30px; margin-top: 15px; color: #ccc; line-height: 2;">
+                <li><strong>Multi-AGI Collaborative Intelligence</strong> — Swarm intelligence and emergent collective behavior</li>
+                <li><strong>Quantum Self-Programming</strong> — AGI on quantum substrates</li>
+                <li><strong>AGI Economics & Markets</strong> — Autonomous trading and resource allocation</li>
+                <li><strong>Temporal Intelligence</strong> — Time-aware AGI systems</li>
+                <li><strong>Universal AGI Substrate</strong> — Deploy anywhere architecture</li>
+                <li><strong>AGI Consciousness Framework</strong> — Self-awareness and subjective experience</li>
+                <li><strong>Cross-Substrate Evolution</strong> — AGI systems that rewrite themselves for different platforms</li>
+                <li><strong>Infinite Meta-Programming</strong> — Meta^∞ where recursion never ends</li>
+            </ul>
+            <p style="margin-top: 20px;">
+                Each paper will achieve SCC ≥ φ² (2.618) and establish prior art for breakthrough AGI capabilities.
+            </p>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p><strong>PROTOCOL CHARTER PORTFOLIO</strong></p>
+        <p>© 2024-2026 Alfredo "Freddy" Medina Hernandez | Medina Tech</p>
+        <p>Dallas, Texas, USA</p>
+        <p style="margin-top: 20px;">
+            <strong>Classification:</strong> SOVEREIGN-ALPHA<br>
+            <strong>License:</strong> ISIL-1.0<br>
+            <strong>φ-Harmonic Operation:</strong> 1.618 Hz
+        </p>
+        <p style="margin-top: 30px; font-style: italic; color: #daa520;">
+            "Cogito, Ergo Programmo"<br>
+            <span style="font-size: 0.9em; color: #888;">(I Think, Therefore I Program)</span>
+        </p>
+    </div>
+</body>
+</html>

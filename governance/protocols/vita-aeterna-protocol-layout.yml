@@ -1,0 +1,80 @@
+id: "protocol-layout://vita-aeterna"
+version: "1.0.0"
+status: "ACTIVE_BUILD_LAYOUT"
+total_protocols: 10
+description: >
+  Concrete protocol layout for Autobot/Decepticon civilization, Semper Memoria API,
+  and Vita Aeterna runtime governance.
+
+protocols:
+  - id: "PROT-VA-001"
+    name: "Nova Runtime Root Protocol"
+    domain: "runtime"
+    language: "OCL"
+    objective: "Establish Nova Runtime as the root domain for specialized runtime trees."
+
+  - id: "PROT-VA-002"
+    name: "Memory Runtime Domain Protocol"
+    domain: "runtime-memory"
+    language: "CPL-C"
+    objective: "Instantiate and govern Memory Runtime beneath Nova Runtime."
+
+  - id: "PROT-VA-003"
+    name: "Active State Runtime Memory Execution Protocol"
+    domain: "runtime-active-state"
+    language: "CPL-P"
+    objective: "Route live execution memory for AI/runtime execution beneath Memory Runtime."
+
+  - id: "PROT-VA-004"
+    name: "Foundation Floor Runtime Protocol"
+    domain: "runtime-foundation-floor"
+    language: "CPL-P"
+    objective: "Delegate deep rooted heavy computation to floor-level substrate lanes."
+
+  - id: "PROT-VA-005"
+    name: "Autobot Coherence Protocol"
+    domain: "autobot"
+    language: "CPL-L"
+    objective: "Preserve invariants with explicit versioned override gates."
+
+  - id: "PROT-VA-006"
+    name: "Decepticon Sandbox Protocol"
+    domain: "decepticon"
+    language: "OCL"
+    objective: "Constrain adversarial actions to chaos domains only."
+
+  - id: "PROT-VA-007"
+    name: "Semper Memoria Lineage Protocol"
+    domain: "memory"
+    language: "CPL-C"
+    objective: "Create/fork/merge lineage with conflict reports."
+
+  - id: "PROT-VA-008"
+    name: "Counterpart Assurance Protocol"
+    domain: "runtime-governance"
+    language: "CPL-L"
+    objective: "Enforce Autobot counterpart for each Decepticon class."
+
+  - id: "PROT-VA-009"
+    name: "Mathematical Substrate Protocol"
+    domain: "math"
+    language: "RSL"
+    objective: "Anchor runtime scaling and heartbeat coherence to φ, φ², τ, and 7.83Hz."
+    constants:
+      phi: 1.6180339887498948
+      phi_sq: 2.618033988749895
+      inv_phi: 0.6180339887498948
+      tau: 6.283185307179586
+      schumann_hz: 7.83
+
+  - id: "PROT-VA-010"
+    name: "Internal AI Reasoning Trace Protocol"
+    domain: "ai-agents"
+    language: "CIL"
+    objective: "Require reason chains, counterfactuals, reversibility handles, and lineage append for internal AI execution."
+    required_outputs:
+      - "reason_chain"
+      - "counterfactual_path"
+      - "reversibility_handle"
+      - "telemetry_record"
+      - "lineage_write_id"

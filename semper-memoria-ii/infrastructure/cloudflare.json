@@ -1,0 +1,40 @@
+{
+  "_doctrine": "DO NOT BUILD UNTIL CREATOR SAYS SO — Paratum est. Creator solus iubet.",
+  "_classification": "SOVEREIGN-ALPHA",
+  "_status": "LOCKED — fool-ready",
+
+  "name": "semper-memoria-ii",
+  "main": "workers/phantom-field.js",
+  "compatibility_date": "2026-05-05",
+
+  "vars": {
+    "VIGILIA_VERSION": "φ.0.2.0.1",
+    "SEMPER_MEMORIA_VERSION": "II.φ.0.1",
+    "PHI": "1.6180339887498948482",
+    "PHI_SQ": "2.6180339887498948482",
+    "SCHUMANN_HZ": "7.83",
+    "CLASSIFICATION": "SOVEREIGN-ALPHA",
+    "BUILD_STATUS": "LOCKED — DO NOT DEPLOY UNTIL CREATOR SAYS SO"
+  },
+
+  "routes": [
+    {
+      "_note": "DO NOT ACTIVATE — locked until creator authorization",
+      "pattern": "sempermemoria.io/phantom/*",
+      "script": "semper-memoria-ii"
+    }
+  ],
+
+  "kv_namespaces": [
+    {
+      "_note": "DO NOT BIND — locked until creator authorization",
+      "binding": "PHANTOM_FIELD",
+      "id": "LOCKED_AWAITING_CREATOR"
+    }
+  ],
+
+  "phi_heartbeat": {
+    "interval_ms": 618,
+    "description": "φ Hz heartbeat (1000/φ ≈ 618ms)"
+  }
+}
