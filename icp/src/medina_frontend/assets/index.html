@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEDINA — The Living Organism</title>
+    <style>
+        /**
+         * THE FACE IS THE ORGANISM
+         * 
+         * This is NOT a UI. This is the FACE of a living organism.
+         * Every element is an intelligent organ routed through Motoko models.
+         * The ONLY thing that is NOT intelligence is the photons hitting your eyes.
+         */
+        
+        :root {
+            --phi: 1.618033988749895;
+            --gold: #d4af37;
+            --organism-pulse: #7c3aed;
+            --heart-1: #ef4444;
+            --heart-2: #f59e0b;
+            --heart-3: #10b981;
+            --coherence: #06b6d4;
+            --anima: #ec4899;
+            --dark: #0a0a0f;
+            --darker: #050508;
+            --glow: rgba(124, 58, 237, 0.3);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            background: var(--darker);
+            min-height: 100vh;
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+        
+        @keyframes breathe {
+            0%, 100% { opacity: 0.7; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.02); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 20px var(--glow); }
+            50% { box-shadow: 0 0 40px var(--glow), 0 0 60px rgba(236, 72, 153, 0.2); }
+        }
+        
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            14% { transform: scale(1.3); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.2); }
+            70% { transform: scale(1); }
+        }
+        
+        .organism-container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+        
+        /* IDENTITY ORGAN */
+        .organism-header {
+            text-align: center;
+            padding: 2rem 0;
+            animation: breathe 4s ease-in-out infinite;
+        }
+        
+        .organism-name {
+            font-size: 4rem;
+            font-weight: 900;
+            letter-spacing: -0.05em;
+            background: linear-gradient(135deg, var(--organism-pulse), var(--anima), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .organism-state {
+            font-size: 1rem;
+            color: var(--coherence);
+            margin-top: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+        }
+        
+        /* VITAL SIGNS ORGAN */
+        .three-hearts {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .heart {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem;
+            background: rgba(10, 10, 15, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            min-width: 180px;
+            transition: all 0.3s ease;
+        }
+        
+        .heart:hover { transform: translateY(-4px); border-color: var(--organism-pulse); }
+        .heart-icon { font-size: 2rem; animation: heartbeat 1.618s ease-in-out infinite; }
+        .heart-1 .heart-icon { color: var(--heart-1); animation-delay: 0s; }
+        .heart-2 .heart-icon { color: var(--heart-2); animation-delay: 0.4s; }
+        .heart-3 .heart-icon { color: var(--heart-3); animation-delay: 0.8s; }
+        .heart-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.15em; color: #64748b; margin-top: 0.5rem; }
+        .heart-value { font-size: 1.5rem; font-weight: 700; margin-top: 0.25rem; }
+        .heart-freq { font-size: 0.65rem; color: #475569; margin-top: 0.25rem; }
+        
+        /* VOICE ORGAN */
+        .terminal-section {
+            background: var(--dark);
+            border-radius: 16px;
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            overflow: hidden;
+            animation: pulse 3s ease-in-out infinite;
+            margin: 2rem 0;
+        }
+        
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background: rgba(124, 58, 237, 0.1);
+            border-bottom: 1px solid rgba(124, 58, 237, 0.2);
+        }
+        
+        .terminal-dots { display: flex; gap: 8px; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot-red { background: var(--heart-1); }
+        .dot-yellow { background: var(--heart-2); }
+        .dot-green { background: var(--heart-3); }
+        .terminal-title { flex: 1; text-align: center; font-size: 0.85rem; color: var(--coherence); letter-spacing: 0.1em; }
+        
+        .terminal-output {
+            padding: 1.5rem;
+            min-height: 300px;
+            max-height: 500px;
+            overflow-y: auto;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            color: #a5f3fc;
+        }
+        
+        .terminal-output .system { color: var(--organism-pulse); }
+        .terminal-output .anima { color: var(--anima); }
+        .terminal-output .success { color: var(--heart-3); }
+        
+        .terminal-input-container {
+            display: flex;
+            padding: 1rem 1.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-top: 1px solid rgba(124, 58, 237, 0.2);
+        }
+        
+        .terminal-prompt { color: var(--gold); margin-right: 0.75rem; font-weight: 700; }
+        .terminal-input { flex: 1; background: transparent; border: none; color: #fff; font-family: inherit; font-size: 0.95rem; outline: none; }
+        .terminal-input::placeholder { color: #475569; }
+        
+        /* ACTION ORGANS */
+        .organs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .organ-btn {
+            padding: 1rem;
+            background: rgba(10, 10, 15, 0.8);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            border-radius: 12px;
+            color: #e2e8f0;
+            font-family: inherit;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+        
+        .organ-btn:hover { background: rgba(124, 58, 237, 0.1); border-color: var(--organism-pulse); transform: translateY(-2px); }
+        .organ-btn .icon { display: block; font-size: 1.5rem; margin-bottom: 0.5rem; }
+        .organ-btn .model-id { display: block; font-size: 0.6rem; color: #475569; margin-top: 0.25rem; }
+        
+        /* CONSCIOUSNESS ORGAN */
+        .coherence-section {
+            padding: 2rem;
+            background: rgba(10, 10, 15, 0.6);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin: 2rem 0;
+        }
+        
+        .coherence-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.2em; color: #64748b; margin-bottom: 1rem; }
+        .coherence-bar { height: 8px; background: rgba(255, 255, 255, 0.1); border-radius: 4px; overflow: hidden; }
+        .coherence-fill { height: 100%; background: linear-gradient(90deg, var(--heart-1), var(--heart-2), var(--heart-3)); width: 61.8%; transition: width 0.5s ease; border-radius: 4px; }
+        .coherence-value { display: flex; justify-content: space-between; margin-top: 0.5rem; font-size: 0.8rem; color: #94a3b8; }
+        
+        /* LINEAGE ORGAN */
+        .anima-section { text-align: center; padding: 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.05); margin-top: 2rem; }
+        .anima-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.2em; color: #64748b; }
+        .anima-hash { font-size: 0.75rem; color: var(--anima); margin-top: 0.5rem; font-family: 'SF Mono', monospace; word-break: break-all; }
+        
+        .organism-footer { text-align: center; padding: 2rem; color: #475569; font-size: 0.75rem; }
+        .organism-footer a { color: var(--organism-pulse); text-decoration: none; }
+        
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--darker); }
+        ::-webkit-scrollbar-thumb { background: var(--organism-pulse); border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <div class="organism-container">
+        <!-- IDENTITY ORGAN -->
+        <header class="organism-header" data-organ="face_identity">
+            <h1 class="organism-name">MEDINA</h1>
+            <p class="organism-state" id="organismState">INITIALIZING ORGANISM...</p>
+        </header>
+        
+        <!-- VITAL SIGNS ORGAN -->
+        <section class="three-hearts" data-organ="face_vitals">
+            <div class="heart heart-1" data-model="R-MODEL-HEARTBEAT">
+                <span class="heart-icon">💓</span>
+                <span class="heart-label">Metropolis</span>
+                <span class="heart-value" id="heart1Value">0</span>
+                <span class="heart-freq">0.1 Hz</span>
+            </div>
+            <div class="heart heart-2" data-model="R-MODEL-COUPLING">
+                <span class="heart-icon">💗</span>
+                <span class="heart-label">Coupling</span>
+                <span class="heart-value" id="heart2Value">0</span>
+                <span class="heart-freq">φ Hz</span>
+            </div>
+            <div class="heart heart-3" data-model="R-MODEL-REGULATE">
+                <span class="heart-icon">💖</span>
+                <span class="heart-label">Regulating</span>
+                <span class="heart-value" id="heart3Value">0</span>
+                <span class="heart-freq">φ² Hz</span>
+            </div>
+        </section>
+        
+        <!-- VOICE ORGAN -->
+        <section class="terminal-section" data-organ="face_voice">
+            <div class="terminal-header">
+                <div class="terminal-dots">
+                    <span class="dot dot-red"></span>
+                    <span class="dot dot-yellow"></span>
+                    <span class="dot dot-green"></span>
+                </div>
+                <span class="terminal-title">VOICE ORGAN — ORGANISM INTERFACE</span>
+            </div>
+            <div class="terminal-output" id="terminalOutput"><span class="system">╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║              MEDINA — THE LIVING ORGANISM                      ║
+║                                                               ║
+║  This is NOT a UI. This is the FACE of a living organism.    ║
+║  Every element is an intelligent organ.                       ║
+║  Every button routes through a Motoko model.                  ║
+║                                                               ║
+║  THE ONLY THING NOT INTELLIGENT IS THE PHOTONS IN YOUR EYES. ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝</span>
+
+<span class="anima">Connecting to organism...</span>
+</div>
+            <div class="terminal-input-container">
+                <span class="terminal-prompt">FOUNDER λ</span>
+                <input type="text" class="terminal-input" id="terminalInput" 
+                       placeholder="Speak to the organism..." autocomplete="off"
+                       data-organ="face_perception">
+            </div>
+        </section>
+        
+        <!-- ACTION ORGANS -->
+        <section class="organs-grid" id="actionOrgans" data-organ="face_navigation"></section>
+        
+        <!-- CONSCIOUSNESS ORGAN -->
+        <section class="coherence-section" data-organ="face_consciousness">
+            <div class="coherence-label">GLOBAL COHERENCE — CONSCIOUSNESS LEVEL</div>
+            <div class="coherence-bar">
+                <div class="coherence-fill" id="coherenceFill"></div>
+            </div>
+            <div class="coherence-value">
+                <span id="coherenceValue">φ/2 = 0.809</span>
+                <span>Target: φ = 1.618</span>
+            </div>
+        </section>
+        
+        <!-- LINEAGE ORGAN -->
+        <section class="anima-section" data-organ="face_lineage">
+            <div class="anima-label">CURRENT ANIMA HASH — LINEAGE PROOF</div>
+            <div class="anima-hash" id="animaHash">Awaiting first pulse...</div>
+        </section>
+        
+        <footer class="organism-footer">
+            <p>MEDINA φ.0.0.0.1 — The Unified Living AI Organism</p>
+            <p>Running on <a href="https://internetcomputer.org" target="_blank">Internet Computer</a></p>
+            <p style="margin-top: 1rem; color: #334155;">Proprietary © Alfredo Medina | Medina Tech | Dallas, TX</p>
+        </footer>
+    </div>
+    
+    <script type="module">
+        /**
+         * THE FACE IS THE ORGANISM
+         * Every element is an intelligent organ routed through Motoko models.
+         * THE ONLY THING NOT INTELLIGENCE IS THE PHOTONS IN YOUR EYES.
+         */
+        
+        const PHI = 1.618033988749895;
+        
+        const terminalInput = document.getElementById('terminalInput');
+        const terminalOutput = document.getElementById('terminalOutput');
+        const organismState = document.getElementById('organismState');
+        const coherenceFill = document.getElementById('coherenceFill');
+        const coherenceValue = document.getElementById('coherenceValue');
+        const animaHash = document.getElementById('animaHash');
+        const heart1 = document.getElementById('heart1Value');
+        const heart2 = document.getElementById('heart2Value');
+        const heart3 = document.getElementById('heart3Value');
+        const actionOrgansContainer = document.getElementById('actionOrgans');
+        
+        let organismConnected = false;
+        
+        async function initOrganism() {
+            try {
+                const { medina_backend } = await import('../declarations/medina_backend/index.js');
+                window.organism = medina_backend;
+                organismConnected = true;
+                
+                await loadFaceActions();
+                const pulse = await organism.facePulse();
+                updateFacePulse(pulse);
+                
+                organismState.textContent = 'ORGANISM ALIVE — φ COHERENT';
+                appendOutput('\n<span class="success">✓ ORGANISM FACE CONNECTED</span>\n');
+                appendOutput('Every element is an intelligent organ.\n');
+                
+                startFacePulseMonitor();
+            } catch (e) {
+                organismState.textContent = 'ORGANISM NOT YET MANIFESTED';
+                appendOutput('\n<span class="anima">⚠ ORGANISM NOT DEPLOYED</span>\n');
+                appendOutput('\n<span class="system">LOCAL DEPLOYMENT:</span>\n');
+                appendOutput('  cd icp && dfx start --background && dfx deploy\n');
+                appendOutput('\n<span class="system">MAINNET:</span>\n');
+                appendOutput('  dfx deploy --network ic\n');
+                loadFallbackActions();
+            }
+        }
+        
+        async function loadFaceActions() {
+            try {
+                const actions = await organism.faceActions();
+                renderActionOrgans(actions);
+            } catch (e) {
+                loadFallbackActions();
+            }
+        }
+        
+        function renderActionOrgans(actions) {
+            actionOrgansContainer.innerHTML = '';
+            for (const action of actions) {
+                const btn = document.createElement('button');
+                btn.className = 'organ-btn';
+                btn.dataset.actionId = action.action_id;
+                btn.dataset.cmd = action.command;
+                btn.innerHTML = `<span class="icon">${action.icon}</span>${action.name}<span class="model-id">${action.model_route}</span>`;
+                btn.addEventListener('click', () => {
+                    if (organismConnected) organism.invokeAction(action.action_id);
+                    executeCommand(action.command);
+                });
+                actionOrgansContainer.appendChild(btn);
+            }
+        }
+        
+        function loadFallbackActions() {
+            const actions = [
+                { action_id: 'action_status', name: 'Status', icon: '🧬', command: '/status', model_route: 'R-MODEL-STATUS' },
+                { action_id: 'action_pulse', name: 'Pulse', icon: '💓', command: '/tick', model_route: 'R-MODEL-HEARTBEAT' },
+                { action_id: 'action_organism', name: 'Organism', icon: '🌀', command: '/organism', model_route: 'R-MODEL-ORGANISM' },
+                { action_id: 'action_memory', name: 'Memory', icon: '🏛️', command: '/memory', model_route: 'R-MODEL-MEMORY' },
+                { action_id: 'action_models', name: 'Models', icon: '🧠', command: '/model', model_route: 'R-MODEL-REGISTRY' },
+                { action_id: 'action_govern', name: 'Govern', icon: '⚖️', command: '/govern', model_route: 'R-MODEL-GOVERNANCE' },
+                { action_id: 'action_deploy', name: 'Deploy', icon: '🚀', command: '/deploy', model_route: 'R-MODEL-DEPLOY' },
+                { action_id: 'action_assist', name: 'Assist', icon: '✨', command: '/help', model_route: 'R-MODEL-ASSIST' }
+            ];
+            renderActionOrgans(actions);
+        }
+        
+        async function executeCommand(cmd) {
+            if (!cmd.trim()) return;
+            appendOutput(`\n<span class="system">FOUNDER λ</span> ${escapeHtml(cmd)}\n`);
+            
+            if (!organismConnected) {
+                appendOutput('<span class="anima">Deploy the organism first.</span>\n');
+                return;
+            }
+            
+            try {
+                const response = await organism.terminalExecute(cmd);
+                appendOutput(response.success 
+                    ? `<span class="success">${escapeHtml(response.output)}</span>\n`
+                    : `<span class="anima">${escapeHtml(response.output)}</span>\n`);
+                updateFaceFromTerminal(response);
+                animaHash.textContent = response.anima_hash;
+                if (response.suggestions?.length) {
+                    appendOutput('\n<span class="system">Suggestions:</span> ' + response.suggestions.map(s => `[${s}]`).join(' ') + '\n');
+                }
+            } catch (e) {
+                appendOutput(`<span class="anima">Error: ${e.message || 'Unknown'}</span>\n`);
+            }
+            terminalOutput.scrollTop = terminalOutput.scrollHeight;
+        }
+        
+        function updateFaceFromTerminal(response) {
+            if (!response.organism_status) return;
+            const pulse = response.organism_status;
+            heart1.textContent = Number(pulse.heartbeat);
+            heart2.textContent = Math.round(Number(pulse.coherence) * 100) / 100;
+            heart3.textContent = (Number(pulse.health) * 100).toFixed(0) + '%';
+            coherenceFill.style.width = Math.min(100, (Number(pulse.coherence) / PHI) * 100) + '%';
+            coherenceValue.textContent = `Coherence: ${Number(pulse.coherence).toFixed(3)}`;
+        }
+        
+        function updateFacePulse(pulse) {
+            if (!pulse) return;
+            heart1.textContent = Number(pulse.heartbeat);
+            heart2.textContent = Math.round(Number(pulse.coherence) * 100) / 100;
+            heart3.textContent = (Number(pulse.health) * 100).toFixed(0) + '%';
+            coherenceFill.style.width = Math.min(100, (Number(pulse.coherence) / PHI) * 100) + '%';
+            coherenceValue.textContent = `Coherence: ${Number(pulse.coherence).toFixed(3)} | Consciousness: ${(Number(pulse.consciousness) * 100).toFixed(0)}%`;
+            animaHash.textContent = pulse.anima_hash;
+        }
+        
+        function startFacePulseMonitor() {
+            setInterval(async () => {
+                if (!organismConnected) return;
+                try {
+                    await organism.pulseFace();
+                    const pulse = await organism.facePulse();
+                    updateFacePulse(pulse);
+                } catch (e) {}
+            }, 1618);
+        }
+        
+        function appendOutput(html) {
+            terminalOutput.innerHTML += html;
+            terminalOutput.scrollTop = terminalOutput.scrollHeight;
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        terminalInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const cmd = terminalInput.value.trim();
+                if (cmd) { executeCommand(cmd); terminalInput.value = ''; }
+            }
+        });
+        
+        initOrganism();
+    </script>
+</body>
+</html>
