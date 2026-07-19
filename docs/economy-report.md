@@ -1,7 +1,7 @@
 # 💰 Organism Economy Report
 
-**Generated:** 2026-07-12 10:31:59 UTC
-**Commit:** `5bf5a62`
+**Generated:** 2026-07-19 10:32:03 UTC
+**Commit:** `148204f`
 
 ## Value Census
 
@@ -15,11 +15,11 @@
 
 | Package | Version | Description |
 |---------|---------|-------------|
-| @medina/agent-incentive-service | 1.0.0 | MEDINA Agent Incentive Service — Sovereign agent r |
-| @medina/memory-sdk | 2.0.0 | MEDINA Memory SDK — Sovereign memory temple, linea |
-| @solus/ai-sdk-pages | 1.0.0 | SOLUS AI — Sovereign Open Local Universal System — |
-| @medina/ai-tools-marketplace | 1.0.0 | MEDINA AI Tools Marketplace — Sovereign tool disco |
 | @medina/ai-memory-access-sdk | 1.0.0 | MEDINA AI Memory Access SDK — Protocol-compliant m |
+| @medina/ai-tools-marketplace | 1.0.0 | MEDINA AI Tools Marketplace — Sovereign tool disco |
+| @medina/agent-incentive-service | 1.0.0 | MEDINA Agent Incentive Service — Sovereign agent r |
+| @solus/ai-sdk-pages | 1.0.0 | SOLUS AI — Sovereign Open Local Universal System — |
+| @medina/memory-sdk | 2.0.0 | MEDINA Memory SDK — Sovereign memory temple, linea |
 | @medina/micro-worker-careers | 1.0.0 | 100 sovereign micro-workers with career flows — AN |
 
 ## Extension Catalog
